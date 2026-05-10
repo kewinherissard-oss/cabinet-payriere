@@ -1,311 +1,276 @@
 'use strict';
 
-/* ── Constantes ────────────────────────────────────────── */
-const STORAGE_KEY = 'monbudget_transactions';
+/* ── Burger menu ── */
+const burger   = document.getElementById('burger');
+const navLinks = document.getElementById('nav-links');
+burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => navLinks.classList.remove('open')));
 
-const CAT_COLORS = {
-  alimentation: '#f43f5e',
-  logement:     '#f59e0b',
-  transport:    '#0ea5e9',
-  loisirs:      '#ec4899',
-  sante:        '#10b981',
-  autres:       '#64748b',
-};
+/* ── Header scroll ── */
+const header = document.querySelector('.header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
 
-const CAT_LABELS = {
-  alimentation: 'Alimentation',
-  logement:     'Logement',
-  transport:    'Transport',
-  loisirs:      'Loisirs',
-  sante:        'Santé',
-  autres:       'Autres',
-};
-
-/* ── État ──────────────────────────────────────────────── */
-let transactions = load();
-
-/* ── Persistance ───────────────────────────────────────── */
-function load() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
-}
-
-function genId() {
-  return crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`;
-}
-
-/* ── Mutations ─────────────────────────────────────────── */
-function addTransaction(data) {
-  transactions.push({ id: genId(), ...data });
-  save();
-  render();
-}
-
-function deleteTransaction(id) {
-  if (!confirm('Supprimer cette transaction ?')) return;
-  transactions = transactions.filter(t => t.id !== id);
-  save();
-  render();
-}
-
-/* ── Formatage ─────────────────────────────────────────── */
-function formatAmount(n) {
-  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
-}
-
-function formatDate(iso) {
-  const [y, m, d] = iso.split('-');
-  return `${d}/${m}/${y}`;
-}
-
-/* ── Filtres ───────────────────────────────────────────── */
-function getFiltered() {
-  const type = document.getElementById('fil-type').value;
-  const cat  = document.getElementById('fil-categorie').value;
-  const mois = document.getElementById('fil-mois').value;   // "YYYY-MM"
-
-  return transactions
-    .filter(t => !type || t.type === type)
-    .filter(t => !cat  || t.categorie === cat)
-    .filter(t => !mois || t.date.startsWith(mois))
-    .sort((a, b) => b.date.localeCompare(a.date));
-}
-
-/* ── Rendu : résumé ────────────────────────────────────── */
-function renderSummary() {
-  const revenus   = transactions.filter(t => t.type === 'revenu').reduce((s, t) => s + t.montant, 0);
-  const depenses  = transactions.filter(t => t.type === 'depense').reduce((s, t) => s + t.montant, 0);
-  const solde     = revenus - depenses;
-
-  const elSolde = document.getElementById('val-solde');
-  elSolde.textContent = formatAmount(solde);
-  elSolde.className = 'card-value' + (solde > 0 ? ' positive' : solde < 0 ? ' negative' : '');
-
-  document.getElementById('val-revenus').textContent  = formatAmount(revenus);
-  document.getElementById('val-depenses').textContent = formatAmount(depenses);
-}
-
-/* ── Rendu : graphique en camembert ────────────────────── */
-function renderChart() {
-  const canvas = document.getElementById('chart');
+/* ══════════════════════════════════════════════
+   CANVAS PARTICULES — fond étoilé
+   ══════════════════════════════════════════════ */
+(function initCanvas() {
+  const canvas = document.getElementById('heroCanvas');
   const ctx    = canvas.getContext('2d');
+  let W, H, dots = [];
 
-  canvas.width  = canvas.offsetWidth || 360;
-  canvas.height = 320;
-
-  const W = canvas.width;
-  const H = canvas.height;
-
-  ctx.clearRect(0, 0, W, H);
-
-  // Agréger les dépenses par catégorie
-  const map = {};
-  transactions
-    .filter(t => t.type === 'depense')
-    .forEach(t => { map[t.categorie] = (map[t.categorie] || 0) + t.montant; });
-
-  const data = Object.entries(map)
-    .map(([cat, total]) => ({ cat, total }))
-    .sort((a, b) => b.total - a.total);
-
-  // Pas de données
-  if (data.length === 0) {
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '14px system-ui, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('Aucune dépense à afficher', W / 2, H / 2);
-    return;
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
   }
 
-  const total = data.reduce((s, d) => s + d.total, 0);
-
-  // Zone camembert : moitié haute
-  const LEGEND_H = 28 * data.length;
-  const pieAreaH = H - LEGEND_H - 16;
-  const cx = W / 2;
-  const cy = pieAreaH / 2;
-  const radius = Math.min(cx, cy) - 12;
-
-  // Dessiner les secteurs
-  let startAngle = -Math.PI / 2;
-  data.forEach(d => {
-    const slice = (d.total / total) * 2 * Math.PI;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, radius, startAngle, startAngle + slice);
-    ctx.closePath();
-    ctx.fillStyle = CAT_COLORS[d.cat] || '#94a3b8';
-    ctx.fill();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Pourcentage dans le secteur (si secteur assez grand)
-    if (slice > 0.25) {
-      const midAngle = startAngle + slice / 2;
-      const tx = cx + (radius * 0.65) * Math.cos(midAngle);
-      const ty = cy + (radius * 0.65) * Math.sin(midAngle);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px system-ui, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(Math.round((d.total / total) * 100) + '%', tx, ty);
-    }
-
-    startAngle += slice;
-  });
-
-  // Légende sous le camembert
-  const legendTop = pieAreaH + 8;
-  data.forEach((d, i) => {
-    const y = legendTop + i * 28;
-    // Carré de couleur
-    ctx.fillStyle = CAT_COLORS[d.cat] || '#94a3b8';
-    ctx.beginPath();
-    ctx.roundRect(16, y + 4, 14, 14, 3);
-    ctx.fill();
-    // Label
-    ctx.fillStyle = '#1e293b';
-    ctx.font = '13px system-ui, sans-serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(CAT_LABELS[d.cat] || d.cat, 38, y + 11);
-    // Montant
-    ctx.fillStyle = '#64748b';
-    ctx.font = '13px system-ui, sans-serif';
-    ctx.textAlign = 'right';
-    const amtLabel = d.total.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
-    ctx.fillText(amtLabel, W - 16, y + 11);
-  });
-}
-
-/* ── Rendu : table ─────────────────────────────────────── */
-function renderTable(filtered) {
-  const tbody = document.getElementById('transactions-body');
-  tbody.innerHTML = '';
-
-  if (filtered.length === 0) {
-    const tr = document.createElement('tr');
-    tr.className = 'empty-row';
-    tr.innerHTML = '<td colspan="6">Aucune transaction à afficher</td>';
-    tbody.appendChild(tr);
-    return;
+  function mkDot() {
+    return {
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      r:  Math.random() * 1.8 + 0.4,
+      a:  Math.random(),
+      da: (Math.random() - 0.5) * 0.008,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+    };
   }
 
-  filtered.forEach(t => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="td-date">${formatDate(t.date)}</td>
-      <td class="td-desc" title="${t.description || ''}">${t.description || '<em style="color:var(--color-muted)">—</em>'}</td>
-      <td><span class="badge badge-${t.categorie}">${CAT_LABELS[t.categorie]}</span></td>
-      <td><span class="type-badge type-${t.type}">${t.type === 'depense' ? 'Dépense' : 'Revenu'}</span></td>
-      <td class="td-amount ${t.type === 'revenu' ? 'income' : 'expense'}">
-        ${t.type === 'revenu' ? '+' : '−'} ${formatAmount(t.montant)}
-      </td>
-      <td>
-        <button class="btn btn--danger btn-delete" data-id="${t.id}" title="Supprimer">✕</button>
-      </td>
+  resize();
+  dots = Array.from({ length: 110 }, mkDot);
+  window.addEventListener('resize', resize, { passive: true });
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    dots.forEach(d => {
+      d.x += d.vx; d.y += d.vy; d.a += d.da;
+      if (d.a < 0 || d.a > 1) d.da *= -1;
+      if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+      if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${d.a * 0.6})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════════════
+   PARALLAX SOURIS — déplacement des couches 3D
+   ══════════════════════════════════════════════ */
+(function initMouseParallax() {
+  const hero   = document.querySelector('[data-hero]');
+  const layers = hero.querySelectorAll('.p-layer');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+  let raf;
+
+  hero.addEventListener('mousemove', e => {
+    const r = hero.getBoundingClientRect();
+    mx = (e.clientX - r.left) / r.width  - 0.5;
+    my = (e.clientY - r.top)  / r.height - 0.5;
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', () => { mx = 0; my = 0; });
+
+  function tick() {
+    cx += (mx - cx) * 0.08;
+    cy += (my - cy) * 0.08;
+
+    layers.forEach(layer => {
+      const depth = parseFloat(layer.dataset.depth || 0);
+      const tx = cx * depth * 80;
+      const ty = cy * depth * 60;
+      layer.style.transform = `translate(${tx}px, ${ty}px)`;
+    });
+    raf = requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ══════════════════════════════════════════════
+   PERSPECTIVE MARQUEE — recréation fidèle du
+   composant PerspectiveMarquee (Remotion/React)
+   en JS natif avec requestAnimationFrame
+   ══════════════════════════════════════════════ */
+(function initPerspectiveMarquee() {
+  const section = document.getElementById('pmarqueeSection');
+  if (!section) return;
+
+  /* — Paramètres identiques aux props du composant — */
+  const ITEMS          = ['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé'];
+  const FONT_SIZE      = 48;
+  const FONT_WEIGHT    = 700;
+  const PX_PER_FRAME   = 2;
+  const ROTATE_Y       = -28;
+  const ROTATE_X       = 8;
+  const PERSPECTIVE    = 1200;
+  const COLOR          = '#ffffff';
+  const ITEM_PADDING   = FONT_SIZE * 0.9;
+  const FONT_FAMILY    = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+  /* — Largeur approximative d'un cycle (même calcul que le composant) — */
+  const approxItemWidth = ITEMS.reduce(
+    (acc, item) => acc + item.length * FONT_SIZE * 0.6 + ITEM_PADDING, 0
+  );
+
+  /* — Conteneur avec perspective CSS (= outer div du composant) — */
+  const perspEl = document.createElement('div');
+  perspEl.className = 'pmarquee-perspective';
+  perspEl.style.perspective = `${PERSPECTIVE}px`;
+
+  /* — Div 3D rotaté (= middle div rotateX/rotateY) — */
+  const rotEl = document.createElement('div');
+  rotEl.className = 'pmarquee-rotate';
+  rotEl.style.transform = `rotateX(${ROTATE_X}deg) rotateY(${ROTATE_Y}deg)`;
+
+  /* — Track qui translate horizontalement — */
+  const trackEl = document.createElement('div');
+  trackEl.className = 'pmarquee-track';
+
+  /* — 3 répétitions des items (même pattern que [...items, ...items, ...items]) — */
+  const rendered = [...ITEMS, ...ITEMS, ...ITEMS];
+  const spans = rendered.map(item => {
+    const span = document.createElement('span');
+    span.textContent = item;
+    span.style.cssText = `
+      display: inline-block;
+      font-family: ${FONT_FAMILY};
+      font-size: ${FONT_SIZE}px;
+      font-weight: ${FONT_WEIGHT};
+      color: ${COLOR};
+      letter-spacing: -0.03em;
+      padding-right: ${ITEM_PADDING}px;
+      will-change: filter, opacity;
     `;
-    tbody.appendChild(tr);
+    return span;
   });
-}
 
-/* ── Rendu global ──────────────────────────────────────── */
-function render() {
-  renderSummary();
-  renderChart();
-  renderTable(getFiltered());
-}
+  spans.forEach(s => trackEl.appendChild(s));
+  rotEl.appendChild(trackEl);
+  perspEl.appendChild(rotEl);
 
-/* ── Formulaire ────────────────────────────────────────── */
-function clearError(fieldId, errId) {
-  const f = document.getElementById(fieldId);
-  const e = document.getElementById(errId);
-  if (f) f.classList.remove('invalid');
-  if (e) e.textContent = '';
-}
+  /* Insérer avant les fades (qui ont z-index:10) */
+  section.insertBefore(perspEl, section.querySelector('.pmarquee-fade-x'));
 
-function showError(fieldId, errId, msg) {
-  const f = document.getElementById(fieldId);
-  const e = document.getElementById(errId);
-  if (f) f.classList.add('invalid');
-  if (e) e.textContent = msg;
-}
+  /* — Boucle d'animation (= useCurrentFrame * speed dans le composant) — */
+  let frame = 0;
 
-document.getElementById('transaction-form').addEventListener('submit', e => {
-  e.preventDefault();
-  const form = e.target;
+  function animate() {
+    frame++;
+    const offset = -((frame * PX_PER_FRAME) % approxItemWidth);
+    trackEl.style.transform = `translateX(${offset}px)`;
 
-  const type        = form.type.value;
-  const montantRaw  = parseFloat(form.montant.value);
-  const categorie   = form.categorie.value;
-  const date        = form.date.value;
-  const description = form.description.value.trim();
+    /* Calcul blur/opacity par item — même logique que le composant :
+       norm = (itemCenter - 640) / 640  →  distance  →  blur & opacity */
+    const W      = section.offsetWidth;
+    const center = W / 2;
 
-  let valid = true;
+    spans.forEach((span, i) => {
+      const slotW      = approxItemWidth / ITEMS.length;
+      const itemCenter = i * slotW + slotW / 2 + offset;
+      const norm       = (itemCenter - center) / center;
+      const distance   = Math.min(1, Math.abs(norm));
+      span.style.filter  = `blur(${distance * 6}px)`;
+      span.style.opacity = String(1 - distance * 0.4);
+    });
 
-  clearError('f-montant',   'err-montant');
-  clearError('f-categorie', 'err-categorie');
-  clearError('f-date',      'err-date');
-
-  if (isNaN(montantRaw) || montantRaw <= 0) {
-    showError('f-montant', 'err-montant', 'Montant invalide (doit être > 0)');
-    valid = false;
-  }
-  if (!categorie) {
-    showError('f-categorie', 'err-categorie', 'Veuillez choisir une catégorie');
-    valid = false;
-  }
-  if (!date) {
-    showError('f-date', 'err-date', 'Veuillez saisir une date');
-    valid = false;
+    requestAnimationFrame(animate);
   }
 
-  if (!valid) return;
+  animate();
+})();
 
-  addTransaction({ type, montant: montantRaw, categorie, date, description });
-  form.reset();
-  document.getElementById('f-date').value = todayISO();
+/* ══════════════════════════════════════════════
+   GSAP ScrollTrigger — animations au scroll
+   ══════════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  if (typeof gsap === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* — Entrée héro — */
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  tl.from('[data-gsap-hero="tag"]',  { opacity: 0, y: 20, duration: .7 })
+    .from('[data-gsap-hero="title"]', { opacity: 0, y: 40, duration: .9 }, '-=.3')
+    .from('[data-gsap-hero="sub"]',   { opacity: 0, y: 30, duration: .7 }, '-=.5')
+    .from('[data-gsap-hero="pets"] span', { opacity: 0, scale: 0, stagger: .08, duration: .5 }, '-=.4')
+    .from('[data-gsap-hero="cta"] a', { opacity: 0, y: 20, stagger: .12, duration: .5 }, '-=.3');
+
+  /* — Parallax scroll sur le héro — */
+  const layers = document.querySelectorAll('.p-layer');
+  layers.forEach(layer => {
+    const depth = parseFloat(layer.dataset.depth || 0);
+    gsap.to(layer, {
+      y: depth * -200,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '[data-hero]',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+      }
+    });
+  });
+
+  /* — Scale-out du héro au scroll — */
+  gsap.to('.hero-content', {
+    opacity: 0,
+    y: -60,
+    ease: 'power2.in',
+    scrollTrigger: {
+      trigger: '[data-hero]',
+      start: 'center top',
+      end: 'bottom top',
+      scrub: 1,
+    }
+  });
+
+  /* — Défilé des animaux — */
+  gsap.utils.toArray('[data-parade]').forEach((el, i) => {
+    gsap.to(el, {
+      opacity: 1,
+      y: 0,
+      duration: .7,
+      delay: i * 0.1,
+      ease: 'back.out(1.5)',
+      scrollTrigger: {
+        trigger: '.animal-parade',
+        start: 'top 80%',
+        toggleActions: 'play none none none',
+      }
+    });
+  });
+
+  /* — Cartes services & témoignages — */
+  gsap.utils.toArray('[data-gsap-card]').forEach((el, i) => {
+    gsap.to(el, {
+      opacity: 1,
+      y: 0,
+      duration: .6,
+      delay: (i % 3) * 0.12,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 88%',
+        toggleActions: 'play none none none',
+      }
+    });
+  });
+
+  /* — Reveal sections — */
+  gsap.utils.toArray('[data-gsap-reveal]').forEach(el => {
+    gsap.from(el, {
+      opacity: 0,
+      y: 40,
+      duration: .8,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none',
+      }
+    });
+  });
 });
-
-/* ── Suppression (délégation) ──────────────────────────── */
-document.getElementById('transactions-body').addEventListener('click', e => {
-  const btn = e.target.closest('.btn-delete');
-  if (btn) deleteTransaction(btn.dataset.id);
-});
-
-/* ── Filtres ───────────────────────────────────────────── */
-['fil-type', 'fil-categorie', 'fil-mois'].forEach(id => {
-  document.getElementById(id).addEventListener('change', render);
-});
-
-document.getElementById('btn-reset-filters').addEventListener('click', () => {
-  document.getElementById('fil-type').value      = '';
-  document.getElementById('fil-categorie').value = '';
-  document.getElementById('fil-mois').value      = '';
-  render();
-});
-
-/* ── Utilitaires ───────────────────────────────────────── */
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-/* ── Redessiner le canvas au redimensionnement ─────────── */
-let resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(renderChart, 120);
-});
-
-/* ── Init ──────────────────────────────────────────────── */
-document.getElementById('f-date').value = todayISO();
-render();

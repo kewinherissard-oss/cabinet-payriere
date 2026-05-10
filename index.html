@@ -1,166 +1,472 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mon Budget — Gestion de budget personnel</title>
-  <meta name="description" content="Suivez facilement vos dépenses et revenus avec Mon Budget. Application gratuite, sans inscription, données stockées localement." />
-  <meta name="author" content="Mon Budget" />
-  <meta name="theme-color" content="#6c63ff" />
-  <meta property="og:title" content="Mon Budget" />
-  <meta property="og:description" content="Suivez facilement vos dépenses et revenus. Gratuit, sans inscription, 100 % privé." />
-  <meta property="og:type" content="website" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cabinet du Dr PAYRIERE — Vétérinaire</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="header-inner">
-      <span class="header-icon">💰</span>
-      <h1>Mon Budget</h1>
-    </div>
+  <!-- ── Navigation ── -->
+  <header class="header" id="top">
+    <nav class="navbar">
+      <a href="#top" class="logo">
+        <span class="logo-paw">🐾</span>
+        <div class="logo-text">
+          <span class="logo-cabinet">Cabinet Vétérinaire</span>
+          <span class="logo-dr">Dr PAYRIERE</span>
+        </div>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#accueil">Accueil</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#equipe">L'équipe</a></li>
+        <li><a href="#temoignages">Avis</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#contact" class="btn-rdv">Prendre RDV</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <main class="main-layout">
+  <!-- ── Hero 3D Parallax ── -->
+  <section id="accueil" class="hero" data-hero>
 
-    <!-- Colonne gauche : tableau de bord + formulaire -->
-    <div class="left-col">
+    <!-- Fond étoilé / particules -->
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
 
-      <!-- Tableau de bord -->
-      <section id="dashboard">
-        <div class="summary-cards">
-          <div class="card card--solde">
-            <p class="card-label">Solde actuel</p>
-            <p class="card-value" id="val-solde">0,00 €</p>
+    <!-- Couche 0 — très loin : pattes décoratives -->
+    <div class="parallax-scene" id="parallaxScene">
+      <div class="p-layer" data-depth="0.05">
+        <span class="deco-paw" style="top:12%;left:8%;">🐾</span>
+        <span class="deco-paw" style="top:75%;left:92%;">🐾</span>
+        <span class="deco-paw" style="top:55%;left:3%;">🐾</span>
+        <span class="deco-paw" style="top:20%;left:88%;">🐾</span>
+      </div>
+
+      <!-- Couche 1 — loin : petits animaux -->
+      <div class="p-layer" data-depth="0.12">
+        <div class="animal-orb small" style="top:15%;left:12%;">
+          <img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=160&h=160&fit=crop&q=80" alt="Hamster" loading="lazy">
+        </div>
+        <div class="animal-orb small" style="top:68%;left:85%;">
+          <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=160&h=160&fit=crop&q=80" alt="Lapin" loading="lazy">
+        </div>
+        <div class="animal-orb small" style="top:80%;left:20%;">
+          <img src="https://images.unsplash.com/photo-1452857297128-d9c29adba80b?w=160&h=160&fit=crop&q=80" alt="Chaton" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Couche 2 — milieu : animaux moyens -->
+      <div class="p-layer" data-depth="0.25">
+        <div class="animal-orb medium" style="top:10%;right:18%;">
+          <img src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=240&h=240&fit=crop&q=80" alt="Chat" loading="lazy">
+        </div>
+        <div class="animal-orb medium" style="top:70%;left:8%;">
+          <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=240&h=240&fit=crop&q=80" alt="Chiot" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Couche 3 — proche : grand animal -->
+      <div class="p-layer" data-depth="0.45">
+        <div class="animal-orb large" style="top:50%;right:12%;transform:translateY(-50%);">
+          <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=400&fit=crop&q=80" alt="Chien" loading="lazy">
+          <div class="orb-ring"></div>
+          <div class="orb-ring r2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenu texte (fixe) -->
+    <div class="hero-content">
+      <span class="hero-tag" data-gsap-hero="tag">Cabinet vétérinaire de confiance</span>
+      <h1 data-gsap-hero="title">
+        Bienvenue au<br>
+        <em>Cabinet du<br>Dr&nbsp;PAYRIERE</em>
+      </h1>
+      <p class="hero-sub" data-gsap-hero="sub">
+        Votre vétérinaire à l'écoute de tous vos compagnons —<br>
+        avec douceur, expertise et bienveillance.
+      </p>
+      <div class="hero-pets" data-gsap-hero="pets">
+        <span title="Chiens">🐶</span>
+        <span title="Chats">🐱</span>
+        <span title="Lapins">🐰</span>
+        <span title="Rongeurs">🐹</span>
+        <span title="Oiseaux">🦜</span>
+        <span title="Furets">🦡</span>
+      </div>
+      <div class="hero-cta" data-gsap-hero="cta">
+        <a href="#contact" class="btn-primary">📅 Prendre rendez-vous</a>
+        <a href="#services" class="btn-secondary">Nos services</a>
+      </div>
+    </div>
+
+    <!-- Indicateur scroll -->
+    <div class="scroll-indicator">
+      <span>Défiler</span>
+      <div class="scroll-mouse">
+        <div class="scroll-dot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Bandeau confiance ── -->
+  <div class="trust-bar">
+    <div class="trust-item"><span class="trust-icon">✅</span><p>Soins de qualité</p></div>
+    <div class="trust-item"><span class="trust-icon">⚡</span><p>Urgences acceptées</p></div>
+    <div class="trust-item"><span class="trust-icon">❤️</span><p>Équipe bienveillante</p></div>
+    <div class="trust-item"><span class="trust-icon">🔬</span><p>Matériel moderne</p></div>
+    <div class="trust-item"><span class="trust-icon">📍</span><p>Cabinet accessible</p></div>
+  </div>
+
+  <!-- ── Perspective Marquee ── -->
+  <section class="pmarquee-section" id="pmarqueeSection">
+    <div class="pmarquee-fade-x"></div>
+    <div class="pmarquee-fade-y"></div>
+  </section>
+
+  <!-- ── Défilé des animaux ── -->
+  <section class="animal-parade">
+    <div class="parade-track">
+      <div class="parade-item" data-parade>
+        <div class="parade-photo">
+          <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=260&h=260&fit=crop&q=80" alt="Chien" loading="lazy">
+        </div>
+        <h3>Chiens</h3>
+        <p>Consultations, vaccins, chirurgie</p>
+      </div>
+      <div class="parade-item" data-parade>
+        <div class="parade-photo">
+          <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=260&h=260&fit=crop&q=80" alt="Chat" loading="lazy">
+        </div>
+        <h3>Chats</h3>
+        <p>Stérilisation, dentisterie, soins</p>
+      </div>
+      <div class="parade-item" data-parade>
+        <div class="parade-photo">
+          <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=260&h=260&fit=crop&q=80" alt="Lapin" loading="lazy">
+        </div>
+        <h3>Lapins</h3>
+        <p>Suivi, parasitologie, conseils</p>
+      </div>
+      <div class="parade-item" data-parade>
+        <div class="parade-photo">
+          <img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=260&h=260&fit=crop&q=80" alt="Rongeur" loading="lazy">
+        </div>
+        <h3>Rongeurs</h3>
+        <p>Examens, nutrition, bien-être</p>
+      </div>
+      <div class="parade-item" data-parade>
+        <div class="parade-photo">
+          <img src="https://images.unsplash.com/photo-1518288774672-b94e808873ff?w=260&h=260&fit=crop&q=80" alt="Furet" loading="lazy">
+        </div>
+        <h3>Furets & NAC</h3>
+        <p>Nouveaux animaux de compagnie</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Galerie photos ── -->
+  <section class="gallery">
+    <div class="gallery-strip">
+      <div class="gallery-item" data-label="Nos patients chiens">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=300&fit=crop&q=80" alt="Chien Golden" loading="lazy">
+      </div>
+      <div class="gallery-item" data-label="Soins avec amour">
+        <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=600&h=300&fit=crop&q=80" alt="Vétérinaire" loading="lazy">
+      </div>
+      <div class="gallery-item" data-label="Nos petits félins">
+        <img src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=300&fit=crop&q=80" alt="Chat" loading="lazy">
+      </div>
+      <div class="gallery-item" data-label="Chaque animal compte">
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&h=300&fit=crop&q=80" alt="Chiens" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ── -->
+  <section id="services" class="section services">
+    <div class="container">
+      <div class="section-header" data-gsap-reveal>
+        <h2>Nos <span>Services</span></h2>
+        <p>Tout ce dont votre animal a besoin, réuni en un seul cabinet</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon">🩺</div>
+          <h3>Consultations</h3>
+          <p>Bilan de santé, suivi régulier et consultations d'urgence pour tous vos compagnons.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon">💉</div>
+          <h3>Vaccinations</h3>
+          <p>Programme de vaccination adapté à chaque espèce pour une protection optimale tout au long de la vie.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon">🔬</div>
+          <h3>Analyses & Imagerie</h3>
+          <p>Prise de sang, échographie — des diagnostics précis réalisés directement sur place.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon">🏥</div>
+          <h3>Chirurgie</h3>
+          <p>Bloc opératoire moderne pour les interventions courantes : stérilisation, extractions, et plus.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon">🦷</div>
+          <h3>Dentisterie</h3>
+          <p>Détartrage, soins dentaires et conseils pour une bonne hygiène bucco-dentaire de votre animal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── À propos ── -->
+  <section id="equipe" class="section about">
+    <div class="container about-inner">
+      <div class="about-visual" data-gsap-reveal>
+        <div class="about-card">
+          <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=680&fit=crop&q=85" alt="Vétérinaire avec un animal" loading="lazy">
+          <div class="about-floating a1">
+            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=112&h=112&fit=crop&q=80" alt="Chien" loading="lazy">
           </div>
-          <div class="card card--income">
-            <p class="card-label">Total revenus</p>
-            <p class="card-value" id="val-revenus">0,00 €</p>
+          <div class="about-floating a2">
+            <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=112&h=112&fit=crop&q=80" alt="Chat" loading="lazy">
           </div>
-          <div class="card card--expense">
-            <p class="card-label">Total dépenses</p>
-            <p class="card-value" id="val-depenses">0,00 €</p>
+          <div class="about-floating a3">
+            <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=96&h=96&fit=crop&q=80" alt="Lapin" loading="lazy">
+          </div>
+          <div class="about-floating a4">
+            <img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=96&h=96&fit=crop&q=80" alt="Rongeur" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="about-text" data-gsap-reveal>
+        <div class="section-header left">
+          <h2>Le <span>Dr PAYRIERE</span></h2>
+          <p>Médecin vétérinaire passionné</p>
+        </div>
+        <p class="about-desc">Passionné par les animaux depuis toujours, le Dr PAYRIERE exerce la médecine vétérinaire avec rigueur et bienveillance. Son cabinet accueille chiens, chats, lapins et rongeurs dans une atmosphère chaleureuse, pensée pour réduire le stress des animaux comme de leurs propriétaires.</p>
+        <ul class="about-list">
+          <li><span>🎓</span> Diplômé de l'École Nationale Vétérinaire</li>
+          <li><span>🏅</span> Plus de 30 ans d'expérience</li>
+          <li><span>❤️</span> Approche douce et rassurante</li>
+          <li><span>🌿</span> Spécialiste des animaux de compagnie</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Philosophie de soins ── -->
+  <section class="section philosophie">
+    <div class="container">
+      <div class="section-header" data-gsap-reveal>
+        <h2>Notre <span>Philosophie</span></h2>
+        <p>Des soins pensés pour le bien-être naturel de votre animal</p>
+      </div>
+      <div class="philo-grid">
+
+        <div class="philo-card philo-main" data-gsap-reveal>
+          <div class="philo-icon">🌿</div>
+          <h3>La phytothérapie en priorité</h3>
+          <p>Le Dr PAYRIERE privilégie autant que possible les solutions naturelles avant de recourir aux traitements conventionnels. La phytothérapie — utilisation thérapeutique des plantes — est au cœur de sa pratique : moins d'effets secondaires, une approche douce et respectueuse de l'organisme de votre animal.</p>
+          <ul class="philo-list">
+            <li><span>🌱</span> Plantes médicinales adaptées à chaque espèce</li>
+            <li><span>💧</span> Huiles essentielles vétérinaires</li>
+            <li><span>🍃</span> Compléments naturels & oligoéléments</li>
+            <li><span>⚖️</span> Médecine conventionnelle en complément si nécessaire</li>
+          </ul>
+        </div>
+
+        <div class="philo-cards-right">
+          <div class="philo-card philo-yes" data-gsap-reveal>
+            <div class="philo-badge yes">✅ Recommandée</div>
+            <div class="philo-icon">🐱</div>
+            <h3>Stérilisation du chat</h3>
+            <p>Le Dr PAYRIERE recommande la stérilisation chez la chatte et le chat mâle. Elle prévient les maladies hormonales, réduit les comportements indésirables et améliore significativement la qualité et l'espérance de vie de votre félin.</p>
+          </div>
+
+          <div class="philo-card philo-no" data-gsap-reveal>
+            <div class="philo-badge no">⚠️ Sans chirurgie</div>
+            <div class="philo-icon">🐶</div>
+            <h3>Stérilisation du chien</h3>
+            <p>Le Dr PAYRIERE ne pratique pas la stérilisation chirurgicale du chien. Il privilégie l'<strong>implant hormonal</strong> (Suprelorin®), une alternative réversible et sans anesthésie générale qui suspend temporairement la fertilité tout en préservant l'équilibre hormonal essentiel au bon développement du chien.</p>
           </div>
         </div>
 
-        <div class="card chart-card">
-          <h2 class="section-title">Dépenses par catégorie</h2>
-          <canvas id="chart" height="220"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Témoignages ── -->
+  <section id="temoignages" class="section testimonials">
+    <div class="container">
+      <div class="section-header" data-gsap-reveal>
+        <h2>Ils nous font <span>confiance</span></h2>
+        <p>Les retours de nos patients à quatre pattes… et de leurs humains 🐾</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card" data-gsap-card>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <p>« Le Dr PAYRIERE est fantastique ! Il a pris soin de notre chien Max avec une patience et une douceur remarquables. On recommande à 100 % ! »</p>
+          <div class="t-author">
+            <span class="t-animal">🐶</span>
+            <div><strong>Sophie L.</strong><small>Propriétaire de Max</small></div>
+          </div>
         </div>
-      </section>
-
-      <!-- Formulaire d'ajout -->
-      <section id="form-section" class="card">
-        <h2 class="section-title">Ajouter une transaction</h2>
-        <form id="transaction-form" novalidate>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="f-type">Type</label>
-              <select id="f-type" name="type" required>
-                <option value="depense">Dépense</option>
-                <option value="revenu">Revenu</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="f-montant">Montant (€)</label>
-              <input id="f-montant" name="montant" type="number" min="0.01" step="0.01" placeholder="0,00" required />
-              <span class="field-error" id="err-montant"></span>
-            </div>
+        <div class="testimonial-card" data-gsap-card>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <p>« Cabinet propre, équipe adorable et docteur très à l'écoute. Notre chatte Minou se laisse même examiner sans stress. Merci infiniment ! »</p>
+          <div class="t-author">
+            <span class="t-animal">🐱</span>
+            <div><strong>Marc D.</strong><small>Propriétaire de Minou</small></div>
           </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="f-categorie">Catégorie</label>
-              <select id="f-categorie" name="categorie" required>
-                <option value="">— Choisir —</option>
-                <option value="alimentation">Alimentation</option>
-                <option value="logement">Logement</option>
-                <option value="transport">Transport</option>
-                <option value="loisirs">Loisirs</option>
-                <option value="sante">Santé</option>
-                <option value="autres">Autres</option>
-              </select>
-              <span class="field-error" id="err-categorie"></span>
-            </div>
-            <div class="form-group">
-              <label for="f-date">Date</label>
-              <input id="f-date" name="date" type="date" required />
-              <span class="field-error" id="err-date"></span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="f-description">Description</label>
-            <input id="f-description" name="description" type="text" placeholder="ex. Courses du week-end" maxlength="100" />
-          </div>
-
-          <button type="submit" class="btn btn--primary">+ Ajouter</button>
-        </form>
-      </section>
-
-    </div><!-- /left-col -->
-
-    <!-- Colonne droite : historique -->
-    <div class="right-col">
-      <section id="history-section" class="card">
-        <h2 class="section-title">Historique</h2>
-
-        <div class="filters">
-          <div class="filter-group">
-            <label for="fil-type">Type</label>
-            <select id="fil-type">
-              <option value="">Tous</option>
-              <option value="depense">Dépenses</option>
-              <option value="revenu">Revenus</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="fil-categorie">Catégorie</label>
-            <select id="fil-categorie">
-              <option value="">Toutes</option>
-              <option value="alimentation">Alimentation</option>
-              <option value="logement">Logement</option>
-              <option value="transport">Transport</option>
-              <option value="loisirs">Loisirs</option>
-              <option value="sante">Santé</option>
-              <option value="autres">Autres</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="fil-mois">Mois</label>
-            <input id="fil-mois" type="month" />
-          </div>
-          <button class="btn btn--ghost" id="btn-reset-filters">Réinitialiser</button>
         </div>
-
-        <div class="table-wrapper">
-          <table id="transactions-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Catégorie</th>
-                <th>Type</th>
-                <th class="col-amount">Montant</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="transactions-body">
-              <!-- Rempli par app.js -->
-            </tbody>
-          </table>
+        <div class="testimonial-card" data-gsap-card>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <p>« Prise en charge rapide pour notre lapin en urgence. Professionnalisme et bienveillance au rendez-vous. Nous sommes très reconnaissants ! »</p>
+          <div class="t-author">
+            <span class="t-animal">🐰</span>
+            <div><strong>Élise M.</strong><small>Propriétaire de Caramel</small></div>
+          </div>
         </div>
-      </section>
-    </div><!-- /right-col -->
+      </div>
+    </div>
+  </section>
 
-  </main>
+  <!-- ── Boutique en ligne ChronoVet ── -->
+  <section class="section boutique" id="boutique">
+    <div class="container">
+      <div class="boutique-inner" data-gsap-reveal>
+        <div class="boutique-text">
+          <span class="boutique-tag">🛒 Boutique en ligne & Point Relais</span>
+          <h2>Commandez vos produits <span>en ligne</span></h2>
+          <p>Le cabinet est <strong>point relais ChronoVet</strong> : commandez vos produits vétérinaires en ligne et venez les récupérer directement au cabinet, sans frais de livraison supplémentaires. Le Dr PAYRIERE a sélectionné pour vous une gamme de qualité — prix compétitifs, conseils inclus.</p>
+          <ul class="boutique-list">
+            <li><span>💊</span> Médicaments et compléments</li>
+            <li><span>🌿</span> Produits de phytothérapie vétérinaire</li>
+            <li><span>🪱</span> Antiparasitaires internes & externes</li>
+            <li><span>🍽️</span> Alimentation vétérinaire prescrite</li>
+            <li><span>🚿</span> Soins hygiène & entretien</li>
+          </ul>
+          <a href="https://www.chronovet.fr" target="_blank" rel="noopener" class="btn-boutique">
+            Accéder à la boutique ChronoVet →
+          </a>
+        </div>
+        <div class="boutique-visual">
+          <div class="boutique-card">
+            <div class="boutique-logo">
+              <span class="boutique-logo-icon">🏪</span>
+              <div>
+                <strong>ChronoVet</strong>
+                <span>Point relais officiel</span>
+              </div>
+            </div>
+            <div class="boutique-features">
+              <div class="boutique-feature">
+                <span>📍</span>
+                <p>Retrait au cabinet, sans livraison</p>
+              </div>
+              <div class="boutique-feature">
+                <span>✅</span>
+                <p>Produits validés par le Dr PAYRIERE</p>
+              </div>
+              <div class="boutique-feature">
+                <span>💳</span>
+                <p>Paiement sécurisé en ligne</p>
+              </div>
+              <div class="boutique-feature">
+                <span>🌿</span>
+                <p>Sélection naturelle & vétérinaire</p>
+              </div>
+            </div>
+            <div class="boutique-animals">🐶 🐱 🐰 🐹</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <footer class="site-footer">
-    <p>Données stockées localement dans votre navigateur — aucune donnée n'est envoyée sur internet.</p>
+  <!-- ── Contact & Horaires ── -->
+  <section id="contact" class="section contact">
+    <div class="container contact-inner">
+      <div class="contact-info" data-gsap-reveal>
+        <div class="section-header left">
+          <h2>Nous <span>Contacter</span></h2>
+          <p>Nous sommes là pour vous et vos animaux</p>
+        </div>
+        <div class="contact-items">
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <div><strong>Adresse</strong><p>3 impasse des Coquelicots<br>Saint-Paul-sur-Save, 31530</p></div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <div><strong>Téléphone</strong><p>05 61 49 27 99</p></div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <div><strong>Email</strong><p>mpayriere@gmail.com</p></div>
+          </div>
+        </div>
+        <a href="tel:0561492799" class="btn-primary">📞 Appeler maintenant</a>
+        <div class="urgence-box">
+          <p>🚨 <strong>Urgence en dehors des heures d'ouverture ?</strong></p>
+          <p>Contactez les <strong>Urgences Vétérinaires de Toulouse</strong> :</p>
+          <a href="tel:0561112131" class="urgence-link">
+            <span>🏥</span>
+            <div>
+              <strong>Vet-Urgences Ouest</strong>
+              <span>05 61 11 21 31</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="hours-card" data-gsap-reveal>
+        <h3>🕐 Horaires d'ouverture</h3>
+        <table class="hours-table">
+          <tr><td>Lundi</td><td>9h30 – 12h30 / 15h – 19h</td></tr>
+          <tr class="domicile"><td>Mardi</td><td>🏠 Visite à domicile</td></tr>
+          <tr><td>Mercredi</td><td>9h30 – 12h30 / 15h – 19h</td></tr>
+          <tr class="domicile"><td>Jeudi</td><td>🏠 Visite à domicile</td></tr>
+          <tr><td>Vendredi</td><td>9h30 – 12h30 / 15h – 19h</td></tr>
+          <tr class="closed"><td>Samedi</td><td>Fermé</td></tr>
+          <tr class="closed"><td>Dimanche</td><td>Fermé</td></tr>
+        </table>
+        <div class="hours-pets">🐶 🐱 🐰 🐹 🦜</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span>🐾</span>
+        <div>
+          <strong>Cabinet Vétérinaire</strong>
+          <span>Dr PAYRIERE</span>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="#accueil">Accueil</a>
+        <a href="#services">Services</a>
+        <a href="#equipe">L'équipe</a>
+        <a href="#boutique">Boutique</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <p class="footer-copy">© 2026 Cabinet Vétérinaire Dr PAYRIERE — Tous droits réservés</p>
+      <p class="footer-animals">🐶 🐱 🐰 🐹 🦜 Chaque animal mérite les meilleurs soins</p>
+    </div>
   </footer>
 
+  <!-- GSAP + ScrollTrigger (gratuit, open source) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
