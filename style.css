@@ -484,7 +484,7 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow-lg);
   animation: morphBlob 8s ease-in-out infinite;
 }
-.about-card img { width: 100%; height: 100%; object-fit: cover; }
+.about-card img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
 @keyframes morphBlob {
   0%,100% { border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%; }
   33%      { border-radius: 60% 40% 40% 60% / 60% 60% 40% 40%; }
