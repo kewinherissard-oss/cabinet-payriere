@@ -263,6 +263,22 @@
     },
   ];
 
+  /* ── Webhook Google Apps Script ── */
+  const WEBHOOK_URL = 'REMPLACER_PAR_URL_APPS_SCRIPT';
+
+  function sendWebhook(data) {
+    if (WEBHOOK_URL === 'REMPLACER_PAR_URL_APPS_SCRIPT') return;
+    const params = new URLSearchParams({
+      name:   data.name   || '',
+      phone:  data.phone  || '',
+      email:  data.email  || '',
+      date:   data.date   || '',
+      animal: data.animal || '',
+      motive: data.motive || '',
+    });
+    fetch(WEBHOOK_URL + '?' + params.toString(), { mode: 'no-cors' }).catch(() => {});
+  }
+
   /* ── État interne ── */
   let panelOpen   = false;
   let booking     = false;
@@ -405,8 +421,9 @@
   }
 
   function handleBookingInput(text) {
-    const chips_animaux = ['🐶 Chien', '🐱 Chat', '🐰 Lapin', '🐹 Rongeur', '🦜 Autre'];
-    const chips_motifs  = ['Consultation générale', 'Vaccination', 'Chirurgie / Stérilisation', 'Urgence', 'Suivi / Rappel'];
+    const chips_creneaux = ['Lundi matin', 'Lundi après-midi', 'Mercredi matin', 'Mercredi après-midi', 'Vendredi matin', 'Vendredi après-midi', 'Je ne sais pas encore'];
+    const chips_animaux  = ['🐶 Chien', '🐱 Chat', '🐰 Lapin', '🐹 Rongeur', '🦜 Autre'];
+    const chips_motifs   = ['Consultation générale', 'Vaccination', 'Chirurgie / Stérilisation', 'Urgence', 'Suivi / Rappel'];
 
     if (normalize(text).match(/^(annuler|stop|quitter|non merci|abandonner)$/)) {
       resetBooking();
@@ -436,79 +453,91 @@
       }
       bookingData.phone = text.trim();
       bookingStep = 3;
+      botReply('Quelle est votre <strong>adresse email</strong> ? (pour recevoir une confirmation)');
+
+    } else if (bookingStep === 3) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text.trim())) {
+        botReply('Cet email ne semble pas valide. Merci de saisir une <strong>adresse email correcte</strong> (ex : prenom@gmail.com).');
+        return;
+      }
+      bookingData.email = text.trim();
+      bookingStep = 4;
+      setChips(chips_creneaux);
+      botReply('Quel <strong>créneau vous conviendrait</strong> ? (Le cabinet est ouvert Lun / Mer / Ven)');
+
+    } else if (bookingStep === 4) {
+      if (text.trim().length < 2) {
+        botReply('Merci d\'indiquer un créneau souhaité ou de choisir "Je ne sais pas encore".');
+        return;
+      }
+      bookingData.date = text.trim();
+      bookingStep = 5;
       setChips(chips_animaux);
       botReply('Quel animal souhaitez-vous amener ? <strong>Précisez l\'espèce et le prénom</strong> de votre compagnon 🐾');
 
-    } else if (bookingStep === 3) {
+    } else if (bookingStep === 5) {
       if (text.trim().length < 2) {
         botReply('Merci de préciser l\'espèce et le prénom de votre animal (ex : "Mon chat Minou").');
         return;
       }
       bookingData.animal = text.trim();
-      bookingStep = 4;
+      bookingStep = 6;
       setChips(chips_motifs);
       botReply('Quel est le <strong>motif de la consultation</strong> ?');
 
-    } else if (bookingStep === 4) {
+    } else if (bookingStep === 6) {
       if (text.trim().length < 2) {
         botReply('Merci d\'indiquer le motif de votre visite (ex : "Vaccination annuelle").');
         return;
       }
       bookingData.motive = text.trim();
-      bookingStep = 5;
+      bookingStep = 7;
       showRecap();
     }
   }
 
   function showRecap() {
-    const mailto = buildMailto(bookingData);
+    const data = bookingData;
     setChips([]);
+    sendWebhook(data);
     showTyping();
     setTimeout(() => {
       hideTyping();
-      appendMsg('bot', `Voici le récapitulatif de votre demande :<br><br>
-        👤 <strong>${escapeHtml(bookingData.name)}</strong><br>
-        📞 ${escapeHtml(bookingData.phone)}<br>
-        🐾 ${escapeHtml(bookingData.animal)}<br>
-        📋 ${escapeHtml(bookingData.motive)}<br><br>
-        Comment souhaitez-vous nous contacter ?`);
-
-      const wrap = make('div', { class: 'cb-booking-actions' });
-
-      const btnCall = make('a', { href: 'tel:0561492799', class: 'cb-action-btn cb-action-call' });
-      btnCall.innerHTML = '📞 Appeler le cabinet';
-
-      const btnMail = make('a', { href: mailto, class: 'cb-action-btn cb-action-mail' });
-      btnMail.innerHTML = '✉️ Envoyer par email';
-
-      const btnRedo = make('button', { class: 'cb-action-btn cb-action-redo' });
-      btnRedo.innerHTML = '🔄 Recommencer';
-      btnRedo.addEventListener('click', () => {
-        resetBooking();
-        appendMsg('bot', 'D\'accord, recommençons ! Comment puis-je vous aider ?');
-        setChips(['Prendre RDV', 'Horaires', 'Services', 'Urgences']);
-      });
-
-      wrap.appendChild(btnCall);
-      wrap.appendChild(btnMail);
-      wrap.appendChild(btnRedo);
-      elMessages.appendChild(wrap);
+      appendMsg('bot', `Récapitulatif de votre demande :<br><br>
+        👤 <strong>${escapeHtml(data.name)}</strong><br>
+        📞 ${escapeHtml(data.phone)}<br>
+        ✉️ ${escapeHtml(data.email)}<br>
+        🗓️ ${escapeHtml(data.date)}<br>
+        🐾 ${escapeHtml(data.animal)}<br>
+        📋 ${escapeHtml(data.motive)}`);
       scrollBottom();
-      resetBooking();
-    }, 900);
-  }
+    }, 700);
 
-  function buildMailto(data) {
-    const subject = encodeURIComponent(`Demande de RDV - ${data.animal} - ${data.name}`);
-    const body = encodeURIComponent(
-      `Bonjour,\n\nJe souhaite prendre rendez-vous au cabinet vétérinaire.\n\n` +
-      `Propriétaire : ${data.name}\n` +
-      `Téléphone : ${data.phone}\n` +
-      `Animal : ${data.animal}\n` +
-      `Motif : ${data.motive}\n\n` +
-      `Merci de me rappeler pour confirmer le créneau.\n\nCordialement,\n${data.name}`
-    );
-    return `mailto:mpayriere@gmail.com?subject=${subject}&body=${body}`;
+    setTimeout(() => {
+      showTyping();
+      setTimeout(() => {
+        hideTyping();
+        appendMsg('bot', `✅ <strong>Demande envoyée automatiquement !</strong><br><br>
+          Le Dr PAYRIERE vous contactera au <strong>${escapeHtml(data.phone)}</strong> pour confirmer votre rendez-vous.<br><br>
+          📧 Un email de confirmation a été envoyé à <strong>${escapeHtml(data.email)}</strong>.`);
+
+        const wrap = make('div', { class: 'cb-booking-actions' });
+        const btnCall = make('a', { href: 'tel:0561492799', class: 'cb-action-btn cb-action-call' });
+        btnCall.innerHTML = '📞 Appeler quand même';
+        const btnRedo = make('button', { class: 'cb-action-btn cb-action-redo' });
+        btnRedo.innerHTML = '🔄 Nouvelle demande';
+        btnRedo.addEventListener('click', () => {
+          resetBooking();
+          appendMsg('bot', 'D\'accord ! Comment puis-je vous aider ?');
+          setChips(['Prendre RDV', 'Horaires', 'Services', 'Urgences']);
+        });
+        wrap.appendChild(btnCall);
+        wrap.appendChild(btnRedo);
+        elMessages.appendChild(wrap);
+        scrollBottom();
+        resetBooking();
+      }, 800);
+    }, 1800);
   }
 
   function resetBooking() {
