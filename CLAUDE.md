@@ -15,6 +15,8 @@ Déployé en ligne sur GitHub Pages : **https://kewinherissard-oss.github.io/cab
 ├── index.html          # Structure HTML complète
 ├── style.css           # Système de design complet
 ├── app.js              # Animations et interactions JS (276 lignes)
+├── chatbot.js          # Widget chatbot autonome (IIFE, ~500 lignes)
+├── Code.gs             # Google Apps Script — webhook RDV (à déployer)
 ├── dr-payriere.jpg     # Photo réelle du Dr PAYRIERE (récupérée depuis Discord)
 ├── CLAUDE.md           # Ce fichier
 ├── .claude/
@@ -35,6 +37,7 @@ Dépôts Git :
 - **CSS3** — variables CSS, flexbox, grid, responsive mobile-first
 - **JavaScript ES6+** — vanilla JS, IIFEs, `requestAnimationFrame`, Canvas 2D
 - **GSAP 3.12.5 + ScrollTrigger** — chargé via CDN, uniquement pour les animations au scroll
+- **Google Apps Script** — webhook serverless gratuit pour l'automatisation des RDV
 
 > Aucune autre bibliothèque tierce. Pas de bundler, pas de build step.
 
@@ -77,12 +80,13 @@ Dépôts Git :
   --bg:            #f8fafc;
   --surface:       #ffffff;
   --border:        #e2e8f0;
+  --radius:        14px;
 }
 ```
 
 ### Patterns visuels utilisés
 
-- **Glassmorphisme** — `backdrop-filter: blur()` + bordures semi-transparentes (navbar scrollée, cartes)
+- **Glassmorphisme** — `backdrop-filter: blur()` + bordures semi-transparentes (navbar scrollée, cartes, chatbot)
 - **Orbes photos** — images circulaires avec `border-radius: 50%`, `box-shadow` multicouche
 - **Hero background** — dégradé Navy→Bleu en overlay sur photo Unsplash (chien)
 - **Photos animaux** — Unsplash CDN avec paramètres `?w=&h=&fit=crop&q=80`
@@ -95,6 +99,11 @@ Dépôts Git :
 - `.testimonials-grid` — grille 3 colonnes pour les 3 premiers avis
 - `.testimonials-more` — grille 2 colonnes centrée (max-width 820px) pour les 2 avis supplémentaires
 - `.about-card img` — `object-fit: cover; object-position: center 5%; transform: scale(1.5)` pour recadrer la photo du Dr
+- `#cb-root` — widget chatbot fixe, z-index 1100 (au-dessus du header à 1000)
+- `#cb-bubble` — bouton FAB bleu avec animation pulse dorée
+- `#cb-panel` — fenêtre chat glassmorphisme `rgba(10,15,46,.92)` + `backdrop-filter: blur(22px)`
+- `.cb-chip` — suggestions rapides, hover doré
+- `.cb-booking-actions` — boutons d'action post-RDV
 
 ---
 
@@ -107,7 +116,7 @@ Fond étoilé animé dans le hero. 110 points qui bougent et scintillent via `re
 Plusieurs couches `.p-layer` avec `data-depth` (0.05 à 0.45) se déplacent à des vitesses différentes au survol de la souris. Crée un effet 3D sans librairie 3D.
 
 ### 3. PerspectiveMarquee (`initPerspectiveMarquee`)
-Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Recréation fidèle en JS natif d'un composant React/Remotion. Items : `['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé']`. Blur et opacité par item selon la distance au centre.
+Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Items : `['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé']`. Blur et opacité par item selon la distance au centre.
 
 ### 4. GSAP ScrollTrigger (sur `window.load`)
 - Entrée animée du hero (tag → titre → sous-titre → emojis → CTA)
@@ -115,6 +124,79 @@ Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Recréation fi
 - Fade-out du contenu hero au scroll
 - Apparition en stagger des cartes (`.animal-parade`, `[data-gsap-card]`)
 - Reveal des sections (`[data-gsap-reveal]`)
+
+---
+
+## Chatbot assistant virtuel (chatbot.js)
+
+Widget IIFE autonome injecté dans `document.body`, aucune dépendance, aucun conflit avec `app.js`.
+
+### Architecture DOM générée
+
+```
+#cb-root (position:fixed, bottom:24px, right:24px, z-index:1100)
+  ├── #cb-bubble        ← bouton FAB bleu 🐾, animation pulse
+  └── #cb-panel         ← fenêtre chat (glassmorphisme navy)
+        ├── .cb-header  ← avatar + "Assistant Dr PAYRIERE" + statut vert + ✕
+        ├── .cb-messages ← bulles scrollables (bot/user)
+        ├── .cb-quick   ← chips suggestions contextuelles
+        └── .cb-input-row ← champ texte + bouton envoi doré
+```
+
+### Moteur de réponses (NLP léger)
+- **Normalisation** : lowercase + suppression accents
+- **Scoring keywords** : `hits / keywords.length` — seuil configurable par règle
+- **25+ règles** couvrant : horaires (par jour), adresse, téléphone, email, services, espèces, urgences, vaccination, stérilisation, phytothérapie, boutique, domicile, ostéopathie, avis, tarifs, fallback
+
+### Flux de prise de RDV (6 étapes)
+
+```
+Étape 1 → Nom du propriétaire
+Étape 2 → Téléphone (validation regex)
+Étape 3 → Email (validation regex — pour confirmation automatique)
+Étape 4 → Créneau souhaité (chips : Lun/Mer/Ven × matin/après-midi)
+Étape 5 → Animal + prénom (chips espèces)
+Étape 6 → Motif (chips) → sendWebhook() → confirmation ✅
+```
+
+- Saisie `annuler` / `stop` à n'importe quelle étape → retour au chat libre
+- `sendWebhook(data)` envoie un `fetch() GET mode:no-cors` vers Google Apps Script
+
+### Configuration webhook
+
+Dans `chatbot.js`, ligne à configurer après déploiement du script Google :
+
+```js
+const WEBHOOK_URL = 'REMPLACER_PAR_URL_APPS_SCRIPT';
+```
+
+---
+
+## Automatisation RDV — Google Apps Script (Code.gs)
+
+Fichier à déployer **une seule fois** sur https://script.google.com (compte mpayriere@gmail.com).
+
+### Ce que fait le script à chaque RDV
+
+1. **Crée un événement Google Calendar** (`CalendarApp`) avec titre, description complète, créneau calculé
+2. **Envoie un email de notification** à `mpayriere@gmail.com` (`GmailApp`)
+3. **Envoie un email de confirmation** au client (si email fourni)
+
+### Calcul du créneau
+- `parseDate(str)` : convertit "Lundi matin" → prochain lundi, heure 10h00
+- `getNextWorkday()` : fallback si créneau non parseable → J+1 ouvré
+- "matin" → 10h00, "après-midi" → 16h00, durée 30 min
+
+### Déploiement (une seule fois)
+
+```
+1. script.google.com → Nouveau projet → coller Code.gs
+2. Déployer → Application Web
+   - Exécuter en tant que : Moi
+   - Accès : Tout le monde
+3. Copier l'URL → remplacer WEBHOOK_URL dans chatbot.js
+4. git add chatbot.js && git push payriere main
+```
 
 ---
 
