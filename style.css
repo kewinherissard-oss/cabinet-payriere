@@ -756,8 +756,8 @@ img { max-width: 100%; display: block; }
 #cb-bubble {
   width: 62px; height: 62px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
-  border: 2px solid rgba(255,255,255,.22);
+  background: #fff;
+  border: 3px solid #f59e0b;
   box-shadow: 0 8px 32px rgba(29,78,216,.5);
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
@@ -765,6 +765,8 @@ img { max-width: 100%; display: block; }
   transition: transform .25s ease, box-shadow .25s ease;
   animation: cb-pulse 3.5s ease-in-out infinite;
   color: #fff;
+  overflow: hidden;
+  padding: 0;
 }
 #cb-bubble:hover {
   transform: scale(1.1) translateY(-2px);
@@ -812,6 +814,7 @@ img { max-width: 100%; display: block; }
   border-radius: 50%;
   background: rgba(255,255,255,.1);
   display: flex; align-items: center; justify-content: center;
+  overflow: hidden; padding: 0;
   border: 1px solid rgba(245,158,11,.4);
   box-shadow: 0 0 10px rgba(245,158,11,.18);
 }
