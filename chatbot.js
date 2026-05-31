@@ -501,6 +501,22 @@
     }
   }
 
+  function buildMailto(data) {
+    const subject = encodeURIComponent('🐾 Demande de RDV — ' + (data.animal || '') + ' — ' + (data.name || ''));
+    const body = encodeURIComponent(
+      'Bonjour Dr PAYRIERE,\n\n' +
+      'Nouvelle demande de rendez-vous reçue via le site internet :\n\n' +
+      'Propriétaire : ' + (data.name   || '') + '\n' +
+      'Téléphone    : ' + (data.phone  || '') + '\n' +
+      'Email        : ' + (data.email  || '') + '\n' +
+      'Créneau      : ' + (data.date   || '') + '\n' +
+      'Animal       : ' + (data.animal || '') + '\n' +
+      'Motif        : ' + (data.motive || '') + '\n\n' +
+      'Merci de confirmer le rendez-vous.\n\nCordialement,\n' + (data.name || '')
+    );
+    return 'mailto:mpayriere.vet@gmail.com?subject=' + subject + '&body=' + body;
+  }
+
   function showRecap() {
     const data = bookingData;
     setChips([]);
@@ -508,13 +524,13 @@
     showTyping();
     setTimeout(() => {
       hideTyping();
-      appendMsg('bot', `Récapitulatif de votre demande :<br><br>
-        👤 <strong>${escapeHtml(data.name)}</strong><br>
-        📞 ${escapeHtml(data.phone)}<br>
-        ✉️ ${escapeHtml(data.email)}<br>
-        🗓️ ${escapeHtml(data.date)}<br>
-        🐾 ${escapeHtml(data.animal)}<br>
-        📋 ${escapeHtml(data.motive)}`);
+      appendMsg('bot', 'Récapitulatif de votre demande :<br><br>' +
+        '👤 <strong>' + escapeHtml(data.name)   + '</strong><br>' +
+        '📞 ' + escapeHtml(data.phone)  + '<br>' +
+        '✉️ ' + escapeHtml(data.email)  + '<br>' +
+        '🗓️ ' + escapeHtml(data.date)   + '<br>' +
+        '🐾 ' + escapeHtml(data.animal) + '<br>' +
+        '📋 ' + escapeHtml(data.motive));
       scrollBottom();
     }, 700);
 
@@ -522,13 +538,20 @@
       showTyping();
       setTimeout(() => {
         hideTyping();
-        appendMsg('bot', `✅ <strong>Demande envoyée automatiquement !</strong><br><br>
-          Le Dr PAYRIERE vous contactera au <strong>${escapeHtml(data.phone)}</strong> pour confirmer votre rendez-vous.<br><br>
-          📧 Un email de confirmation a été envoyé à <strong>${escapeHtml(data.email)}</strong>.`);
+        const mailto = buildMailto(data);
+
+        appendMsg('bot', '✅ <strong>Demande enregistrée !</strong><br><br>' +
+          'Le Dr PAYRIERE vous contactera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer votre rendez-vous.<br><br>' +
+          '📧 Cliquez sur le bouton ci-dessous pour envoyer votre demande directement par email :');
 
         const wrap = make('div', { class: 'cb-booking-actions' });
+
+        const btnMail = make('a', { href: mailto, class: 'cb-action-btn cb-action-mail' });
+        btnMail.innerHTML = '📧 Envoyer ma demande par email';
+
         const btnCall = make('a', { href: 'tel:0561492799', class: 'cb-action-btn cb-action-call' });
-        btnCall.innerHTML = '📞 Appeler quand même';
+        btnCall.innerHTML = '📞 Appeler le cabinet';
+
         const btnRedo = make('button', { class: 'cb-action-btn cb-action-redo' });
         btnRedo.innerHTML = '🔄 Nouvelle demande';
         btnRedo.addEventListener('click', () => {
@@ -536,6 +559,8 @@
           appendMsg('bot', 'D\'accord ! Comment puis-je vous aider ?');
           setChips(['Prendre RDV', 'Horaires', 'Services', 'Urgences']);
         });
+
+        wrap.appendChild(btnMail);
         wrap.appendChild(btnCall);
         wrap.appendChild(btnRedo);
         elMessages.appendChild(wrap);
