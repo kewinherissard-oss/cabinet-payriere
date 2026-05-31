@@ -300,14 +300,19 @@
   let bookingData = {};
 
   /* ── Références DOM (remplies dans buildDOM) ── */
-  let elRoot, elBubble, elPanel, elMessages, elQuick, elInput, elSend, elTyping;
+  let elRoot, elBubble, elGreet, elPanel, elMessages, elQuick, elInput, elSend, elTyping;
 
   /* ── Construction du DOM ── */
   function buildDOM() {
     elRoot = make('div', { id: 'cb-root' });
 
-    elBubble = make('button', { id: 'cb-bubble', 'aria-label': 'Ouvrir l\'assistant', title: 'Assistant virtuel — Puce' });
-    elBubble.innerHTML = '<img src="puce-avatar.svg" alt="Puce" style="width:90%;height:90%;object-fit:contain;">';
+    /* Bulle de salutation */
+    elGreet = make('div', { id: 'cb-greet' });
+    elGreet.innerHTML = '😺 Bonjour ! Je suis <strong>Puce</strong>,<br>comment puis-je vous aider ?<span id="cb-greet-close">✕</span>';
+
+    /* Chat animé cliquable (remplace l ancien bouton rond) */
+    elBubble = make('button', { id: 'cb-bubble', 'aria-label': 'Ouvrir l\'assistant Puce', title: 'Puce — Assistante du cabinet' });
+    elBubble.innerHTML = '<img src="puce-avatar.svg" alt="Puce" id="cb-cat-img">';
 
     elPanel = make('div', { id: 'cb-panel', role: 'dialog', 'aria-label': 'Assistant du cabinet vétérinaire' });
     elPanel.innerHTML = `
@@ -315,7 +320,7 @@
         <div class="cb-header-info">
           <div class="cb-header-avatar"><img src="puce-avatar.svg" alt="Puce" style="width:100%;height:100%;object-fit:contain;"></div>
           <div>
-            <div class="cb-header-name">Puce — Assistant Dr PAYRIERE</div>
+            <div class="cb-header-name">Puce 🐱 — Cabinet Dr PAYRIERE</div>
             <div class="cb-header-status"><span class="cb-status-dot"></span>En ligne</div>
           </div>
         </div>
@@ -329,6 +334,7 @@
       </div>
     `;
 
+    elRoot.appendChild(elGreet);
     elRoot.appendChild(elBubble);
     elRoot.appendChild(elPanel);
     document.body.appendChild(elRoot);
@@ -664,21 +670,27 @@
   function openPanel() {
     panelOpen = true;
     elPanel.classList.add('cb-open');
-    elBubble.innerHTML = '✕';
-    elBubble.setAttribute('aria-label', 'Fermer l\'assistant');
+    elGreet.classList.remove('cb-greet-show');
+    elBubble.classList.add('cb-bubble-open');
     setTimeout(() => elInput.focus(), 300);
   }
 
   function closePanel() {
     panelOpen = false;
     elPanel.classList.remove('cb-open');
-    elBubble.innerHTML = '<img src="puce-avatar.svg" alt="Puce" style="width:90%;height:90%;object-fit:contain;">';
-    elBubble.setAttribute('aria-label', 'Ouvrir l\'assistant');
+    elBubble.classList.remove('cb-bubble-open');
   }
 
   /* ── Événements ── */
   function bindEvents() {
     elBubble.addEventListener('click', () => panelOpen ? closePanel() : openPanel());
+    elGreet.addEventListener('click', (e) => {
+      if (e.target.id === 'cb-greet-close') {
+        elGreet.classList.remove('cb-greet-show');
+      } else {
+        openPanel();
+      }
+    });
 
     elPanel.querySelector('.cb-close').addEventListener('click', closePanel);
 
@@ -701,6 +713,8 @@
   buildDOM();
   bindEvents();
   welcome();
+  /* Auto-salutation après 2s */
+  setTimeout(() => { elGreet.classList.add('cb-greet-show'); }, 2000);
 
   /* ── API publique — accessible depuis index.html ── */
   window.openChatbotRDV = function () {
