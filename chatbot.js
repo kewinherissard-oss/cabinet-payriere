@@ -667,4 +667,15 @@
   bindEvents();
   welcome();
 
+  /* ── API publique — accessible depuis index.html ── */
+  window.openChatbotRDV = function () {
+    if (!panelOpen) openPanel();
+    setTimeout(() => {
+      if (!booking) {
+        appendMsg('user', 'Prendre RDV');
+        startBooking();
+      }
+    }, 350);
+  };
+
 })();
