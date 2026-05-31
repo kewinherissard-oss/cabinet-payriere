@@ -12,15 +12,18 @@ Déployé en ligne sur GitHub Pages : **https://kewinherissard-oss.github.io/cab
 
 ```
 /
-├── index.html          # Structure HTML complète
-├── style.css           # Système de design complet
-├── app.js              # Animations et interactions JS (276 lignes)
-├── chatbot.js          # Widget chatbot autonome (IIFE, ~500 lignes)
-├── Code.gs             # Google Apps Script — webhook RDV (à déployer)
-├── dr-payriere.jpg     # Photo réelle du Dr PAYRIERE (récupérée depuis Discord)
-├── CLAUDE.md           # Ce fichier
+├── index.html               # Structure HTML complète
+├── style.css                # Système de design complet
+├── app.js                   # Animations et interactions JS (276 lignes)
+├── chatbot.js               # Widget chatbot autonome (IIFE, ~500 lignes)
+├── Code.gs                  # Google Apps Script — webhook RDV (à déployer)
+├── dr-payriere.jpg          # Photo réelle du Dr PAYRIERE (récupérée depuis Discord)
+├── CLAUDE.md                # Ce fichier
+├── apps-script/
+│   ├── Code.gs              # Copie du script pour déploiement clasp
+│   └── appsscript.json      # Manifest Apps Script (webapp, timezone Europe/Paris)
 ├── .claude/
-│   ├── launch.json     # Config serveur de développement (npx serve -p 3000)
+│   ├── launch.json          # Config serveur de développement (npx serve -p 3000)
 │   └── settings.local.json
 └── .gitignore
 ```
@@ -116,7 +119,7 @@ Fond étoilé animé dans le hero. 110 points qui bougent et scintillent via `re
 Plusieurs couches `.p-layer` avec `data-depth` (0.05 à 0.45) se déplacent à des vitesses différentes au survol de la souris. Crée un effet 3D sans librairie 3D.
 
 ### 3. PerspectiveMarquee (`initPerspectiveMarquee`)
-Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Items : `['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé']`. Blur et opacité par item selon la distance au centre.
+Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Recréation fidèle en JS natif d'un composant React/Remotion. Items : `['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé']`. Blur et opacité par item selon la distance au centre.
 
 ### 4. GSAP ScrollTrigger (sur `window.load`)
 - Entrée animée du hero (tag → titre → sous-titre → emojis → CTA)
@@ -174,12 +177,12 @@ const WEBHOOK_URL = 'REMPLACER_PAR_URL_APPS_SCRIPT';
 
 ## Automatisation RDV — Google Apps Script (Code.gs)
 
-Fichier à déployer **une seule fois** sur https://script.google.com (compte mpayriere@gmail.com).
+Fichier à déployer sur https://script.google.com avec le compte **mpayriere.vet@gmail.com**.
 
 ### Ce que fait le script à chaque RDV
 
 1. **Crée un événement Google Calendar** (`CalendarApp`) avec titre, description complète, créneau calculé
-2. **Envoie un email de notification** à `mpayriere@gmail.com` (`GmailApp`)
+2. **Envoie un email de notification** à `mpayriere.vet@gmail.com` (`GmailApp`)
 3. **Envoie un email de confirmation** au client (si email fourni)
 
 ### Calcul du créneau
@@ -187,16 +190,34 @@ Fichier à déployer **une seule fois** sur https://script.google.com (compte mp
 - `getNextWorkday()` : fallback si créneau non parseable → J+1 ouvré
 - "matin" → 10h00, "après-midi" → 16h00, durée 30 min
 
-### Déploiement (une seule fois)
+### Déploiement via clasp (outil CLI installé)
 
+```bash
+# clasp est installé globalement : npm install -g @google/clasp
+# Se connecter avec mpayriere.vet@gmail.com :
+cd apps-script
+clasp login                          # ouvre le navigateur pour OAuth
+
+# Créer le projet Apps Script :
+clasp create --type webapp --title "Cabinet PAYRIERE - RDV" --rootDir .
+
+# Pousser le code :
+clasp push
+
+# Déployer en tant qu'Application Web :
+clasp deploy --description "RDV automatique v1"
+
+# Récupérer l'URL de déploiement :
+clasp deployments
+# → copier l'URL https://script.google.com/macros/s/XXXX/exec
+# → remplacer WEBHOOK_URL dans chatbot.js
+# → git add chatbot.js && git push payriere main
 ```
-1. script.google.com → Nouveau projet → coller Code.gs
-2. Déployer → Application Web
-   - Exécuter en tant que : Moi
-   - Accès : Tout le monde
-3. Copier l'URL → remplacer WEBHOOK_URL dans chatbot.js
-4. git add chatbot.js && git push payriere main
-```
+
+### État actuel du déploiement
+
+⏳ **En attente** — clasp authentifié avec `mpayriere.vet@gmail.com`, déploiement pas encore finalisé.
+La constante `WEBHOOK_URL` dans `chatbot.js` contient encore `'REMPLACER_PAR_URL_APPS_SCRIPT'`.
 
 ---
 
@@ -219,7 +240,7 @@ Les 5 avis sont issus de Google Reviews (source : bestveterinaire.fr) :
 - **Nom** : Cabinet du Dr PAYRIERE
 - **Adresse** : 3 impasse des Coquelicots, Saint-Paul-sur-Save, 31530
 - **Téléphone** : 05 61 49 27 99
-- **Email** : mpayriere@gmail.com
+- **Email RDV** : mpayriere.vet@gmail.com (compte dédié à la gestion des RDV)
 - **Urgences** : Vet-Urgences Ouest — 05 61 11 21 31
 - **Horaires** : Lun / Mer / Ven 9h30–12h30 et 15h–19h | Mar / Jeu : visites à domicile | Sam / Dim : fermé
 - **Espèces** : Chiens, Chats, Lapins, Rongeurs, NAC
@@ -246,7 +267,7 @@ npx serve -p 3000 .
 # Puis ouvrir http://localhost:3000
 ```
 
-## Déploiement
+## Déploiement site
 
 ```bash
 git add .

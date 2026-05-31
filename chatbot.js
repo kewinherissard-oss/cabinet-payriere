@@ -11,7 +11,7 @@
     name:    'Cabinet Vétérinaire Dr PAYRIERE',
     address: '3 impasse des Coquelicots, Saint-Paul-sur-Save (31530)',
     phone:   '05 61 49 27 99',
-    email:   'mpayriere@gmail.com',
+    email:   'mpayriere.vet@gmail.com',
     hours: {
       lundi:    '9h30 – 12h30 et 15h – 19h',
       mardi:    'Visites à domicile uniquement',
@@ -110,7 +110,7 @@
       id: 'email',
       keywords: ['email', 'mail', 'courriel', 'ecrire', 'message'],
       threshold: 0.5,
-      response: '✉️ Vous pouvez nous écrire à <strong><a href="mailto:mpayriere@gmail.com">mpayriere@gmail.com</a></strong>.',
+      response: '✉️ Vous pouvez nous écrire à <strong><a href="mailto:mpayriere.vet@gmail.com">mpayriere.vet@gmail.com</a></strong>.',
       chips: ['Téléphone', 'Prendre RDV'],
     },
     {
