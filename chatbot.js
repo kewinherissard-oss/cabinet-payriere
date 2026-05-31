@@ -263,23 +263,24 @@
     },
   ];
 
-  /* ── Envoi RDV via FormSubmit (gratuit, sans compte) ── */
+  /* ── Envoi RDV via Airform (gratuit, sans compte) ── */
   function sendWebhook(data) {
-    fetch('https://formsubmit.co/ajax/mpayriere.vet@gmail.com', {
+    const body = new URLSearchParams({
+      name:         (data.name   || '') + ' — Demande de RDV',
+      email:        data.email  || 'non-fourni@noreply.com',
+      _replyto:     data.email  || '',
+      Propriétaire: data.name   || '',
+      Téléphone:    data.phone  || '',
+      'E-mail':     data.email  || '',
+      Créneau:      data.date   || '',
+      Animal:       data.animal || '',
+      Motif:        data.motive || '',
+    });
+    fetch('https://airform.io/mpayriere.vet@gmail.com', {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        _subject:  '🐾 Nouvelle demande de RDV — ' + (data.animal || '') + ' — ' + (data.name || ''),
-        _replyto:  data.email || '',
-        _template: 'table',
-        _captcha:  'false',
-        Propriétaire: data.name   || '',
-        Téléphone:    data.phone  || '',
-        Email:        data.email  || '',
-        Créneau:      data.date   || '',
-        Animal:       data.animal || '',
-        Motif:        data.motive || '',
-      }),
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body:    body.toString(),
     }).catch(() => {});
   }
 
