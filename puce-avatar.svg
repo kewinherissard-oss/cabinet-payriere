@@ -1,194 +1,202 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" width="160" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220">
   <defs>
     <style>
-      .ear-l { transform-origin: 38px 38px; animation: ear-l 6s ease-in-out infinite 2s; }
-      .ear-r { transform-origin: 122px 38px; animation: ear-r 6s ease-in-out infinite 2.4s; }
-      .eye-l-group { transform-origin: 57px 88px; animation: blink 6s ease-in-out infinite 1s; }
-      .eye-r-group { transform-origin: 103px 88px; animation: blink 6s ease-in-out infinite 1s; }
-      .tail { transform-origin: 118px 168px; animation: tail 3s ease-in-out infinite; }
-      .body { animation: breathe 4s ease-in-out infinite; transform-origin: 80px 150px; }
-      .whisker-l { animation: wisk-l 4s ease-in-out infinite; transform-origin: 60px 110px; }
-      .whisker-r { animation: wisk-r 4s ease-in-out infinite 0.5s; transform-origin: 100px 110px; }
+      .ear-l  { transform-origin: 52px 40px;  animation: ear-l  5s ease-in-out infinite 1s; }
+      .ear-r  { transform-origin: 148px 40px; animation: ear-r  5s ease-in-out infinite 1.4s; }
+      .eye-l  { transform-origin: 72px 92px;  animation: blink  5s ease-in-out infinite 2s; }
+      .eye-r  { transform-origin: 128px 92px; animation: blink  5s ease-in-out infinite 2s; }
+      .tail   { transform-origin: 148px 178px; animation: tail  2.8s ease-in-out infinite; }
+      .body   { animation: breathe 3.5s ease-in-out infinite; transform-origin: 100px 165px; }
+      .whisL  { transform-origin: 75px 118px; animation: wiskL 3s ease-in-out infinite; }
+      .whisR  { transform-origin: 125px 118px; animation: wiskR 3s ease-in-out infinite .6s; }
+      .eyebrow-l { transform-origin: 72px 77px; animation: eyebrow 5s ease-in-out infinite 2s; }
+      .eyebrow-r { transform-origin: 128px 77px; animation: eyebrow 5s ease-in-out infinite 2s; }
 
       @keyframes ear-l {
-        0%,80%,100%{ transform:rotate(0deg) }
-        84%{ transform:rotate(-12deg) }
-        90%{ transform:rotate(6deg) }
-        95%{ transform:rotate(-5deg) }
+        0%,75%,100%{transform:rotate(0deg)}
+        80%{transform:rotate(-14deg)}
+        88%{transform:rotate(7deg)}
+        94%{transform:rotate(-5deg)}
       }
       @keyframes ear-r {
-        0%,80%,100%{ transform:rotate(0deg) }
-        84%{ transform:rotate(10deg) }
-        90%{ transform:rotate(-6deg) }
-        95%{ transform:rotate(4deg) }
+        0%,75%,100%{transform:rotate(0deg)}
+        80%{transform:rotate(12deg)}
+        88%{transform:rotate(-6deg)}
+        94%{transform:rotate(4deg)}
       }
       @keyframes blink {
-        0%,40%,55%,100%{ transform:scaleY(1) }
-        46%,50%{ transform:scaleY(0.06) }
+        0%,42%,55%,100%{transform:scaleY(1)}
+        47%,51%{transform:scaleY(0.06)}
+      }
+      @keyframes eyebrow {
+        0%,42%,55%,100%{transform:translateY(0)}
+        47%,51%{transform:translateY(4px)}
       }
       @keyframes tail {
-        0%,100%{ transform:rotate(0deg) }
-        30%{ transform:rotate(22deg) }
-        70%{ transform:rotate(-22deg) }
+        0%,100%{transform:rotate(0deg)}
+        25%{transform:rotate(24deg)}
+        75%{transform:rotate(-24deg)}
       }
       @keyframes breathe {
-        0%,100%{ transform:scaleY(1) scaleX(1) }
-        50%{ transform:scaleY(1.015) scaleX(1.008) }
+        0%,100%{transform:scaleY(1) scaleX(1)}
+        50%{transform:scaleY(1.018) scaleX(1.01)}
       }
-      @keyframes wisk-l {
-        0%,100%{ transform:rotate(0deg) }
-        50%{ transform:rotate(4deg) }
+      @keyframes wiskL {
+        0%,100%{transform:rotate(0deg)}
+        50%{transform:rotate(5deg)}
       }
-      @keyframes wisk-r {
-        0%,100%{ transform:rotate(0deg) }
-        50%{ transform:rotate(-4deg) }
+      @keyframes wiskR {
+        0%,100%{transform:rotate(0deg)}
+        50%{transform:rotate(-5deg)}
       }
     </style>
 
-    <!-- Fur gradients -->
-    <radialGradient id="bodyWhite" cx="42%" cy="35%" r="65%">
+    <radialGradient id="blackFur" cx="38%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#3a3a3a"/>
+      <stop offset="60%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#0d0d0d"/>
+    </radialGradient>
+    <radialGradient id="whiteFur" cx="40%" cy="30%" r="65%">
       <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="70%" stop-color="#f2f2f2"/>
-      <stop offset="100%" stop-color="#ddd"/>
+      <stop offset="70%" stop-color="#f5f5f5"/>
+      <stop offset="100%" stop-color="#e8e8e8"/>
     </radialGradient>
-    <radialGradient id="blackPatch" cx="50%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#2a2a2a"/>
-      <stop offset="100%" stop-color="#111"/>
+    <radialGradient id="eyeWhite" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e8f0ff"/>
     </radialGradient>
-    <radialGradient id="eyeAmber" cx="35%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#ffe066"/>
-      <stop offset="50%" stop-color="#e0a020"/>
-      <stop offset="100%" stop-color="#a06010"/>
-    </radialGradient>
-    <radialGradient id="eyeAmber2" cx="35%" cy="30%" r="70%">
-      <stop offset="0%" stop-color="#ffe066"/>
-      <stop offset="50%" stop-color="#e0a020"/>
-      <stop offset="100%" stop-color="#a06010"/>
+    <radialGradient id="iris" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#5cb8ff"/>
+      <stop offset="50%" stop-color="#2288dd"/>
+      <stop offset="100%" stop-color="#1155aa"/>
     </radialGradient>
     <radialGradient id="noseGrad" cx="30%" cy="25%" r="70%">
-      <stop offset="0%" stop-color="#ffbbd0"/>
-      <stop offset="100%" stop-color="#d06080"/>
+      <stop offset="0%" stop-color="#ffccdd"/>
+      <stop offset="100%" stop-color="#cc5577"/>
     </radialGradient>
-    <radialGradient id="innerEarGrad" cx="50%" cy="50%" r="70%">
-      <stop offset="0%" stop-color="#f4a0b0"/>
-      <stop offset="100%" stop-color="#d07090"/>
+    <radialGradient id="innerEar" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#ff99bb"/>
+      <stop offset="100%" stop-color="#cc4466"/>
     </radialGradient>
-    <radialGradient id="bellyGrad" cx="50%" cy="40%" r="60%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#f0f0f0"/>
+    <radialGradient id="cheekGrad" cx="40%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#ffddee" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#ffbbcc" stop-opacity="0.3"/>
     </radialGradient>
-    <filter id="softShadow">
-      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#00000028"/>
+    <filter id="softDrop">
+      <feDropShadow dx="2" dy="5" stdDeviation="5" flood-color="#00000030"/>
     </filter>
-    <filter id="furBlur">
-      <feGaussianBlur stdDeviation="0.4"/>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
 
-  <!-- TAIL -->
+  <!-- QUEUE -->
   <g class="tail">
-    <path d="M118 170 C135 162 148 148 144 128 C141 112 130 108 124 116 C132 122 136 138 128 152 C124 162 120 168 118 170Z"
-          fill="#1a1a1a"/>
-    <!-- tail tip white -->
-    <ellipse cx="124" cy="116" rx="5" ry="7" fill="#f0f0f0" transform="rotate(-20,124,116)"/>
+    <path d="M148 178 C168 165 182 148 178 126 C175 110 162 106 155 114 C165 120 170 138 162 158 C157 168 152 175 148 178Z"
+          fill="url(#blackFur)" stroke="#111" stroke-width="0.5"/>
+    <ellipse cx="156" cy="114" rx="7" ry="9" fill="url(#whiteFur)" transform="rotate(-25,156,114)"/>
   </g>
 
-  <!-- BODY -->
-  <g class="body" filter="url(#softShadow)">
-    <!-- Main white body -->
-    <ellipse cx="80" cy="155" rx="42" ry="38" fill="url(#bodyWhite)"/>
-    <!-- Black saddle patch on back -->
-    <path d="M52 138 C52 128 58 122 68 120 C78 118 92 118 102 122 C112 126 116 132 114 142 C110 134 104 129 92 127 C80 125 68 126 58 133Z"
-          fill="#1a1a1a"/>
-    <!-- White belly -->
-    <ellipse cx="78" cy="162" rx="28" ry="22" fill="url(#bellyGrad)"/>
-    <!-- Front paws -->
-    <ellipse cx="63" cy="185" rx="14" ry="9" fill="#f5f5f5"/>
-    <ellipse cx="97" cy="185" rx="14" ry="9" fill="#f5f5f5"/>
-    <!-- Paw dividers -->
-    <line x1="59" y1="187" x2="59" y2="192" stroke="#ccc" stroke-width="1" stroke-linecap="round"/>
-    <line x1="63" y1="188" x2="63" y2="193" stroke="#ccc" stroke-width="1" stroke-linecap="round"/>
-    <line x1="67" y1="187" x2="67" y2="192" stroke="#ccc" stroke-width="1" stroke-linecap="round"/>
-    <line x1="93" y1="187" x2="93" y2="192" stroke="#ccc" stroke-width="1" stroke-linecap="round"/>
-    <line x1="97" y1="188" x2="97" y2="193" stroke="#ccc" stroke-width="1" stroke-linecap="round"/>
-    <line x1="101" y1="187" x2="101" y2="192" stroke="#ccc" stroke-width="1" stroke-linecap="round"/>
+  <!-- CORPS -->
+  <g class="body" filter="url(#softDrop)">
+    <!-- Corps noir principal -->
+    <ellipse cx="100" cy="168" rx="52" ry="46" fill="url(#blackFur)"/>
+    <!-- Plastron blanc (ventre) -->
+    <ellipse cx="98" cy="175" rx="30" ry="34" fill="url(#whiteFur)"/>
+    <!-- Pattes avant -->
+    <ellipse cx="74" cy="200" rx="18" ry="11" fill="url(#blackFur)"/>
+    <ellipse cx="126" cy="200" rx="18" ry="11" fill="url(#blackFur)"/>
+    <!-- Orteils -->
+    <ellipse cx="68" cy="203" rx="5" ry="3.5" fill="#222"/>
+    <ellipse cx="74" cy="205" rx="5" ry="3.5" fill="#222"/>
+    <ellipse cx="80" cy="203" rx="5" ry="3.5" fill="#222"/>
+    <ellipse cx="120" cy="203" rx="5" ry="3.5" fill="#222"/>
+    <ellipse cx="126" cy="205" rx="5" ry="3.5" fill="#222"/>
+    <ellipse cx="132" cy="203" rx="5" ry="3.5" fill="#222"/>
   </g>
 
-  <!-- HEAD -->
-  <g filter="url(#softShadow)">
-    <!-- Head base white -->
-    <ellipse cx="80" cy="80" rx="38" ry="35" fill="#f8f8f8"/>
-    <!-- Black cap covering top half of head -->
-    <path d="M42 72 C42 54 58 42 80 42 C102 42 118 54 118 72 C114 66 104 60 80 60 C56 60 46 66 42 72Z"
-          fill="#1a1a1a"/>
-    <ellipse cx="80" cy="64" rx="32" ry="20" fill="#222"/>
-    <!-- White cheeks slightly raised -->
-    <ellipse cx="52" cy="90" rx="16" ry="12" fill="#f5f5f5"/>
-    <ellipse cx="108" cy="90" rx="16" ry="12" fill="#f5f5f5"/>
-    <!-- Chin white -->
-    <ellipse cx="80" cy="105" rx="20" ry="10" fill="#ffffff"/>
+  <!-- TÊTE -->
+  <g filter="url(#softDrop)">
+    <!-- Tête noire grande et ronde (style cartoon) -->
+    <circle cx="100" cy="88" r="58" fill="url(#blackFur)"/>
+    <!-- Museau blanc large -->
+    <ellipse cx="100" cy="108" rx="36" ry="28" fill="url(#whiteFur)"/>
+    <!-- Joues blanches rondes caractéristiques -->
+    <ellipse cx="62" cy="102" rx="22" ry="18" fill="url(#whiteFur)"/>
+    <ellipse cx="138" cy="102" rx="22" ry="18" fill="url(#whiteFur)"/>
+    <!-- Rougeur joues -->
+    <ellipse cx="60" cy="106" rx="14" ry="9" fill="url(#cheekGrad)"/>
+    <ellipse cx="140" cy="106" rx="14" ry="9" fill="url(#cheekGrad)"/>
   </g>
 
-  <!-- EARS -->
+  <!-- OREILLES -->
   <g class="ear-l">
-    <!-- outer ear black -->
-    <path d="M34 62 L22 22 L56 46 Z" fill="#1a1a1a"/>
-    <!-- inner ear pink -->
-    <path d="M36 58 L28 30 L52 48 Z" fill="url(#innerEarGrad)" opacity="0.85"/>
+    <path d="M46 52 L28 8 L72 42 Z" fill="url(#blackFur)" stroke="#0d0d0d" stroke-width="1"/>
+    <path d="M50 50 L36 18 L67 44 Z" fill="url(#innerEar)" opacity="0.9"/>
   </g>
   <g class="ear-r">
-    <!-- outer ear black -->
-    <path d="M126 62 L138 22 L104 46 Z" fill="#1a1a1a"/>
-    <!-- inner ear pink -->
-    <path d="M124 58 L132 30 L108 48 Z" fill="url(#innerEarGrad)" opacity="0.85"/>
+    <path d="M154 52 L172 8 L128 42 Z" fill="url(#blackFur)" stroke="#0d0d0d" stroke-width="1"/>
+    <path d="M150 50 L164 18 L133 44 Z" fill="url(#innerEar)" opacity="0.9"/>
   </g>
 
-  <!-- EYES -->
-  <g class="eye-l-group">
-    <!-- eye white -->
-    <ellipse cx="57" cy="88" rx="12" ry="10" fill="url(#eyeAmber)"/>
-    <!-- pupil vertical slit -->
-    <ellipse cx="57" cy="88" rx="5" ry="8" fill="#111"/>
-    <!-- pupil shine -->
-    <circle cx="54" cy="85" r="2.5" fill="white" opacity="0.9"/>
-    <circle cx="60" cy="91" r="1.2" fill="white" opacity="0.5"/>
-    <!-- eyelid top -->
-    <path d="M45 88 Q57 80 69 88" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- YEUX (grands, expressifs, style Figaro) -->
+  <g class="eye-l" filter="url(#glow)">
+    <!-- Blanc de l'oeil grand -->
+    <ellipse cx="72" cy="90" rx="19" ry="20" fill="url(#eyeWhite)" stroke="#111" stroke-width="1.5"/>
+    <!-- Iris bleu -->
+    <ellipse cx="72" cy="92" rx="13" ry="14" fill="url(#iris)"/>
+    <!-- Pupille noire verticale -->
+    <ellipse cx="72" cy="92" rx="6" ry="11" fill="#111"/>
+    <!-- Reflets lumineux (style cartoon) -->
+    <circle cx="66" cy="86" r="4" fill="white" opacity="0.95"/>
+    <circle cx="76" cy="98" r="2" fill="white" opacity="0.6"/>
+    <!-- Contour oeil épais cartoon -->
+    <ellipse cx="72" cy="90" rx="19" ry="20" fill="none" stroke="#0d0d0d" stroke-width="2.5"/>
+    <!-- Cil supérieur style cartoon -->
+    <path d="M53 86 Q72 74 91 86" fill="none" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round"/>
   </g>
-  <g class="eye-r-group">
-    <!-- eye white -->
-    <ellipse cx="103" cy="88" rx="12" ry="10" fill="url(#eyeAmber2)"/>
-    <!-- pupil vertical slit -->
-    <ellipse cx="103" cy="88" rx="5" ry="8" fill="#111"/>
-    <!-- pupil shine -->
-    <circle cx="100" cy="85" r="2.5" fill="white" opacity="0.9"/>
-    <circle cx="106" cy="91" r="1.2" fill="white" opacity="0.5"/>
-    <!-- eyelid top -->
-    <path d="M91 88 Q103 80 115 88" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+  <g class="eye-r" filter="url(#glow)">
+    <ellipse cx="128" cy="90" rx="19" ry="20" fill="url(#eyeWhite)" stroke="#111" stroke-width="1.5"/>
+    <ellipse cx="128" cy="92" rx="13" ry="14" fill="url(#iris)"/>
+    <ellipse cx="128" cy="92" rx="6" ry="11" fill="#111"/>
+    <circle cx="122" cy="86" r="4" fill="white" opacity="0.95"/>
+    <circle cx="132" cy="98" r="2" fill="white" opacity="0.6"/>
+    <ellipse cx="128" cy="90" rx="19" ry="20" fill="none" stroke="#0d0d0d" stroke-width="2.5"/>
+    <path d="M109 86 Q128 74 147 86" fill="none" stroke="#0d0d0d" stroke-width="3" stroke-linecap="round"/>
   </g>
 
-  <!-- NOSE -->
-  <path d="M77 105 Q80 102 83 105 Q80 109 77 105Z" fill="url(#noseGrad)"/>
+  <!-- SOURCILS (expressifs) -->
+  <g class="eyebrow-l">
+    <path d="M55 72 Q72 64 88 68" fill="none" stroke="#0d0d0d" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+  <g class="eyebrow-r">
+    <path d="M112 68 Q128 64 145 72" fill="none" stroke="#0d0d0d" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- NEZ -->
+  <ellipse cx="100" cy="112" rx="8" ry="6" fill="url(#noseGrad)" stroke="#aa3355" stroke-width="0.8"/>
   <!-- Philtrum -->
-  <line x1="80" y1="108" x2="80" y2="112" stroke="#d08090" stroke-width="0.8"/>
-  <!-- Mouth -->
-  <path d="M80 112 Q74 118 70 116" fill="none" stroke="#c07080" stroke-width="1.2" stroke-linecap="round"/>
-  <path d="M80 112 Q86 118 90 116" fill="none" stroke="#c07080" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="100" y1="118" x2="100" y2="124" stroke="#cc5577" stroke-width="1.2"/>
 
-  <!-- WHISKERS LEFT -->
-  <g class="whisker-l">
-    <line x1="8"  y1="100" x2="64" y2="105" stroke="#aaa" stroke-width="0.9" opacity="0.8"/>
-    <line x1="10" y1="108" x2="64" y2="108" stroke="#aaa" stroke-width="0.9" opacity="0.8"/>
-    <line x1="12" y1="116" x2="64" y2="111" stroke="#aaa" stroke-width="0.9" opacity="0.8"/>
-  </g>
-  <!-- WHISKERS RIGHT -->
-  <g class="whisker-r">
-    <line x1="96" y1="105" x2="152" y2="100" stroke="#aaa" stroke-width="0.9" opacity="0.8"/>
-    <line x1="96" y1="108" x2="150" y2="108" stroke="#aaa" stroke-width="0.9" opacity="0.8"/>
-    <line x1="96" y1="111" x2="148" y2="116" stroke="#aaa" stroke-width="0.9" opacity="0.8"/>
-  </g>
+  <!-- BOUCHE souriante (style cartoon) -->
+  <path d="M100 124 Q88 138 78 134" fill="none" stroke="#0d0d0d" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M100 124 Q112 138 122 134" fill="none" stroke="#0d0d0d" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Dents visibles sourire -->
+  <path d="M85 133 Q100 142 115 133 Q115 128 100 129 Q85 128 85 133Z" fill="white" stroke="#ddd" stroke-width="0.5"/>
+  <!-- Intérieur bouche (rose) -->
+  <path d="M86 133 Q100 140 114 133 Q107 136 100 137 Q93 136 86 133Z" fill="#ffaacc" opacity="0.7"/>
 
-  <!-- Forehead fur detail lines -->
-  <path d="M72 50 Q75 44 80 42" fill="none" stroke="#333" stroke-width="0.6" opacity="0.5"/>
-  <path d="M88 50 Q85 44 80 42" fill="none" stroke="#333" stroke-width="0.6" opacity="0.5"/>
+  <!-- MOUSTACHES GAUCHE -->
+  <g class="whisL">
+    <line x1="8"  y1="110" x2="72" y2="114" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+    <line x1="10" y1="118" x2="72" y2="118" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+    <line x1="12" y1="126" x2="72" y2="122" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+  </g>
+  <!-- MOUSTACHES DROITE -->
+  <g class="whisR">
+    <line x1="128" y1="114" x2="192" y2="110" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+    <line x1="128" y1="118" x2="190" y2="118" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+    <line x1="128" y1="122" x2="188" y2="126" stroke="#ffffff" stroke-width="1.2" opacity="0.85"/>
+  </g>
 </svg>
