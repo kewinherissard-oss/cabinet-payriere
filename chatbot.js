@@ -263,24 +263,25 @@
     },
   ];
 
-  /* ── Envoi RDV via Airform (gratuit, sans compte) ── */
+  /* ── Envoi RDV via ntfy.sh (notification push instantanée) ── */
+  const NTFY_TOPIC = 'rdv-cabinet-payriere-31530';
   function sendWebhook(data) {
-    const body = new URLSearchParams({
-      name:         (data.name   || '') + ' — Demande de RDV',
-      email:        data.email  || 'non-fourni@noreply.com',
-      _replyto:     data.email  || '',
-      Propriétaire: data.name   || '',
-      Téléphone:    data.phone  || '',
-      'E-mail':     data.email  || '',
-      Créneau:      data.date   || '',
-      Animal:       data.animal || '',
-      Motif:        data.motive || '',
-    });
-    fetch('https://airform.io/mpayriere.vet@gmail.com', {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body:    body.toString(),
+    const message = [
+      'Propriétaire : ' + (data.name   || '?'),
+      'Téléphone    : ' + (data.phone  || '?'),
+      'Email        : ' + (data.email  || '?'),
+      'Créneau      : ' + (data.date   || '?'),
+      'Animal       : ' + (data.animal || '?'),
+      'Motif        : ' + (data.motive || '?'),
+    ].join('\n');
+    fetch('https://ntfy.sh/' + NTFY_TOPIC, {
+      method: 'POST',
+      headers: {
+        'Title':    '🐾 Nouveau RDV — ' + (data.animal || '') + ' — ' + (data.name || ''),
+        'Tags':     'stethoscope,calendar',
+        'Priority': 'high',
+      },
+      body: message,
     }).catch(() => {});
   }
 
@@ -540,9 +541,9 @@
         hideTyping();
         const mailto = buildMailto(data);
 
-        appendMsg('bot', '✅ <strong>Demande enregistrée !</strong><br><br>' +
-          'Le Dr PAYRIERE vous contactera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer votre rendez-vous.<br><br>' +
-          '📧 Cliquez sur le bouton ci-dessous pour envoyer votre demande directement par email :');
+        appendMsg('bot', '✅ <strong>Demande envoyée automatiquement !</strong><br><br>' +
+          'Le Dr PAYRIERE a reçu une notification et vous contactera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer votre créneau.<br><br>' +
+          '📧 Vous pouvez aussi envoyer un email directement :');
 
         const wrap = make('div', { class: 'cb-booking-actions' });
 
