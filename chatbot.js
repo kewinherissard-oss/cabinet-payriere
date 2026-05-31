@@ -263,20 +263,24 @@
     },
   ];
 
-  /* ── Webhook Google Apps Script ── */
-  const WEBHOOK_URL = 'REMPLACER_PAR_URL_APPS_SCRIPT';
-
+  /* ── Envoi RDV via FormSubmit (gratuit, sans compte) ── */
   function sendWebhook(data) {
-    if (WEBHOOK_URL === 'REMPLACER_PAR_URL_APPS_SCRIPT') return;
-    const params = new URLSearchParams({
-      name:   data.name   || '',
-      phone:  data.phone  || '',
-      email:  data.email  || '',
-      date:   data.date   || '',
-      animal: data.animal || '',
-      motive: data.motive || '',
-    });
-    fetch(WEBHOOK_URL + '?' + params.toString(), { mode: 'no-cors' }).catch(() => {});
+    fetch('https://formsubmit.co/ajax/mpayriere.vet@gmail.com', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject:  '🐾 Nouvelle demande de RDV — ' + (data.animal || '') + ' — ' + (data.name || ''),
+        _replyto:  data.email || '',
+        _template: 'table',
+        _captcha:  'false',
+        Propriétaire: data.name   || '',
+        Téléphone:    data.phone  || '',
+        Email:        data.email  || '',
+        Créneau:      data.date   || '',
+        Animal:       data.animal || '',
+        Motif:        data.motive || '',
+      }),
+    }).catch(() => {});
   }
 
   /* ── État interne ── */
