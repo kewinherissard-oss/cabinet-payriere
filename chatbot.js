@@ -307,13 +307,13 @@
     elRoot = make('div', { id: 'cb-root' });
 
     elBubble = make('button', { id: 'cb-bubble', 'aria-label': 'Ouvrir l\'assistant', title: 'Assistant virtuel — Puce' });
-    elBubble.innerHTML = '<img src="puce.jpg" alt="Puce" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    elBubble.innerHTML = '<img src="puce-avatar.svg" alt="Puce" style="width:90%;height:90%;object-fit:contain;">';
 
     elPanel = make('div', { id: 'cb-panel', role: 'dialog', 'aria-label': 'Assistant du cabinet vétérinaire' });
     elPanel.innerHTML = `
       <div class="cb-header">
         <div class="cb-header-info">
-          <div class="cb-header-avatar"><img src="puce.jpg" alt="Puce" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+          <div class="cb-header-avatar"><img src="puce-avatar.svg" alt="Puce" style="width:100%;height:100%;object-fit:contain;"></div>
           <div>
             <div class="cb-header-name">Puce — Assistant Dr PAYRIERE</div>
             <div class="cb-header-status"><span class="cb-status-dot"></span>En ligne</div>
@@ -672,7 +672,7 @@
   function closePanel() {
     panelOpen = false;
     elPanel.classList.remove('cb-open');
-    elBubble.innerHTML = '<img src="puce.jpg" alt="Puce" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    elBubble.innerHTML = '<img src="puce-avatar.svg" alt="Puce" style="width:90%;height:90%;object-fit:contain;">';
     elBubble.setAttribute('aria-label', 'Ouvrir l\'assistant');
   }
 
