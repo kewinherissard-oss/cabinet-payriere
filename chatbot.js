@@ -263,24 +263,32 @@
     },
   ];
 
-  /* ── Envoi RDV via ntfy.sh (notification push instantanée) ── */
-  const NTFY_TOPIC = 'rdv-cabinet-payriere-31530';
+  /* ── Envoi RDV via Google Apps Script (email + Calendar) + ntfy.sh (push) ── */
+  const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxbpM-4eLwtqComh3X8n22vxuuVMzNzdQ1sY2QTPsPcOgL2a2I_PhU5Bl29ttp9anM6/exec';
+  const NTFY_TOPIC  = 'rdv-cabinet-payriere-31530';
+
   function sendWebhook(data) {
+    const params = new URLSearchParams({
+      name:   data.name   || '',
+      phone:  data.phone  || '',
+      email:  data.email  || '',
+      date:   data.date   || '',
+      animal: data.animal || '',
+      motive: data.motive || '',
+    });
+    fetch(WEBHOOK_URL + '?' + params.toString(), { mode: 'no-cors' }).catch(() => {});
+
     const message = [
-      'Propriétaire : ' + (data.name   || '?'),
-      'Téléphone    : ' + (data.phone  || '?'),
+      'Proprietaire : ' + (data.name   || '?'),
+      'Telephone    : ' + (data.phone  || '?'),
       'Email        : ' + (data.email  || '?'),
-      'Créneau      : ' + (data.date   || '?'),
+      'Creneau      : ' + (data.date   || '?'),
       'Animal       : ' + (data.animal || '?'),
       'Motif        : ' + (data.motive || '?'),
     ].join('\n');
     fetch('https://ntfy.sh/' + NTFY_TOPIC, {
       method: 'POST',
-      headers: {
-        'Title':    '🐾 Nouveau RDV — ' + (data.animal || '') + ' — ' + (data.name || ''),
-        'Tags':     'stethoscope,calendar',
-        'Priority': 'high',
-      },
+      headers: { 'Title': 'Nouveau RDV - ' + (data.animal || '') + ' - ' + (data.name || ''), 'Priority': 'high' },
       body: message,
     }).catch(() => {});
   }
