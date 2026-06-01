@@ -140,7 +140,7 @@
     },
     {
       id: 'services',
-      keywords: ['service', 'soin', 'propose', 'offre', 'prestation', 'pratique', 'specialite', 'proposez', 'faites', 'traitements'],
+      keywords: ['quels services', 'que proposez', 'que faites', 'prestation', 'specialite', 'offrez vous', 'liste services'],
       threshold: 1,
       response: `Voici nos services :<br><br>
         🩺 <strong>Consultations</strong> & bilans de santé<br>
@@ -168,7 +168,7 @@
     },
     {
       id: 'chat-animal',
-      keywords: ['chatte', 'felin', 'chaton', 'chatons'],
+      keywords: ['mon chat', 'votre chat', 'les chats', 'chatte', 'felin', 'chaton', 'chatons'],
       threshold: 1,
       response: '🐱 Nous accueillons les chats pour toutes les consultations. Le Dr PAYRIERE a une approche douce, idéale pour les chats craintifs !',
       chips: ['Vaccination', 'Stérilisation', 'Prendre RDV'],
@@ -189,9 +189,9 @@
     },
     {
       id: 'nac',
-      keywords: ['nac', 'oiseau', 'reptile', 'perroquet', 'tortue', 'serpent', 'chinchilla', 'exotique', 'oiseaux'],
+      keywords: ['nac', 'nouveaux animaux', 'animaux exotiques', 'oiseau', 'reptile', 'perroquet', 'tortue', 'serpent', 'chinchilla', 'specialise nac', 'veterinaire nac'],
       threshold: 1,
-      response: '🦜 Le Dr PAYRIERE soigne également les NAC : oiseaux, reptiles, chinchillas et autres animaux exotiques. Appelez-nous pour confirmer selon l\'espèce.',
+      response: '🦜 Le Dr PAYRIERE prend en charge les <strong>NAC</strong> (Nouveaux Animaux de Compagnie) : oiseaux, reptiles, chinchillas et autres espèces exotiques.<br><br>Elle possède une expérience solide avec ces espèces. Appelez-nous pour confirmer selon l\'animal :<br>📞 <a href="tel:0561492799">05 61 49 27 99</a>',
       chips: ['Prendre RDV', 'Téléphone'],
     },
     {
@@ -291,7 +291,7 @@
     },
     {
       id: 'docteur',
-      keywords: ['docteur', 'veterinaire', 'veto', 'payriere', 'equipe', 'experience', 'diplome', 'formation', 'qui'],
+      keywords: ['docteur', 'veterinaire specialise', 'veto', 'payriere', 'equipe medicale', 'experience veterinaire', 'diplome', 'qui est le'],
       threshold: 1,
       response: '👩‍⚕️ Le <strong>Dr PAYRIERE</strong> est vétérinaire depuis plus de <strong>30 ans</strong>.<br><br>Elle maîtrise la médecine conventionnelle ainsi que l\'ostéopathie, l\'acupuncture et la phytothérapie pour une approche douce et globale.',
       chips: ['Services', 'Prendre RDV', 'Avis clients'],
@@ -710,18 +710,16 @@
       .trim();
   }
 
-  function matchScore(rule, tokens) {
+  function matchScore(rule, fullText) {
     if (!rule.keywords.length) return -1;
-    return rule.keywords.filter(kw =>
-      tokens.some(tok => tok === kw || tok.includes(kw) || kw.includes(tok))
-    ).length;
+    return rule.keywords.filter(kw => fullText.includes(kw)).length;
   }
 
   function findBestRule(input) {
-    const tokens = normalize(input).split(' ');
+    const fullText = normalize(input);
     let best = null, bestScore = -Infinity;
     RULES.forEach(rule => {
-      const score = matchScore(rule, tokens);
+      const score = matchScore(rule, fullText);
       if (score >= rule.threshold && score > bestScore) {
         best = rule;
         bestScore = score;
