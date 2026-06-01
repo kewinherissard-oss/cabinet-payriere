@@ -308,7 +308,7 @@
 
     /* Bulle de salutation */
     elGreet = make('div', { id: 'cb-greet' });
-    elGreet.innerHTML = '😺 Bonjour ! Je suis <strong>Puce</strong>,<br>comment puis-je vous aider ?<span id="cb-greet-close">✕</span>';
+    elGreet.innerHTML = '<span class="cb-greet-paw">🐾</span>Bonjour ! Je suis <strong>Puce</strong>,<br>comment puis-je vous aider ?<span id="cb-greet-close">✕</span>';
 
     /* Chat animé cliquable (remplace l ancien bouton rond) */
     elBubble = make('button', { id: 'cb-bubble', 'aria-label': 'Ouvrir l\'assistant Puce', title: 'Puce — Assistante du cabinet' });
