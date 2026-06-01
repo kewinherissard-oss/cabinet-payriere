@@ -312,13 +312,13 @@
 
     /* Chat animé cliquable (remplace l ancien bouton rond) */
     elBubble = make('button', { id: 'cb-bubble', 'aria-label': 'Ouvrir l\'assistant Puce', title: 'Puce — Assistante du cabinet' });
-    elBubble.innerHTML = '<img src="puce-avatar.svg" alt="Puce" id="cb-cat-img">';
+    elBubble.innerHTML = '<img src="avatar puce2.png" alt="Puce" id="cb-cat-img">';
 
     elPanel = make('div', { id: 'cb-panel', role: 'dialog', 'aria-label': 'Assistant du cabinet vétérinaire' });
     elPanel.innerHTML = `
       <div class="cb-header">
         <div class="cb-header-info">
-          <div class="cb-header-avatar"><img src="puce-avatar.svg" alt="Puce" style="width:100%;height:100%;object-fit:contain;"></div>
+          <div class="cb-header-avatar"><img src="avatar puce2.png" alt="Puce" style="width:100%;height:100%;object-fit:contain;"></div>
           <div>
             <div class="cb-header-name">Puce 🐱 — Cabinet Dr PAYRIERE</div>
             <div class="cb-header-status"><span class="cb-status-dot"></span>En ligne</div>
