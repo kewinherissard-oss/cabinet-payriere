@@ -24,233 +24,296 @@
     emergency: { name: 'Vet-Urgences Ouest', phone: '05 61 11 21 31' },
   };
 
-  /* ── Règles de réponse ── */
+  /* ── Règles de réponse (threshold = nb minimum de keywords correspondants) ── */
   const RULES = [
     {
       id: 'bonjour',
-      keywords: ['bonjour', 'salut', 'hello', 'bonsoir', 'coucou', 'hey'],
-      threshold: 0.8,
-      response: 'Bonjour ! 😊 Comment puis-je vous aider aujourd\'hui ?',
+      keywords: ['bonjour', 'salut', 'hello', 'bonsoir', 'coucou', 'hey', 'bjr', 'bsr'],
+      threshold: 1,
+      response: 'Bonjour ! 😊 Je suis Puce, l\'assistante du Dr PAYRIERE. Comment puis-je vous aider ?',
       chips: ['Horaires', 'Prendre RDV', 'Services', 'Urgences'],
     },
     {
+      id: 'aurevoir',
+      keywords: ['aurevoir', 'bonne journee', 'bonne soiree', 'ciao', 'bye', 'bientot', 'tchao'],
+      threshold: 1,
+      response: 'Au revoir ! 🐾 N\'hésitez pas à revenir si vous avez d\'autres questions. Bonne journée !',
+      chips: ['Prendre RDV', 'Horaires'],
+    },
+    {
       id: 'merci',
-      keywords: ['merci', 'super', 'parfait', 'nickel', 'genial', 'top'],
-      threshold: 0.8,
+      keywords: ['merci', 'super', 'parfait', 'nickel', 'genial', 'top', 'impeccable', 'excellent'],
+      threshold: 1,
       response: 'Avec plaisir ! 🐾 N\'hésitez pas si vous avez d\'autres questions.',
       chips: ['Prendre RDV', 'Horaires', 'Adresse'],
     },
     {
-      id: 'horaires',
-      keywords: ['horaire', 'ouvert', 'ouverture', 'ferme', 'heure', 'quand', 'disponible'],
-      threshold: 0.2,
-      response: () => `Voici nos horaires d'ouverture :<br><br>
-        🗓️ <strong>Lundi / Mercredi / Vendredi</strong><br>9h30 – 12h30 et 15h – 19h<br><br>
-        🏠 <strong>Mardi / Jeudi</strong><br>Visites à domicile uniquement<br><br>
-        🔴 <strong>Samedi / Dimanche</strong><br>Fermé`,
-      chips: ['Prendre RDV', 'Adresse', 'Urgences'],
-    },
-    {
       id: 'horaires-lundi',
       keywords: ['lundi'],
-      threshold: 0.9,
+      threshold: 1,
       response: '🗓️ Le cabinet est ouvert <strong>le lundi de 9h30 à 12h30 et de 15h à 19h</strong>.',
       chips: ['Prendre RDV', 'Tous les horaires'],
     },
     {
       id: 'horaires-mardi',
       keywords: ['mardi'],
-      threshold: 0.9,
+      threshold: 1,
       response: '🏠 Le mardi, le Dr PAYRIERE effectue des <strong>visites à domicile uniquement</strong>. Pas de consultations au cabinet.',
       chips: ['Prendre RDV', 'Tous les horaires'],
     },
     {
       id: 'horaires-mercredi',
       keywords: ['mercredi'],
-      threshold: 0.9,
+      threshold: 1,
       response: '🗓️ Le cabinet est ouvert <strong>le mercredi de 9h30 à 12h30 et de 15h à 19h</strong>.',
       chips: ['Prendre RDV', 'Tous les horaires'],
     },
     {
       id: 'horaires-jeudi',
       keywords: ['jeudi'],
-      threshold: 0.9,
+      threshold: 1,
       response: '🏠 Le jeudi, le Dr PAYRIERE effectue des <strong>visites à domicile uniquement</strong>. Pas de consultations au cabinet.',
       chips: ['Prendre RDV', 'Tous les horaires'],
     },
     {
       id: 'horaires-vendredi',
       keywords: ['vendredi'],
-      threshold: 0.9,
+      threshold: 1,
       response: '🗓️ Le cabinet est ouvert <strong>le vendredi de 9h30 à 12h30 et de 15h à 19h</strong>.',
       chips: ['Prendre RDV', 'Tous les horaires'],
     },
     {
       id: 'horaires-weekend',
-      keywords: ['samedi', 'dimanche', 'weekend', 'week-end'],
-      threshold: 0.8,
-      response: '🔴 Le cabinet est <strong>fermé le samedi et le dimanche</strong>. Pour une urgence en dehors des horaires, contactez Vet-Urgences Ouest.',
+      keywords: ['samedi', 'dimanche', 'weekend'],
+      threshold: 1,
+      response: '🔴 Le cabinet est <strong>fermé le samedi et le dimanche</strong>. Pour une urgence, contactez Vet-Urgences Ouest au <a href="tel:0561112131">05 61 11 21 31</a>.',
       chips: ['Urgences', 'Tous les horaires'],
     },
     {
+      id: 'horaires',
+      keywords: ['horaire', 'ouvert', 'ouverture', 'ferme', 'heure', 'quand', 'disponible', 'agenda', 'planning', 'fermeture', 'travaillez', 'recevez', 'jours'],
+      threshold: 1,
+      response: () => `Voici nos horaires :<br><br>
+        🗓️ <strong>Lundi / Mercredi / Vendredi</strong><br>9h30–12h30 et 15h–19h<br><br>
+        🏠 <strong>Mardi / Jeudi</strong><br>Visites à domicile uniquement<br><br>
+        🔴 <strong>Samedi / Dimanche</strong><br>Fermé`,
+      chips: ['Prendre RDV', 'Adresse', 'Urgences'],
+    },
+    {
       id: 'adresse',
-      keywords: ['adresse', 'ou', 'situe', 'trouver', 'localisation', 'gps', 'chemin', 'venir', 'aller'],
-      threshold: 0.2,
-      response: '📍 Nous sommes au <strong>3 impasse des Coquelicots, Saint-Paul-sur-Save (31530)</strong>.<br><br>En face de l\'Intermarché, grand parking gratuit.',
+      keywords: ['adresse', 'situe', 'trouver', 'localisation', 'gps', 'itineraire', 'saint-paul', 'coquelicots', '31530', 'acces', 'parking', 'chemin'],
+      threshold: 1,
+      response: '📍 Nous sommes au <strong>3 impasse des Coquelicots, Saint-Paul-sur-Save (31530)</strong>.<br><br>Grand parking gratuit sur place.',
       chips: ['Horaires', 'Téléphone', 'Prendre RDV'],
     },
     {
       id: 'telephone',
-      keywords: ['telephone', 'appeler', 'numero', 'tel', 'appel', 'contact', 'joindre'],
-      threshold: 0.25,
-      response: '📞 Vous pouvez nous appeler au <strong><a href="tel:0561492799">05 61 49 27 99</a></strong>.<br><br>Horaires d\'appel : Lun / Mer / Ven 9h30–12h30 et 15h–19h.',
+      keywords: ['telephone', 'appeler', 'numero', 'appel', 'joindre', 'coordonnee', 'contacter', 'appelle', 'contact'],
+      threshold: 1,
+      response: '📞 Vous pouvez nous appeler au <strong><a href="tel:0561492799">05 61 49 27 99</a></strong>.<br><br>Lun / Mer / Ven : 9h30–12h30 et 15h–19h.',
       chips: ['Horaires', 'Prendre RDV'],
     },
     {
       id: 'email',
-      keywords: ['email', 'mail', 'courriel', 'ecrire', 'message'],
-      threshold: 0.5,
+      keywords: ['email', 'mail', 'courriel', 'ecrire'],
+      threshold: 1,
       response: '✉️ Vous pouvez nous écrire à <strong><a href="mailto:mpayriere.vet@gmail.com">mpayriere.vet@gmail.com</a></strong>.',
       chips: ['Téléphone', 'Prendre RDV'],
     },
     {
       id: 'rdv',
-      keywords: ['rendez', 'rdv', 'consulter', 'reservation', 'reserver', 'appointment', 'prendre', 'planifier'],
-      threshold: 0.2,
+      keywords: ['rendez-vous', 'rendez', 'rdv', 'reserver', 'reservation', 'planifier', 'fixer', 'booker', 'programmer', 'appointment'],
+      threshold: 1,
       action: 'booking',
       response: 'Je vais vous aider à préparer votre demande de rendez-vous ! 📅',
       chips: [],
     },
     {
+      id: 'urgence',
+      keywords: ['urgence', 'urgent', 'nuit', 'garde', 'accident', 'blesse', 'grave', 'vite', 'secours', 'empoisonnement', 'avale'],
+      threshold: 1,
+      response: `🚨 En dehors de nos horaires, contactez :<br><br>
+        <strong>Vet-Urgences Ouest</strong><br>
+        📞 <a href="tel:0561112131"><strong>05 61 11 21 31</strong></a><br><br>
+        Disponibles 24h/24, 7j/7.`,
+      chips: ['Horaires du cabinet', 'Adresse'],
+    },
+    {
       id: 'services',
-      keywords: ['service', 'soin', 'propose', 'offre', 'prestation', 'fait', 'pratique'],
-      threshold: 0.2,
+      keywords: ['service', 'soin', 'propose', 'offre', 'prestation', 'pratique', 'specialite', 'proposez', 'faites', 'traitements'],
+      threshold: 1,
       response: `Voici nos services :<br><br>
-        🩺 <strong>Consultations</strong> & urgences<br>
+        🩺 <strong>Consultations</strong> & bilans de santé<br>
         💉 <strong>Vaccinations</strong><br>
         🔬 <strong>Analyses</strong> & échographie<br>
         🏥 <strong>Chirurgie</strong> (stérilisation, extractions…)<br>
         🦷 <strong>Dentisterie</strong> & détartrage<br>
-        🌿 <strong>Phytothérapie</strong> & médecine naturelle`,
+        🌿 <strong>Phytothérapie</strong>, acupuncture, ostéopathie<br>
+        🏠 <strong>Visites à domicile</strong> (mar/jeu)`,
       chips: ['Prendre RDV', 'Espèces acceptées', 'Stérilisation'],
     },
     {
       id: 'especes',
-      keywords: ['espece', 'animal', 'accepte', 'accueille', 'recoivent', 'type', 'quelle'],
-      threshold: 0.2,
-      response: 'Nous accueillons avec plaisir :<br><br>🐶 Chiens &nbsp; 🐱 Chats &nbsp; 🐰 Lapins<br>🐹 Rongeurs &nbsp; 🦜 Oiseaux &nbsp; 🐍 NAC<br><br>Bref, tous vos compagnons sont les bienvenus ! 🐾',
+      keywords: ['espece', 'animal', 'accepte', 'accueille', 'recoivent', 'prenez', 'soignez', 'traitez', 'accueillez', 'animaux'],
+      threshold: 1,
+      response: '🐾 Nous accueillons tous vos compagnons :<br><br>🐶 Chiens &nbsp;🐱 Chats &nbsp;🐰 Lapins<br>🐹 Rongeurs &nbsp;🦜 Oiseaux &nbsp;🐍 NAC<br><br>Aucun animal n\'est trop petit pour être bien soigné !',
       chips: ['Services', 'Prendre RDV'],
     },
     {
       id: 'chien',
-      keywords: ['chien', 'chienne', 'toutou', 'canin', 'canine'],
-      threshold: 0.8,
-      response: '🐶 Bien sûr, nous prenons en charge les chiens pour toutes les consultations : vaccinations, chirurgie, dentisterie, bilans de santé et bien plus !',
-      chips: ['Vaccination chien', 'Stérilisation', 'Prendre RDV'],
+      keywords: ['chien', 'chienne', 'toutou', 'canin', 'canine', 'chiot'],
+      threshold: 1,
+      response: '🐶 Nous prenons en charge les chiens pour toutes les consultations : vaccinations, chirurgie, dentisterie, bilans de santé et bien plus !',
+      chips: ['Vaccination', 'Stérilisation', 'Prendre RDV'],
     },
     {
-      id: 'chat',
-      keywords: ['chat', 'chatte', 'felin', 'chaton'],
-      threshold: 0.8,
-      response: '🐱 Nous accueillons les chats pour toutes les consultations. Le Dr PAYRIERE a une approche douce qui permet de manipuler même les chats les plus craintifs !',
-      chips: ['Vaccination chat', 'Stérilisation', 'Prendre RDV'],
+      id: 'chat-animal',
+      keywords: ['chatte', 'felin', 'chaton', 'chatons'],
+      threshold: 1,
+      response: '🐱 Nous accueillons les chats pour toutes les consultations. Le Dr PAYRIERE a une approche douce, idéale pour les chats craintifs !',
+      chips: ['Vaccination', 'Stérilisation', 'Prendre RDV'],
     },
     {
       id: 'lapin',
-      keywords: ['lapin', 'lapine', 'lapereau', 'cuniculture'],
-      threshold: 0.8,
-      response: '🐰 Le Dr PAYRIERE est expérimentée avec les lapins — suivi régulier, vaccination myxomatose/VHD, stérilisation et soins dentaires.',
+      keywords: ['lapin', 'lapine', 'lapereau', 'lapins'],
+      threshold: 1,
+      response: '🐰 Le Dr PAYRIERE est expérimentée avec les lapins : suivi régulier, vaccination myxomatose/VHD, stérilisation et soins dentaires.',
       chips: ['Prendre RDV', 'Services'],
     },
     {
-      id: 'urgence',
-      keywords: ['urgence', 'urgent', 'nuit', 'garde', 'week-end', 'weekend', 'fermé', 'ferme', 'dehors'],
-      threshold: 0.2,
-      response: `🚨 En dehors de nos horaires, contactez :<br><br>
-        <strong>Vet-Urgences Ouest</strong><br>
-        📞 <a href="tel:0561112131">05 61 11 21 31</a><br><br>
-        Disponibles 24h/24 pour les urgences vétérinaires.`,
-      chips: ['Horaires du cabinet', 'Adresse'],
+      id: 'rongeur',
+      keywords: ['rongeur', 'hamster', 'cobaye', 'gerbille', 'souris', 'furet', 'rongeurs'],
+      threshold: 1,
+      response: '🐹 Nous prenons en charge les rongeurs et petits mammifères (hamsters, cobayes, gerbilles, rats…) ainsi que les furets.',
+      chips: ['Prendre RDV', 'Services'],
     },
     {
-      id: 'tarif',
-      keywords: ['tarif', 'prix', 'cout', 'combien', 'cher', 'euro', 'facturation'],
-      threshold: 0.3,
-      response: 'Pour connaître nos tarifs, n\'hésitez pas à nous appeler directement 📞<br><br><a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>Nous répondrons à toutes vos questions !',
-      chips: ['Prendre RDV', 'Horaires'],
-    },
-    {
-      id: 'phyto',
-      keywords: ['naturel', 'plante', 'phytotherapie', 'naturelle', 'huile', 'homeopathie', 'douce'],
-      threshold: 0.25,
-      response: '🌿 Le Dr PAYRIERE privilégie les solutions naturelles avant les traitements conventionnels :<br><br>• Phytothérapie (plantes médicinales)<br>• Huiles essentielles vétérinaires<br>• Oligoéléments & compléments naturels<br>• Acupuncture & fleurs de Bach<br><br>La médecine conventionnelle intervient en complément si nécessaire.',
-      chips: ['Services', 'Prendre RDV'],
+      id: 'nac',
+      keywords: ['nac', 'oiseau', 'reptile', 'perroquet', 'tortue', 'serpent', 'chinchilla', 'exotique', 'oiseaux'],
+      threshold: 1,
+      response: '🦜 Le Dr PAYRIERE soigne également les NAC : oiseaux, reptiles, chinchillas et autres animaux exotiques. Appelez-nous pour confirmer selon l\'espèce.',
+      chips: ['Prendre RDV', 'Téléphone'],
     },
     {
       id: 'sterilisation',
-      keywords: ['sterilisation', 'steriliser', 'castration', 'castrer', 'opere', 'suprelorin', 'implant', 'hormonal'],
-      threshold: 0.2,
-      response: `🐱 <strong>Stérilisation du chat</strong> : recommandée chirurgicalement. Prévient les maladies hormonales et améliore l'espérance de vie.<br><br>
-        🐶 <strong>Stérilisation du chien</strong> : le Dr PAYRIERE préfère l'<strong>implant hormonal Suprelorin®</strong> — réversible, sans anesthésie générale, préserve l'équilibre hormonal.`,
+      keywords: ['sterilisation', 'steriliser', 'castration', 'castrer', 'suprelorin', 'implant', 'sterilise', 'castres'],
+      threshold: 1,
+      response: `🐱 <strong>Chat</strong> : stérilisation chirurgicale recommandée.<br><br>
+        🐶 <strong>Chien</strong> : le Dr PAYRIERE préfère l'<strong>implant Suprelorin®</strong> — réversible, sans anesthésie générale, préserve l'équilibre hormonal.`,
       chips: ['Prendre RDV', 'Services'],
     },
     {
       id: 'vaccin',
-      keywords: ['vaccin', 'vaccination', 'primo', 'rappel', 'vacciner', 'immunite'],
-      threshold: 0.25,
-      response: `💉 Nous proposons les vaccinations pour toutes les espèces :<br><br>
-        🐶 <strong>Chien</strong> : primo à 6-8 semaines, rappel à 1 an, puis tous les 1-3 ans<br>
+      keywords: ['vaccin', 'vaccination', 'vacciner', 'rappel', 'primo', 'immunite', 'vaccins'],
+      threshold: 1,
+      response: `💉 Vaccinations disponibles pour toutes les espèces :<br><br>
+        🐶 <strong>Chien</strong> : primo à 6-8 semaines, rappel annuel<br>
         🐱 <strong>Chat</strong> : primo à 8-9 semaines, rappel annuel<br>
-        🐰 <strong>Lapin</strong> : myxomatose + VHD, rappel annuel<br><br>
-        Consultez-nous pour un programme personnalisé !`,
+        🐰 <strong>Lapin</strong> : myxomatose + VHD, rappel annuel`,
       chips: ['Prendre RDV', 'Services'],
     },
     {
-      id: 'puce',
-      keywords: ['puce', 'tatouage', 'identification', 'identifier', 'chip', 'transpondeur'],
-      threshold: 0.3,
+      id: 'chirurgie',
+      keywords: ['chirurgie', 'operation', 'operer', 'bloc', 'anesthesie', 'intervenir', 'operable'],
+      threshold: 1,
+      response: '🏥 Nous disposons d\'un <strong>bloc opératoire moderne</strong> pour les interventions : stérilisation, extractions dentaires, chirurgies de routine.',
+      chips: ['Prendre RDV', 'Stérilisation'],
+    },
+    {
+      id: 'dentaire',
+      keywords: ['dent', 'dents', 'dentaire', 'dentisterie', 'detartrage', 'machoire', 'gencive', 'bouche'],
+      threshold: 1,
+      response: '🦷 Soins dentaires proposés :<br><br>• Détartrage sous anesthésie<br>• Extractions dentaires<br>• Conseils d\'hygiène bucco-dentaire<br><br>Des dents saines = un animal en bonne santé !',
+      chips: ['Prendre RDV', 'Services'],
+    },
+    {
+      id: 'analyse',
+      keywords: ['analyse', 'sang', 'bilan', 'echographie', 'examen', 'diagnostic', 'labo', 'test', 'resultat', 'radio'],
+      threshold: 1,
+      response: '🔬 Nous réalisons au cabinet :<br><br>• Prises de sang & analyses biologiques<br>• Échographie<br>• Bilans de santé complets<br><br>Résultats rapides pour un diagnostic précis !',
+      chips: ['Prendre RDV', 'Services'],
+    },
+    {
+      id: 'phyto',
+      keywords: ['naturel', 'plante', 'phytotherapie', 'huile', 'homeopathie', 'douce', 'essentielle', 'bio', 'naturelle'],
+      threshold: 1,
+      response: '🌿 Le Dr PAYRIERE privilégie les solutions naturelles :<br><br>• Phytothérapie (plantes médicinales)<br>• Huiles essentielles vétérinaires<br>• Oligoéléments & compléments naturels<br>• Acupuncture & fleurs de Bach',
+      chips: ['Services', 'Prendre RDV'],
+    },
+    {
+      id: 'osteo',
+      keywords: ['osteopathie', 'osteo', 'acupuncture', 'bach', 'fleur', 'manipulation'],
+      threshold: 1,
+      response: '🌸 Le Dr PAYRIERE pratique :<br><br>• <strong>Ostéopathie</strong> animale<br>• <strong>Acupuncture</strong><br>• <strong>Fleurs de Bach</strong><br><br>Idéal pour les animaux anxieux ou douloureux.',
+      chips: ['Prendre RDV', 'Services'],
+    },
+    {
+      id: 'domicile',
+      keywords: ['domicile', 'maison', 'deplacement', 'deplacer', 'chez moi', 'chez nous', 'visite'],
+      threshold: 1,
+      response: '🏠 Le Dr PAYRIERE effectue des <strong>visites à domicile le mardi et le jeudi</strong>. Appelez-nous pour organiser cela !<br><br>📞 <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Prendre RDV', 'Horaires'],
+    },
+    {
+      id: 'identification',
+      keywords: ['identification', 'identifier', 'chip', 'transpondeur', 'tatouage', 'electronique'],
+      threshold: 1,
       response: '🔖 L\'identification est <strong>obligatoire en France</strong> pour les chiens (4 mois) et les chats (7 mois). Nous réalisons la pose de puce électronique au cabinet.',
       chips: ['Prendre RDV', 'Services'],
     },
     {
       id: 'parasites',
-      keywords: ['vermifuge', 'ver', 'parasite', 'antipuce', 'tique', 'antiparasitaire', 'puce'],
-      threshold: 0.25,
-      response: '🛡️ Nous vous conseillons et prescrivons les traitements antiparasitaires adaptés à votre animal (vermifuges, antiparasitaires externes, colliers…). Demandez-nous lors de votre prochaine visite !',
+      keywords: ['vermifuge', 'ver', 'parasite', 'antipuce', 'tique', 'antiparasitaire', 'puces', 'poux', 'vermifuger'],
+      threshold: 1,
+      response: '🛡️ Nous prescrivons les traitements antiparasitaires adaptés : vermifuges, antiparasitaires externes, colliers. Demandez-nous lors de votre prochaine visite !',
       chips: ['Prendre RDV', 'Boutique ChronoVet'],
     },
     {
       id: 'boutique',
-      keywords: ['boutique', 'chronovet', 'commande', 'produit', 'medicament', 'acheter', 'relais', 'livraison'],
-      threshold: 0.2,
-      response: '🛒 Le cabinet est <strong>point relais ChronoVet officiel</strong> !<br><br>Commandez vos produits vétérinaires en ligne sur <a href="https://www.chronovet.fr" target="_blank">chronovet.fr</a> et récupérez-les directement au cabinet — <strong>sans frais de livraison</strong>.',
+      keywords: ['boutique', 'chronovet', 'commande', 'produit', 'medicament', 'acheter', 'relais', 'livraison', 'achat'],
+      threshold: 1,
+      response: '🛒 Le cabinet est <strong>point relais ChronoVet officiel</strong> !<br><br>Commandez sur <a href="https://www.chronovet.fr" target="_blank">chronovet.fr</a> et récupérez au cabinet — <strong>sans frais de livraison</strong>.',
       chips: ['Horaires', 'Adresse'],
     },
     {
-      id: 'domicile',
-      keywords: ['domicile', 'maison', 'deplacement', 'visite', 'venir', 'chez'],
-      threshold: 0.3,
-      response: '🏠 Le Dr PAYRIERE effectue des <strong>visites à domicile le mardi et le jeudi</strong>. Appelez-nous pour organiser une visite chez vous !<br><br>📞 <a href="tel:0561492799">05 61 49 27 99</a>',
+      id: 'tarif',
+      keywords: ['tarif', 'prix', 'cout', 'combien', 'cher', 'euro', 'payer', 'remboursement', 'assurance', 'mutuelle', 'facturation'],
+      threshold: 1,
+      response: 'Les tarifs varient selon la consultation et l\'animal. Pour un devis, appelez-nous :<br><br>📞 <strong><a href="tel:0561492799">05 61 49 27 99</a></strong>',
       chips: ['Prendre RDV', 'Horaires'],
     },
     {
-      id: 'osteo',
-      keywords: ['osteopathie', 'osteo', 'acupuncture', 'bach', 'fleur', 'manipulation'],
-      threshold: 0.3,
-      response: '🌸 Le Dr PAYRIERE pratique également :<br><br>• <strong>Ostéopathie</strong> animale<br>• <strong>Acupuncture</strong><br>• <strong>Fleurs de Bach</strong><br><br>Ces approches douces permettent de traiter même les animaux les plus anxieux sans sédation.',
+      id: 'alimentation',
+      keywords: ['alimentation', 'nourriture', 'croquette', 'regime', 'manger', 'poids', 'obese', 'diet', 'nutrition', 'nourrir'],
+      threshold: 1,
+      response: '🥗 Le Dr PAYRIERE vous conseille sur l\'alimentation adaptée lors d\'une consultation. Une bonne nutrition est la base de la santé de votre animal !',
       chips: ['Prendre RDV', 'Services'],
     },
     {
-      id: 'alimentation',
-      keywords: ['alimentation', 'nourriture', 'croquette', 'regime', 'manger', 'poids', 'obese', 'diet'],
-      threshold: 0.25,
-      response: '🥗 Le Dr PAYRIERE peut vous conseiller sur l\'alimentation adaptée à votre animal lors d\'une consultation. Une alimentation équilibrée est essentielle à la santé de votre compagnon !',
-      chips: ['Prendre RDV', 'Services'],
+      id: 'docteur',
+      keywords: ['docteur', 'veterinaire', 'veto', 'payriere', 'equipe', 'experience', 'diplome', 'formation', 'qui'],
+      threshold: 1,
+      response: '👩‍⚕️ Le <strong>Dr PAYRIERE</strong> est vétérinaire depuis plus de <strong>30 ans</strong>.<br><br>Elle maîtrise la médecine conventionnelle ainsi que l\'ostéopathie, l\'acupuncture et la phytothérapie pour une approche douce et globale.',
+      chips: ['Services', 'Prendre RDV', 'Avis clients'],
+    },
+    {
+      id: 'malade',
+      keywords: ['malade', 'maladie', 'symptome', 'inquiet', 'vomit', 'diarrhee', 'mange plus', 'boit plus', 'douleur', 'blessure', 'boite', 'abattu'],
+      threshold: 1,
+      response: '🩺 Si votre animal présente des symptômes inquiétants, consultez-nous rapidement :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>En dehors des horaires → <strong>Vet-Urgences Ouest</strong> : <a href="tel:0561112131">05 61 11 21 31</a>',
+      chips: ['Prendre RDV', 'Urgences'],
+    },
+    {
+      id: 'passeport',
+      keywords: ['passeport', 'voyage', 'etranger', 'certificat', 'international', 'europe', 'transport'],
+      threshold: 1,
+      response: '✈️ Nous délivrons les <strong>passeports européens</strong> et certificats de santé pour voyager avec votre animal. Contactez-nous en avance !<br><br>📞 <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Prendre RDV', 'Téléphone'],
     },
     {
       id: 'avis',
-      keywords: ['avis', 'temoignage', 'recommande', 'opinion', 'note', 'etoile', 'google'],
-      threshold: 0.3,
+      keywords: ['avis', 'temoignage', 'recommande', 'opinion', 'note', 'etoile', 'google', 'confiance'],
+      threshold: 1,
       response: '⭐⭐⭐⭐⭐ Nos clients nous font confiance !<br><br><em>« Très pro, attentionnée et réactive »</em> — Léa L.<br><em>« Vous pouvez y aller les yeux fermés »</em> — Christopher B.<br><em>« Une veto en or et passionnée »</em> — Florence D.',
       chips: ['Prendre RDV', 'Services'],
     },
@@ -258,7 +321,7 @@
       id: '_fallback',
       keywords: [],
       threshold: -1,
-      response: 'Je ne suis pas sûr de comprendre votre question. 🐾<br><br>Vous pouvez nous appeler directement au <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a> pour toute question spécifique.',
+      response: 'Je ne suis pas sûre de comprendre votre question. 🐾<br><br>Vous pouvez m\'interroger sur nos <strong>horaires</strong>, <strong>services</strong>, <strong>tarifs</strong>… ou appelez-nous au <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a>.',
       chips: ['Horaires', 'Adresse', 'Prendre RDV', 'Urgences'],
     },
   ];
@@ -405,10 +468,9 @@
 
   function matchScore(rule, tokens) {
     if (!rule.keywords.length) return -1;
-    const hits = rule.keywords.filter(kw =>
-      tokens.some(tok => tok.includes(kw) || kw.includes(tok))
-    );
-    return hits.length / rule.keywords.length;
+    return rule.keywords.filter(kw =>
+      tokens.some(tok => tok === kw || tok.includes(kw) || kw.includes(tok))
+    ).length;
   }
 
   function findBestRule(input) {
