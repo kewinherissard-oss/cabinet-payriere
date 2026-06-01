@@ -21,7 +21,7 @@
       samedi:   'Fermé',
       dimanche: 'Fermé',
     },
-    emergency: { name: 'Vet-Urgences Ouest', phone: '05 61 11 21 31' },
+    emergency: { name: 'Vet-Urgentys', phone: '05 61 11 21 31', url: 'https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460' },
   };
 
   /* ── Règles de réponse (threshold = nb minimum de keywords correspondants) ── */
@@ -86,7 +86,7 @@
       id: 'horaires-weekend',
       keywords: ['samedi', 'dimanche', 'weekend'],
       threshold: 1,
-      response: '🔴 Le cabinet est <strong>fermé le samedi et le dimanche</strong>. Pour une urgence, contactez Vet-Urgences Ouest au <a href="tel:0561112131">05 61 11 21 31</a>.',
+      response: '🔴 Le cabinet est <strong>fermé le samedi et le dimanche</strong>. Pour une urgence, contactez <a href="https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460" target="_blank" rel="noopener">Vet-Urgentys</a> au <a href="tel:0561112131">05 61 11 21 31</a>.',
       chips: ['Urgences', 'Tous les horaires'],
     },
     {
@@ -133,7 +133,7 @@
       keywords: ['urgence', 'urgent', 'nuit', 'garde', 'accident', 'blesse', 'grave', 'vite', 'secours', 'empoisonnement', 'avale'],
       threshold: 1,
       response: `🚨 En dehors de nos horaires, contactez :<br><br>
-        <strong>Vet-Urgences Ouest</strong><br>
+        <a href="https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460" target="_blank" rel="noopener"><strong>Vet-Urgentys</strong></a><br>
         📞 <a href="tel:0561112131"><strong>05 61 11 21 31</strong></a><br><br>
         Disponibles 24h/24, 7j/7.`,
       chips: ['Horaires du cabinet', 'Adresse'],
@@ -300,7 +300,7 @@
       id: 'malade',
       keywords: ['malade', 'maladie', 'symptome', 'inquiet', 'vomit', 'diarrhee', 'mange plus', 'boit plus', 'douleur', 'blessure', 'boite', 'abattu'],
       threshold: 1,
-      response: '🩺 Si votre animal présente des symptômes inquiétants, consultez-nous rapidement :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>En dehors des horaires → <strong>Vet-Urgences Ouest</strong> : <a href="tel:0561112131">05 61 11 21 31</a>',
+      response: '🩺 Si votre animal présente des symptômes inquiétants, consultez-nous rapidement :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>En dehors des horaires → <a href="https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460" target="_blank" rel="noopener"><strong>Vet-Urgentys</strong></a> : <a href="tel:0561112131">05 61 11 21 31</a>',
       chips: ['Prendre RDV', 'Urgences'],
     },
     {
