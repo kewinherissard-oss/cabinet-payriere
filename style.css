@@ -310,6 +310,14 @@ img { max-width: 100%; display: block; }
 
 .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
 
+.hero-rdv-bottom {
+  position: absolute;
+  bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  white-space: nowrap;
+}
+
 /* Scroll indicator */
 .scroll-indicator {
   position: absolute;
