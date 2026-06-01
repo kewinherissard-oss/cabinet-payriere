@@ -317,6 +317,250 @@
       response: '⭐⭐⭐⭐⭐ Nos clients nous font confiance !<br><br><em>« Très pro, attentionnée et réactive »</em> — Léa L.<br><em>« Vous pouvez y aller les yeux fermés »</em> — Christopher B.<br><em>« Une veto en or et passionnée »</em> — Florence D.',
       chips: ['Prendre RDV', 'Services'],
     },
+    /* ── RDV & Organisation ── */
+    {
+      id: 'rdv-annuler',
+      keywords: ['annuler', 'annulation', 'deplacer', 'reporter', 'modifier', 'changer'],
+      threshold: 1,
+      response: '📅 Pour annuler ou modifier un rendez-vous, appelez-nous dès que possible :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>Lun / Mer / Ven : 9h30–12h30 et 15h–19h',
+      chips: ['Horaires', 'Prendre RDV'],
+    },
+    {
+      id: 'rdv-duree',
+      keywords: ['duree', 'minute', 'temps consultation', 'combien de temps'],
+      threshold: 1,
+      response: '⏱️ Une consultation dure en général <strong>20 à 30 minutes</strong>. Cela peut varier selon la nature du soin.',
+      chips: ['Prendre RDV', 'Horaires'],
+    },
+    {
+      id: 'rdv-en-ligne',
+      keywords: ['internet', 'numerique', 'appli', 'application', 'en ligne', 'online'],
+      threshold: 1,
+      response: '📞 Les rendez-vous se prennent <strong>uniquement par téléphone</strong> pour le moment :<br><br><a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>Lun / Mer / Ven : 9h30–12h30 et 15h–19h',
+      chips: ['Horaires', 'Prendre RDV'],
+    },
+    {
+      id: 'rdv-attente',
+      keywords: ['attente', 'attendre', 'dispo', 'disponibilite', 'place disponible'],
+      threshold: 1,
+      response: 'Pour connaître les disponibilités actuelles, appelez-nous :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a>',
+      chips: ['Prendre RDV', 'Horaires'],
+    },
+    {
+      id: 'feries',
+      keywords: ['ferie', 'jour ferie', 'noel', 'paques', 'ascension', 'toussaint'],
+      threshold: 1,
+      response: '📅 Le cabinet est généralement fermé les <strong>jours fériés</strong>. En cas de doute, appelez-nous au préalable.<br><br>📞 <a href="tel:0561492799">05 61 49 27 99</a><br><br>En urgence → <a href="https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460" target="_blank"><strong>Vet-Urgentys</strong></a> : <a href="tel:0561112131">05 61 11 21 31</a>',
+      chips: ['Urgences', 'Horaires'],
+    },
+
+    /* ── Urgences spécifiques ── */
+    {
+      id: 'urgence-mange-plus',
+      keywords: ['mange plus', 'ne mange', 'anorexie', 'refuse manger', 'plus manger', 'pas manger', 'appetit'],
+      threshold: 1,
+      response: '🩺 Un animal qui ne mange plus depuis <strong>plus de 24–48h</strong> nécessite une consultation rapide.<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>En dehors des horaires → <a href="https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460" target="_blank"><strong>Vet-Urgentys</strong></a> : <a href="tel:0561112131">05 61 11 21 31</a>',
+      chips: ['Prendre RDV', 'Urgences'],
+    },
+    {
+      id: 'urgence-avale',
+      keywords: ['avale', 'ingere', 'corps etranger', 'objet', 'intoxication', 'empoisonne', 'poison', 'toxique'],
+      threshold: 1,
+      response: '🚨 <strong>URGENT</strong> — Si votre animal a avalé un objet ou une substance toxique, <strong>n\'attendez pas</strong> :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>En dehors des heures → <a href="https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460" target="_blank"><strong>Vet-Urgentys</strong></a> : <a href="tel:0561112131"><strong>05 61 11 21 31</strong></a>',
+      chips: ['Urgences'],
+    },
+    {
+      id: 'urgence-boite',
+      keywords: ['boite', 'boiter', 'boiterie', 'marche mal', 'patte blessée', 'se deplace mal'],
+      threshold: 1,
+      response: '🐾 Un animal qui boite peut avoir une blessure, entorse ou fracture. Si la boiterie est <strong>soudaine et prononcée</strong>, consultez rapidement.<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a>',
+      chips: ['Prendre RDV', 'Urgences'],
+    },
+    {
+      id: 'urgence-soir',
+      keywords: ['ce soir', 'maintenant', 'tout de suite', 'immediat', 'immediatement'],
+      threshold: 1,
+      response: '🚨 Si c\'est une urgence <strong>en dehors de nos horaires</strong>, contactez :<br><br><a href="https://vet-urgentys.fr/?msclkid=b882e05941c4136114f88a44bdd14460" target="_blank"><strong>Vet-Urgentys</strong></a><br>📞 <a href="tel:0561112131"><strong>05 61 11 21 31</strong></a><br><br>Disponibles 24h/24, 7j/7.',
+      chips: ['Horaires du cabinet'],
+    },
+
+    /* ── Vaccins complémentaires ── */
+    {
+      id: 'vaccin-oblig',
+      keywords: ['obligatoire', 'oblige', 'legal', 'requis', 'loi'],
+      threshold: 1,
+      response: '💉 En France, seul le vaccin <strong>antirabique (rage)</strong> est légalement obligatoire (voyages, collectivités). Les autres sont fortement recommandés selon le mode de vie de l\'animal.',
+      chips: ['Vaccination', 'Prendre RDV'],
+    },
+
+    /* ── Antiparasitaires complémentaires ── */
+    {
+      id: 'antiparasitaire-freq',
+      keywords: ['tous les combien', 'frequence', 'regulier', 'quand donner', 'souvent antiparasitaire'],
+      threshold: 1,
+      response: '🛡️ En général :<br><br>• <strong>Vermifuge</strong> : tous les 3 mois (adulte), tous les mois (chiot/chaton)<br>• <strong>Antiparasitaire externe</strong> : tous les 1 à 3 mois selon le produit<br><br>Demandez-nous un programme personnalisé !',
+      chips: ['Prendre RDV', 'Boutique ChronoVet'],
+    },
+    {
+      id: 'antiparasitaire-puces',
+      keywords: ['puce', 'puces', 'gratte', 'gratouille', 'demangeaison', 'se gratte'],
+      threshold: 1,
+      response: '🦟 Si votre animal a des puces :<br><br>1️⃣ Traitez <strong>l\'animal</strong> avec un antiparasitaire adapté<br>2️⃣ Traitez <strong>l\'environnement</strong> (litière, canapé, moquette…)<br><br>📞 Appelez-nous pour le bon produit : <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Prendre RDV', 'Boutique ChronoVet'],
+    },
+    {
+      id: 'antiparasitaire-tique',
+      keywords: ['tique', 'tiques', 'retirer tique', 'enlever tique'],
+      threshold: 1,
+      response: '🕷️ <strong>Tique sur votre animal :</strong><br><br>• Retirez-la avec un tire-tique (sans tourner ni brûler)<br>• Surveillez le site 2 semaines<br>• En cas d\'ingestion par l\'animal → consultez rapidement<br><br>📞 <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Prendre RDV', 'Boutique ChronoVet'],
+    },
+
+    /* ── Stérilisation complémentaire ── */
+    {
+      id: 'sterilisation-age',
+      keywords: ['quel age steriliser', 'age sterilisation', 'quand steriliser', 'trop tot steriliser'],
+      threshold: 1,
+      response: '✂️ Âge recommandé :<br><br>🐱 <strong>Chat</strong> : à partir de 5–6 mois<br>🐶 <strong>Chienne</strong> : après les 1ères chaleurs (6–12 mois)<br>🐶 <strong>Chien mâle</strong> : 6–12 mois selon la race<br><br>Chaque cas est différent, consultez-nous !',
+      chips: ['Stérilisation', 'Prendre RDV'],
+    },
+    {
+      id: 'sterilisation-convalescence',
+      keywords: ['convalescence', 'recuperation', 'cicatrisation', 'repos apres', 'apres operation', 'suites operatoires'],
+      threshold: 1,
+      response: '🏥 Après la stérilisation :<br><br>• Retour à la maison le <strong>jour même</strong> en général<br>• Repos <strong>7 à 10 jours</strong><br>• Port de la collerette<br>• Retrait des fils à 10 jours<br><br>Nous vous expliquons tout après l\'opération.',
+      chips: ['Prendre RDV', 'Stérilisation'],
+    },
+    {
+      id: 'sterilisation-risques',
+      keywords: ['risque operation', 'danger operation', 'risque anesthesie', 'peur operation', 'securite operation'],
+      threshold: 1,
+      response: '✅ La stérilisation est une opération <strong>très courante et bien maîtrisée</strong>. Les risques anesthésiques sont faibles chez un animal sain. Nous évaluerons votre animal avant toute intervention.',
+      chips: ['Stérilisation', 'Prendre RDV'],
+    },
+    {
+      id: 'sterilisation-chaleur',
+      keywords: ['chaleur', 'chaleurs', 'en chaleur', 'saignement', 'cycle'],
+      threshold: 1,
+      response: '🐱 Il est préférable d\'<strong>attendre la fin du cycle</strong> pour stériliser (entre deux chaleurs) afin de réduire les risques hémorragiques.<br><br>📞 Appelez-nous pour évaluer la situation : <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Stérilisation', 'Prendre RDV'],
+    },
+
+    /* ── Médicaments & Ordonnances ── */
+    {
+      id: 'medicament-ordonnance',
+      keywords: ['ordonnance', 'renouveler', 'renouvellement', 'prescription', 'renouveler traitement'],
+      threshold: 1,
+      response: '📋 Pour renouveler une ordonnance, appelez-nous :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a><br><br>Selon le traitement, une consultation de contrôle peut être nécessaire.',
+      chips: ['Prendre RDV', 'Téléphone'],
+    },
+    {
+      id: 'medicament-humain-danger',
+      keywords: ['ibuprofene', 'ibuprofen', 'paracetamol', 'aspirine', 'doliprane', 'nurofen', 'dolori', 'antidouleur humain'],
+      threshold: 1,
+      response: '⚠️ <strong>DANGER</strong> — N\'administrez <strong>jamais</strong> de médicaments humains à votre animal sans avis vétérinaire !<br><br>🔴 L\'<strong>ibuprofène</strong> et le <strong>paracétamol</strong> sont <strong>toxiques</strong> pour les chiens et les chats, même à faible dose.<br><br>En cas d\'ingestion accidentelle :<br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a> ou <a href="tel:0561112131"><strong>Vet-Urgentys</strong></a>',
+      chips: ['Urgences'],
+    },
+    {
+      id: 'medicament-achat',
+      keywords: ['acheter medicament', 'pharmacie', 'commander medicament', 'retirer medicament', 'ou acheter'],
+      threshold: 1,
+      response: '💊 Les médicaments prescrits sont disponibles :<br><br>• Au <strong>cabinet</strong><br>• Via <strong>ChronoVet</strong> (commande en ligne, retrait au cabinet)<br><br>Certains nécessitent une ordonnance vétérinaire.',
+      chips: ['Boutique ChronoVet', 'Prendre RDV'],
+    },
+
+    /* ── Chirurgie ── */
+    {
+      id: 'chirurgie-jeun',
+      keywords: ['jeun', 'manger avant', 'nourrir avant', 'eau avant operation', 'avant anesthesie'],
+      threshold: 1,
+      response: '🏥 Avant une anesthésie générale :<br><br>• <strong>Nourriture</strong> : arrêt 8–12h avant<br>• <strong>Eau</strong> : arrêt 2–4h avant<br><br>Nous vous communiquerons les consignes exactes à la prise de RDV.',
+      chips: ['Prendre RDV'],
+    },
+    {
+      id: 'chirurgie-hospitalisation',
+      keywords: ['hospitalise', 'hospitalisation', 'garder nuit', 'rester clinique', 'rentrer quand'],
+      threshold: 1,
+      response: '🏥 Pour les interventions courantes, votre animal rentre à la <strong>maison le jour même</strong>. Pour des chirurgies complexes, une nuit peut être nécessaire. Nous vous préviendrons au cas par cas.',
+      chips: ['Prendre RDV', 'Services'],
+    },
+    {
+      id: 'chirurgie-rester',
+      keywords: ['rester avec animal', 'accompagner operation', 'assister intervention', 'presence soins'],
+      threshold: 1,
+      response: '❤️ Vous ne pouvez pas assister à l\'intervention, mais vous pouvez accompagner votre animal <strong>à l\'arrivée et au réveil</strong>. Nous restons joignables pendant la procédure.',
+      chips: ['Prendre RDV', 'Téléphone'],
+    },
+
+    /* ── Paiement & Tarifs ── */
+    {
+      id: 'paiement-moyens',
+      keywords: ['carte bancaire', 'cb', 'especes', 'cheque', 'virement', 'moyen paiement', 'comment payer'],
+      threshold: 1,
+      response: '💳 Nous acceptons :<br><br>• Carte bancaire (CB)<br>• Espèces<br>• Chèques<br><br>Pour tout renseignement : 📞 <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Prendre RDV'],
+    },
+    {
+      id: 'assurance-animale',
+      keywords: ['assurance animale', 'mutuelle animale', 'santevet', 'remboursement assurance', 'assurance chien', 'assurance chat'],
+      threshold: 1,
+      response: '🐾 Nous établissons des <strong>factures détaillées</strong> que vous pouvez transmettre à votre assurance animale. Rapprochez-vous de votre assureur pour les conditions de remboursement.',
+      chips: ['Prendre RDV'],
+    },
+    {
+      id: 'devis',
+      keywords: ['devis', 'estimation cout', 'combien coute operation', 'prix chirurgie', 'avant intervention'],
+      threshold: 1,
+      response: '💰 Nous pouvons vous donner une <strong>estimation des coûts</strong> lors d\'une consultation ou par téléphone :<br><br>📞 <a href="tel:0561492799"><strong>05 61 49 27 99</strong></a>',
+      chips: ['Téléphone', 'Prendre RDV'],
+    },
+
+    /* ── Comportement ── */
+    {
+      id: 'comportement-agressif',
+      keywords: ['agressif', 'agressive', 'mord', 'grogne', 'attaque', 'mordre', 'agressivite'],
+      threshold: 1,
+      response: '🐶 L\'agressivité peut être d\'origine <strong>médicale</strong> (douleur) ou <strong>comportementale</strong>. Une consultation permet d\'éliminer toute cause physique.<br><br>Nous pouvons vous orienter vers un comportementaliste si besoin.',
+      chips: ['Prendre RDV', 'Services'],
+    },
+    {
+      id: 'comportement-urine',
+      keywords: ['urine partout', 'pipi partout', 'marquage', 'proprete', 'miction', 'fait pipi'],
+      threshold: 1,
+      response: '🐱 Des mictions inappropriées peuvent signaler :<br><br>• Une <strong>infection urinaire</strong> (cystite)<br>• Des calculs rénaux<br>• Un <strong>stress ou marquage</strong> territorial<br><br>Une consultation permettra de déterminer la cause.',
+      chips: ['Prendre RDV'],
+    },
+    {
+      id: 'comportement-poils',
+      keywords: ['perd ses poils', 'chute poils', 'alopecie', 'pelage abime', 'poils tombent'],
+      threshold: 1,
+      response: '🐾 Une perte de poils anormale peut indiquer :<br><br>• Une <strong>allergie</strong> (alimentaire ou environnementale)<br>• Une <strong>parasitose</strong> (gale, teigne)<br>• Un <strong>déséquilibre hormonal</strong><br><br>Consultation + analyses pour diagnostiquer.',
+      chips: ['Prendre RDV'],
+    },
+
+    /* ── Administratif ── */
+    {
+      id: 'admin-perdu',
+      keywords: ['perdu animal', 'animal disparu', 'fugue', 'recherche animal', 'retrouver animal'],
+      threshold: 1,
+      response: '😿 Si votre animal est perdu :<br><br>1️⃣ Déclarez-le sur <strong>I-CAD</strong> (si pucé/tatoué)<br>2️⃣ Contactez la mairie et les refuges locaux<br>3️⃣ Publiez une annonce sur les groupes locaux<br><br>Nous pouvons vérifier la puce de tout animal trouvé.',
+      chips: ['Adresse', 'Horaires'],
+    },
+    {
+      id: 'admin-trouve',
+      keywords: ['trouve animal', 'trouve chien', 'trouve chat', 'animal trouve', 'ramasse animal'],
+      threshold: 1,
+      response: '🐾 Si vous avez trouvé un animal :<br><br>1️⃣ Venez au cabinet — nous lisons la <strong>puce électronique gratuitement</strong><br>2️⃣ Signalez-le à la mairie<br>3️⃣ Contactez le refuge/fourrière local<br><br>📞 <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Adresse', 'Horaires'],
+    },
+    {
+      id: 'admin-certificat',
+      keywords: ['certificat sante', 'bonne sante', 'attestation sante', 'document veterinaire'],
+      threshold: 1,
+      response: '📋 Nous délivrons des <strong>certificats de bonne santé</strong> lors d\'une consultation. Ce document est requis pour voyages, ventes ou adoptions.<br><br>📞 <a href="tel:0561492799">05 61 49 27 99</a>',
+      chips: ['Prendre RDV', 'Passeport animal'],
+    },
+
     {
       id: '_fallback',
       keywords: [],
