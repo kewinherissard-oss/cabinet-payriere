@@ -28,34 +28,25 @@
     }
   </style>
 
-  <radialGradient id="gHead" cx="34%" cy="26%" r="66%">
-    <stop offset="0%"   stop-color="#ccd0d8"/>
-    <stop offset="50%"  stop-color="#9ea5b2"/>
-    <stop offset="100%" stop-color="#70788a"/>
-  </radialGradient>
-  <radialGradient id="gBody" cx="36%" cy="26%" r="66%">
-    <stop offset="0%"   stop-color="#c8cdd6"/>
-    <stop offset="45%"  stop-color="#9aa0ae"/>
-    <stop offset="100%" stop-color="#6e7480"/>
+  <radialGradient id="gWhite" cx="38%" cy="30%" r="65%">
+    <stop offset="0%"   stop-color="#ffffff"/>
+    <stop offset="70%"  stop-color="#f2f2f2"/>
+    <stop offset="100%" stop-color="#e0e0e0"/>
   </radialGradient>
   <radialGradient id="gBelly" cx="42%" cy="30%" r="62%">
     <stop offset="0%"  stop-color="#ffffff"/>
-    <stop offset="65%" stop-color="#e8eaed"/>
-    <stop offset="100%" stop-color="#d0d4da"/>
-  </radialGradient>
-  <radialGradient id="gCheek" cx="32%" cy="28%" r="68%">
-    <stop offset="0%"  stop-color="#d5d9e2"/>
-    <stop offset="100%" stop-color="#a8b0be"/>
+    <stop offset="100%" stop-color="#f5f5f5"/>
   </radialGradient>
   <radialGradient id="gEyeW" cx="38%" cy="32%" r="64%">
     <stop offset="0%"  stop-color="#ffffff"/>
-    <stop offset="100%" stop-color="#e8f0f8"/>
+    <stop offset="100%" stop-color="#eef4ff"/>
   </radialGradient>
-  <radialGradient id="gIris" cx="32%" cy="26%" r="68%">
-    <stop offset="0%"   stop-color="#88eebb"/>
-    <stop offset="40%"  stop-color="#3aaa7a"/>
-    <stop offset="75%"  stop-color="#1d7a55"/>
-    <stop offset="100%" stop-color="#0e5038"/>
+  <!-- Yeux ambrés/dorés comme la vraie chatte -->
+  <radialGradient id="gIris" cx="30%" cy="24%" r="70%">
+    <stop offset="0%"   stop-color="#ffe566"/>
+    <stop offset="40%"  stop-color="#c8920a"/>
+    <stop offset="75%"  stop-color="#8a5e00"/>
+    <stop offset="100%" stop-color="#4a3000"/>
   </radialGradient>
   <radialGradient id="gNose" cx="30%" cy="25%" r="70%">
     <stop offset="0%"  stop-color="#ffcce0"/>
@@ -65,122 +56,143 @@
     <stop offset="0%"  stop-color="#ffbbcc"/>
     <stop offset="100%" stop-color="#ee6688"/>
   </radialGradient>
-  <radialGradient id="gPaw" cx="40%" cy="30%" r="62%">
-    <stop offset="0%"  stop-color="#d8dde4"/>
-    <stop offset="100%" stop-color="#a8b0bc"/>
-  </radialGradient>
-  <radialGradient id="gMuzzle" cx="40%" cy="30%" r="62%">
-    <stop offset="0%"  stop-color="#f8f8f6"/>
-    <stop offset="100%" stop-color="#e0e2de"/>
-  </radialGradient>
 
   <filter id="f3d">
-    <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#00000030"/>
+    <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#00000028"/>
+  </filter>
+  <filter id="fsoft">
+    <feGaussianBlur stdDeviation="1.5" result="blur"/>
+    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
   </filter>
 </defs>
 
 <!-- OMBRE SOL -->
-<ellipse cx="110" cy="239" rx="58" ry="6" fill="#00000018"/>
+<ellipse cx="110" cy="239" rx="58" ry="6" fill="#00000015"/>
 
-<!-- QUEUE -->
+<!-- QUEUE (blanche avec bout noir) -->
 <g class="tail">
   <path d="M164 200 C192 188 205 162 196 138
            C190 120 175 118 170 130
            C178 138 182 158 172 176
            C167 188 163 197 164 200Z"
-        fill="url(#gBody)" stroke="#8090a2" stroke-width="0.5"/>
+        fill="url(#gWhite)" stroke="#ddd" stroke-width="0.5"/>
+  <!-- Tache noire sur la queue -->
+  <path d="M180 145 C188 136 192 126 186 120
+           C182 116 175 118 172 126
+           C176 132 180 140 180 145Z"
+        fill="#1c1c1c"/>
+  <!-- Bout blanc queue -->
   <ellipse cx="171" cy="131" rx="8" ry="11" fill="url(#gBelly)" transform="rotate(-18,171,131)"/>
-  <path d="M168 178 C174 162 178 144 174 134" fill="none" stroke="#c8d0da" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
 </g>
 
 <!-- CORPS -->
 <g class="breathe" filter="url(#f3d)">
-  <ellipse cx="108" cy="188" rx="64" ry="52" fill="url(#gBody)"/>
-  <ellipse cx="108" cy="196" rx="42" ry="38" fill="url(#gBelly)"/>
-  <ellipse cx="85" cy="166" rx="26" ry="16" fill="#d8dde6" opacity="0.48"/>
-  <path d="M52 172 Q70 164 82 176" fill="none" stroke="#8090a2" stroke-width="3" opacity="0.38" stroke-linecap="round"/>
-  <path d="M50 186 Q69 178 82 190" fill="none" stroke="#8090a2" stroke-width="2.5" opacity="0.32" stroke-linecap="round"/>
-  <path d="M134 176 Q148 164 164 172" fill="none" stroke="#8090a2" stroke-width="3" opacity="0.38" stroke-linecap="round"/>
-  <path d="M134 190 Q148 178 166 186" fill="none" stroke="#8090a2" stroke-width="2.5" opacity="0.32" stroke-linecap="round"/>
+  <!-- Corps blanc de base -->
+  <ellipse cx="108" cy="188" rx="64" ry="52" fill="url(#gWhite)"/>
+
+  <!-- Grande tache noire dorsale (dos + côté droit) -->
+  <path d="M118 142 C134 136 158 140 168 156
+           C176 168 174 184 166 192
+           C156 200 142 202 130 198
+           C118 194 112 182 114 168
+           C116 156 116 148 118 142Z"
+        fill="#1c1c1c"/>
+
+  <!-- Petite tache noire côté gauche corps -->
+  <path d="M60 172 C56 162 58 154 66 152
+           C74 150 80 158 78 168
+           C76 176 68 180 60 172Z"
+        fill="#1c1c1c"/>
+
+  <!-- Ventre blanc propre par-dessus les taches -->
+  <ellipse cx="104" cy="197" rx="44" ry="37" fill="url(#gBelly)"/>
+  <!-- Highlight -->
+  <ellipse cx="82" cy="168" rx="24" ry="14" fill="white" opacity="0.55"/>
 </g>
 
-<!-- PATTES AVANT -->
-<ellipse cx="82" cy="226" rx="22" ry="13" fill="url(#gPaw)" filter="url(#f3d)"/>
+<!-- PATTES AVANT blanches -->
+<ellipse cx="82" cy="226" rx="22" ry="13" fill="url(#gWhite)" filter="url(#f3d)"/>
 <ellipse cx="80" cy="223" rx="19" ry="11" fill="url(#gBelly)"/>
-<ellipse cx="136" cy="226" rx="22" ry="13" fill="url(#gPaw)" filter="url(#f3d)"/>
+<ellipse cx="136" cy="226" rx="22" ry="13" fill="url(#gWhite)" filter="url(#f3d)"/>
 <ellipse cx="138" cy="223" rx="19" ry="11" fill="url(#gBelly)"/>
 
 <!-- TÊTE -->
 <g filter="url(#f3d)">
-  <!-- Joues bouffies -->
-  <ellipse cx="46" cy="100" rx="26" ry="20" fill="url(#gCheek)"/>
-  <ellipse cx="174" cy="100" rx="26" ry="20" fill="url(#gCheek)"/>
-  <ellipse cx="42" cy="96" rx="14" ry="10" fill="#d0d8e4" opacity="0.4"/>
-  <ellipse cx="170" cy="96" rx="14" ry="10" fill="#d0d8e4" opacity="0.4"/>
+  <!-- Joues bouffies blanches -->
+  <ellipse cx="46" cy="100" rx="26" ry="20" fill="url(#gWhite)"/>
+  <ellipse cx="174" cy="100" rx="26" ry="20" fill="url(#gWhite)"/>
 
-  <!-- Tête ronde -->
-  <circle cx="110" cy="82" r="60" fill="url(#gHead)"/>
-  <ellipse cx="86" cy="60" rx="26" ry="20" fill="#d0d8e0" opacity="0.55"/>
-  <ellipse cx="136" cy="94" rx="20" ry="28" fill="#6a7480" opacity="0.22"/>
+  <!-- Tête blanche ronde -->
+  <circle cx="110" cy="82" r="60" fill="url(#gWhite)"/>
+
+  <!-- Grande tache noire dessus de tête -->
+  <path d="M76 28 C88 14 108 10 128 16
+           C144 22 152 36 148 52
+           C144 64 132 70 116 70
+           C98 70 82 62 76 48
+           C72 40 72 34 76 28Z"
+        fill="#1c1c1c"/>
+
+  <!-- Tache noire sur l oreille gauche / tempe gauche -->
+  <path d="M50 56 C44 46 40 56 42 68
+           C44 78 54 82 62 76
+           C68 70 64 56 50 56Z"
+        fill="#1c1c1c"/>
 
   <!-- OREILLES -->
   <g class="ear-l">
-    <path d="M52 52 L34 5 L90 36 Z" fill="url(#gHead)" stroke="#8090a2" stroke-width="0.5"/>
-    <path d="M55 50 L42 12 L87 37 Z" fill="url(#gInEar)" opacity="0.88"/>
+    <!-- Oreille gauche noire (dans la tache) -->
+    <path d="M52 52 L34 5 L90 36 Z" fill="#1c1c1c" stroke="#333" stroke-width="0.5"/>
+    <path d="M55 50 L42 12 L87 37 Z" fill="url(#gInEar)" opacity="0.85"/>
   </g>
   <g class="ear-r">
-    <path d="M168 52 L186 5 L130 36 Z" fill="url(#gHead)" stroke="#8090a2" stroke-width="0.5"/>
-    <path d="M165 50 L178 12 L133 37 Z" fill="url(#gInEar)" opacity="0.88"/>
+    <!-- Oreille droite blanche (hors tache) -->
+    <path d="M168 52 L186 5 L130 36 Z" fill="url(#gWhite)" stroke="#ccc" stroke-width="0.5"/>
+    <path d="M165 50 L178 12 L133 37 Z" fill="url(#gInEar)" opacity="0.85"/>
   </g>
 
-  <!-- Rayures front -->
-  <path d="M98 38 Q110 28 122 38" fill="none" stroke="#8090a2" stroke-width="2.2" opacity="0.42" stroke-linecap="round"/>
-  <path d="M95 28 Q110 18 125 28" fill="none" stroke="#8090a2" stroke-width="1.8" opacity="0.34" stroke-linecap="round"/>
-  <path d="M92 18 Q110 10 128 18" fill="none" stroke="#8090a2" stroke-width="1.4" opacity="0.26" stroke-linecap="round"/>
-  <!-- Rayures joues -->
-  <path d="M56 88 Q66 82 72 92" fill="none" stroke="#8090a2" stroke-width="1.5" opacity="0.38" stroke-linecap="round"/>
-  <path d="M148 88 Q154 82 164 92" fill="none" stroke="#8090a2" stroke-width="1.5" opacity="0.38" stroke-linecap="round"/>
+  <!-- Visage blanc (par-dessus les taches, zone museau/joues) -->
+  <ellipse cx="110" cy="102" rx="38" ry="30" fill="url(#gBelly)" opacity="0.96"/>
 
-  <!-- Museau -->
-  <ellipse cx="110" cy="104" rx="30" ry="22" fill="url(#gMuzzle)"/>
-  <ellipse cx="97" cy="97" rx="13" ry="9" fill="white" opacity="0.38"/>
+  <!-- Highlight tête -->
+  <ellipse cx="116" cy="60" rx="18" ry="10" fill="#3a3a3a" opacity="0.18"/>
 
-  <!-- OEIL GAUCHE -->
+  <!-- OEIL GAUCHE (à la frontière tache/blanc) -->
   <g class="eye-l">
-    <ellipse cx="88" cy="80" rx="17" ry="18" fill="url(#gEyeW)" stroke="#aab0bc" stroke-width="1"/>
+    <ellipse cx="88" cy="80" rx="17" ry="18" fill="url(#gEyeW)" stroke="#888" stroke-width="1"/>
     <ellipse cx="88" cy="81" rx="13" ry="14" fill="url(#gIris)"/>
-    <ellipse cx="88" cy="81" rx="6.5" ry="8.5" fill="#081810"/>
+    <ellipse cx="88" cy="81" rx="6.5" ry="8.5" fill="#0e0800"/>
     <circle  cx="81" cy="73" r="5.5" fill="white" opacity="0.95"/>
     <circle  cx="92" cy="87" r="2.2" fill="white" opacity="0.5"/>
-    <ellipse cx="88" cy="80" rx="17" ry="18" fill="none" stroke="#445060" stroke-width="1.8"/>
-    <path d="M71 71 Q88 58 105 71" fill="none" stroke="#334050" stroke-width="2.8" stroke-linecap="round"/>
+    <ellipse cx="88" cy="80" rx="17" ry="18" fill="none" stroke="#333" stroke-width="1.8"/>
+    <path d="M71 71 Q88 58 105 71" fill="none" stroke="#222" stroke-width="2.8" stroke-linecap="round"/>
   </g>
 
   <!-- OEIL DROIT -->
   <g class="eye-r">
-    <ellipse cx="132" cy="80" rx="17" ry="18" fill="url(#gEyeW)" stroke="#aab0bc" stroke-width="1"/>
+    <ellipse cx="132" cy="80" rx="17" ry="18" fill="url(#gEyeW)" stroke="#888" stroke-width="1"/>
     <ellipse cx="132" cy="81" rx="13" ry="14" fill="url(#gIris)"/>
-    <ellipse cx="132" cy="81" rx="6.5" ry="8.5" fill="#081810"/>
+    <ellipse cx="132" cy="81" rx="6.5" ry="8.5" fill="#0e0800"/>
     <circle  cx="125" cy="73" r="5.5" fill="white" opacity="0.95"/>
     <circle  cx="136" cy="87" r="2.2" fill="white" opacity="0.5"/>
-    <ellipse cx="132" cy="80" rx="17" ry="18" fill="none" stroke="#445060" stroke-width="1.8"/>
-    <path d="M115 71 Q132 58 149 71" fill="none" stroke="#334050" stroke-width="2.8" stroke-linecap="round"/>
+    <ellipse cx="132" cy="80" rx="17" ry="18" fill="none" stroke="#333" stroke-width="1.8"/>
+    <path d="M115 71 Q132 58 149 71" fill="none" stroke="#222" stroke-width="2.8" stroke-linecap="round"/>
   </g>
 
-  <!-- NEZ -->
+  <!-- NEZ rose -->
   <path d="M106 106 Q110 100 114 106 Q110 112 106 106Z" fill="url(#gNose)" stroke="#bb4466" stroke-width="0.7"/>
   <line x1="110" y1="112" x2="110" y2="118" stroke="#cc5577" stroke-width="1.2"/>
   <!-- Sourire doux -->
   <path d="M110 118 Q103 126 97 124" fill="none" stroke="#446688" stroke-width="2.2" stroke-linecap="round"/>
   <path d="M110 118 Q117 126 123 124" fill="none" stroke="#446688" stroke-width="2.2" stroke-linecap="round"/>
 
-  <!-- MOUSTACHES -->
-  <line x1="10"  y1="104" x2="78"  y2="108" stroke="white" stroke-width="1.3" opacity="0.88"/>
-  <line x1="12"  y1="112" x2="78"  y2="112" stroke="white" stroke-width="1.3" opacity="0.88"/>
-  <line x1="12"  y1="120" x2="78"  y2="116" stroke="white" stroke-width="1.3" opacity="0.88"/>
-  <line x1="142" y1="108" x2="210" y2="104" stroke="white" stroke-width="1.3" opacity="0.88"/>
-  <line x1="142" y1="112" x2="208" y2="112" stroke="white" stroke-width="1.3" opacity="0.88"/>
-  <line x1="142" y1="116" x2="208" y2="120" stroke="white" stroke-width="1.3" opacity="0.88"/>
+  <!-- MOUSTACHES blanches -->
+  <line x1="10"  y1="104" x2="78"  y2="108" stroke="white" stroke-width="1.4" opacity="0.9"/>
+  <line x1="12"  y1="112" x2="78"  y2="112" stroke="white" stroke-width="1.4" opacity="0.9"/>
+  <line x1="12"  y1="120" x2="78"  y2="116" stroke="white" stroke-width="1.4" opacity="0.9"/>
+  <line x1="142" y1="108" x2="210" y2="104" stroke="white" stroke-width="1.4" opacity="0.9"/>
+  <line x1="142" y1="112" x2="208" y2="112" stroke="white" stroke-width="1.4" opacity="0.9"/>
+  <line x1="142" y1="116" x2="208" y2="120" stroke="white" stroke-width="1.4" opacity="0.9"/>
 </g>
 
 </svg>
