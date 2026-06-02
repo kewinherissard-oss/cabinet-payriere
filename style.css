@@ -1035,6 +1035,83 @@ img { max-width: 100%; display: block; }
 }
 #cb-send:hover { transform: scale(1.12); box-shadow: 0 6px 18px rgba(245,158,11,.6); }
 
+/* ── Slot picker style Doctolib ── */
+.cb-slot-picker {
+  width: 100%;
+  background: #f0f7ff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1.5px solid #cde4ff;
+  margin: 4px 0 8px;
+  padding: 0 !important;
+}
+.cb-slot-day {
+  border-bottom: 1px solid #deeeff;
+  background: #fff;
+}
+.cb-slot-day:last-child { border-bottom: none; }
+.cb-slot-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  font-size: .9rem;
+  color: #1e293b;
+  transition: background .15s;
+}
+.cb-slot-hdr:hover { background: #f0f7ff; }
+.cb-slot-hdr strong { font-weight: 700; }
+.cb-slot-tog {
+  font-size: .8rem;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+.cb-slot-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 14px 14px;
+  background: #f8fbff;
+  border-top: 1px solid #e6f0ff;
+}
+.cb-slot-btn {
+  padding: 7px 14px;
+  border: 1.5px solid #93c5fd;
+  border-radius: 8px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  min-width: 62px;
+  text-align: center;
+}
+.cb-slot-btn:hover {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(29,78,216,.3);
+}
+.cb-slot-more {
+  width: 100%;
+  padding: 13px;
+  text-align: center;
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .08em;
+  background: #fff;
+  border: none;
+  border-top: 1px solid #deeeff;
+  cursor: pointer;
+  transition: background .15s;
+}
+.cb-slot-more:hover { background: #f0f7ff; }
+
 .cb-booking-actions {
   display: flex; flex-direction: column; gap: 8px;
   padding: 4px 0 6px;

@@ -649,6 +649,109 @@
     return best || RULES.find(r => r.id === '_fallback');
   }
 
+  /* ════ SLOT PICKER — style Doctolib ════ */
+  const OPEN_DAYS    = [1, 3, 5]; /* Lun=1, Mer=3, Ven=5 */
+  const MATIN_SLOTS  = ['09:30','10:00','10:30','11:00','11:30','12:00'];
+  const APM_SLOTS    = ['15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30'];
+  let   slotDaysShown = 0;
+  let   slotAllDays   = [];
+
+  function generateDays(total) {
+    const days = [];
+    const now  = new Date();
+    const check = new Date(now);
+    check.setDate(check.getDate() + 1);
+    while (days.length < total) {
+      if (OPEN_DAYS.includes(check.getDay())) {
+        const label = check.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        const cap   = label.charAt(0).toUpperCase() + label.slice(1);
+        days.push({ label: cap, times: [...MATIN_SLOTS, ...APM_SLOTS] });
+      }
+      check.setDate(check.getDate() + 1);
+    }
+    return days;
+  }
+
+  function renderSlotPicker() {
+    setChips([]);
+    slotAllDays   = generateDays(20);
+    slotDaysShown = 0;
+
+    const wrap = make('div', { class: 'cb-slot-picker cb-msg', 'data-role': 'bot' });
+    elMessages.appendChild(wrap);
+
+    const inner = make('div', { id: 'cb-slot-inner' });
+    wrap.appendChild(inner);
+
+    const moreBtn = make('button', { class: 'cb-slot-more' });
+    moreBtn.textContent = 'VOIR PLUS';
+    moreBtn.addEventListener('click', () => appendSlotDays(inner, 5));
+    wrap.appendChild(moreBtn);
+
+    appendSlotDays(inner, 5);
+    scrollBottom();
+  }
+
+  function appendSlotDays(container, n) {
+    const batch = slotAllDays.slice(slotDaysShown, slotDaysShown + n);
+    slotDaysShown += batch.length;
+
+    batch.forEach((day, i) => {
+      const dayEl = make('div', { class: 'cb-slot-day' });
+
+      const hdr = make('div', { class: 'cb-slot-hdr' });
+      const lbl = make('strong'); lbl.textContent = day.label;
+      const tog = make('span',  { class: 'cb-slot-tog' }); tog.textContent = i < 2 ? '∧' : '∨';
+      hdr.appendChild(lbl); hdr.appendChild(tog);
+
+      const grid = make('div', { class: 'cb-slot-grid' });
+      if (i >= 2) grid.style.display = 'none';
+
+      day.times.forEach(time => {
+        const btn = make('button', { class: 'cb-slot-btn' });
+        btn.textContent = time;
+        btn.addEventListener('click', () => pickSlot(day.label, time));
+        grid.appendChild(btn);
+      });
+
+      hdr.addEventListener('click', () => {
+        const open = grid.style.display !== 'none';
+        grid.style.display = open ? 'none' : 'flex';
+        tog.textContent    = open ? '∨' : '∧';
+      });
+
+      dayEl.appendChild(hdr);
+      dayEl.appendChild(grid);
+      container.appendChild(dayEl);
+    });
+
+    if (slotDaysShown >= slotAllDays.length) {
+      const moreBtn = document.querySelector('.cb-slot-more');
+      if (moreBtn) moreBtn.style.display = 'none';
+    }
+    scrollBottom();
+  }
+
+  function pickSlot(dayLabel, time) {
+    bookingData.date = dayLabel + ' à ' + time;
+    /* Retire le picker du DOM */
+    const picker = document.querySelector('.cb-slot-picker');
+    if (picker) picker.remove();
+    /* Affiche la sélection comme message utilisateur */
+    appendMsg('user', dayLabel + ' à ' + time);
+    /* Avance dans le flux */
+    const chips_motifs = ['Consultation générale', 'Vaccination', 'Chirurgie / Stérilisation', 'Suivi / Rappel', 'Autre'];
+    if (bookingType === 'existing') {
+      bookingStep = 5;
+      setChips(chips_motifs);
+      botReply('Quel est le <strong>motif de la consultation</strong> ?');
+    } else {
+      bookingStep = 6;
+      setChips(chips_motifs);
+      botReply('Dernière question — quel est le <strong>motif de la consultation</strong> ?');
+    }
+  }
+
   /* ── Flux de prise de rendez-vous ── */
   /* bookingType : '' | 'existing' | 'new' */
   let bookingType = '';
@@ -728,15 +831,12 @@
         if (text.trim().length < 2) { botReply('Merci de préciser l\'espèce et le prénom de votre animal (ex : "Mon chat Minou").'); return; }
         bookingData.animal = text.trim();
         bookingStep = 4;
-        setChips(chips_creneaux);
-        botReply('Quel <strong>créneau vous conviendrait</strong> ?<br><small>Cabinet ouvert Lun / Mer / Ven</small>');
+        showTyping();
+        setTimeout(() => { hideTyping(); botReply('Choisissez un créneau disponible 👇'); renderSlotPicker(); }, 600);
 
       } else if (bookingStep === 4) {
-        if (text.trim().length < 2) { botReply('Indiquez un créneau ou choisissez "Je ne sais pas encore".'); return; }
-        bookingData.date = text.trim();
-        bookingStep = 5;
-        setChips(chips_motifs);
-        botReply('Quel est le <strong>motif de la consultation</strong> ?');
+        /* Ce step est maintenant géré par pickSlot() — on ne devrait pas y arriver via texte */
+        return;
 
       } else if (bookingStep === 5) {
         if (text.trim().length < 2) { botReply('Merci d\'indiquer le motif (ex : "Vaccination annuelle").'); return; }
@@ -778,15 +878,12 @@
         if (text.trim().length < 2) { botReply('Précisez l\'espèce et le prénom (ex : "Mon chat Minou").'); return; }
         bookingData.animal = text.trim();
         bookingStep = 5;
-        setChips(chips_creneaux);
-        botReply('Quel <strong>créneau vous conviendrait</strong> ? (cabinet ouvert Lun / Mer / Ven)');
+        showTyping();
+        setTimeout(() => { hideTyping(); botReply('Choisissez un créneau disponible 👇'); renderSlotPicker(); }, 600);
 
       } else if (bookingStep === 5) {
-        if (text.trim().length < 2) { botReply('Indiquez un créneau ou choisissez "Je ne sais pas encore".'); return; }
-        bookingData.date = text.trim();
-        bookingStep = 6;
-        setChips(chips_motifs);
-        botReply('Dernière question — quel est le <strong>motif de la consultation</strong> ?');
+        /* Géré par pickSlot() — on ignore les saisies texte à cette étape */
+        return;
 
       } else if (bookingStep === 6) {
         if (text.trim().length < 2) { botReply('Indiquez le motif (ex : "Bilan de santé").'); return; }
