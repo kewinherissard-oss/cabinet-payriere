@@ -677,9 +677,7 @@
     slotAllDays   = generateDays(20);
     slotDaysShown = 0;
 
-    const wrap = make('div', { class: 'cb-slot-picker cb-msg', 'data-role': 'bot' });
-    elMessages.appendChild(wrap);
-
+    const wrap  = make('div', { class: 'cb-slot-picker' });
     const inner = make('div', { id: 'cb-slot-inner' });
     wrap.appendChild(inner);
 
@@ -689,7 +687,8 @@
     wrap.appendChild(moreBtn);
 
     appendSlotDays(inner, 5);
-    scrollBottom();
+    elMessages.appendChild(wrap);
+    setTimeout(() => scrollBottom(), 50);
   }
 
   function appendSlotDays(container, n) {
@@ -832,7 +831,7 @@
         bookingData.animal = text.trim();
         bookingStep = 4;
         showTyping();
-        setTimeout(() => { hideTyping(); botReply('Choisissez un créneau disponible 👇'); renderSlotPicker(); }, 600);
+        setTimeout(() => { hideTyping(); appendMsg('bot', 'Choisissez un créneau disponible 👇'); setTimeout(() => renderSlotPicker(), 150); }, 700);
 
       } else if (bookingStep === 4) {
         /* Ce step est maintenant géré par pickSlot() — on ne devrait pas y arriver via texte */
@@ -879,7 +878,7 @@
         bookingData.animal = text.trim();
         bookingStep = 5;
         showTyping();
-        setTimeout(() => { hideTyping(); botReply('Choisissez un créneau disponible 👇'); renderSlotPicker(); }, 600);
+        setTimeout(() => { hideTyping(); appendMsg('bot', 'Choisissez un créneau disponible 👇'); setTimeout(() => renderSlotPicker(), 150); }, 700);
 
       } else if (bookingStep === 5) {
         /* Géré par pickSlot() — on ignore les saisies texte à cette étape */
