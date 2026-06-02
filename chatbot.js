@@ -490,7 +490,7 @@
       phone:        data.phone        || '',
       email:        data.email        || '',
       address:      data.address      || '',
-      date:         data.date         || '',
+      date:         data.dateISO || data.date || '',
       animal:       data.animal       || '',
       animalAge:    data.animalAge    || '',
       animalSexe:   data.animalSexe   || '',
@@ -674,9 +674,49 @@
 
   function renderSlotPicker() {
     setChips([]);
-    slotAllDays   = generateDays(20);
     slotDaysShown = 0;
 
+    /* Indicateur de chargement */
+    const loader = make('div', { class: 'cb-slot-loading' });
+    loader.innerHTML = '<span class="cb-slot-spin">⟳</span> Chargement des créneaux…';
+    elMessages.appendChild(loader);
+    scrollBottom();
+
+    /* Tentative de fetch des créneaux réels depuis Google Calendar */
+    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 6000));
+    Promise.race([
+      fetch(WEBHOOK_URL + '?action=slots').then(r => r.json()),
+      timeout
+    ])
+    .then(data => {
+      if (data.status === 'ok' && data.days && data.days.length) {
+        slotAllDays = data.days.map(d => ({
+          iso:   d.iso,
+          label: formatISODateFR(d.iso),
+          times: d.slots
+        }));
+      } else {
+        slotAllDays = generateDays(20);
+      }
+    })
+    .catch(() => {
+      slotAllDays = generateDays(20);
+    })
+    .finally(() => {
+      loader.remove();
+      buildSlotPickerDOM();
+    });
+  }
+
+  function formatISODateFR(iso) {
+    const d = new Date(iso + 'T12:00:00');
+    const label = d.toLocaleDateString('fr-FR', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+
+  function buildSlotPickerDOM() {
     const wrap  = make('div', { class: 'cb-slot-picker' });
     const inner = make('div', { id: 'cb-slot-inner' });
     wrap.appendChild(inner);
@@ -696,10 +736,11 @@
     slotDaysShown += batch.length;
 
     batch.forEach((day, i) => {
+      const label = day.label || day.date || '';
       const dayEl = make('div', { class: 'cb-slot-day' });
 
       const hdr = make('div', { class: 'cb-slot-hdr' });
-      const lbl = make('strong'); lbl.textContent = day.label;
+      const lbl = make('strong'); lbl.textContent = label;
       const tog = make('span',  { class: 'cb-slot-tog' }); tog.textContent = i < 2 ? '∧' : '∨';
       hdr.appendChild(lbl); hdr.appendChild(tog);
 
@@ -709,7 +750,7 @@
       day.times.forEach(time => {
         const btn = make('button', { class: 'cb-slot-btn' });
         btn.textContent = time;
-        btn.addEventListener('click', () => pickSlot(day.label, time));
+        btn.addEventListener('click', () => pickSlot(label, time, day.iso));
         grid.appendChild(btn);
       });
 
@@ -731,8 +772,9 @@
     scrollBottom();
   }
 
-  function pickSlot(dayLabel, time) {
-    bookingData.date = dayLabel + ' à ' + time;
+  function pickSlot(dayLabel, time, isoDate) {
+    bookingData.date    = dayLabel + ' à ' + time;
+    bookingData.dateISO = isoDate ? (isoDate + 'T' + time + ':00') : '';
     /* Retire le picker du DOM */
     const picker = document.querySelector('.cb-slot-picker');
     if (picker) picker.remove();

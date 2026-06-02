@@ -1111,6 +1111,19 @@ img { max-width: 100%; display: block; }
   transition: background .15s;
 }
 .cb-slot-more:hover { background: #f0f7ff; }
+.cb-slot-loading {
+  padding: 14px 16px;
+  color: #64748b;
+  font-size: .88rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cb-slot-spin {
+  display: inline-block;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 .cb-booking-actions {
   display: flex; flex-direction: column; gap: 8px;
