@@ -483,24 +483,37 @@
   const NTFY_TOPIC  = 'rdv-cabinet-payriere-31530';
 
   function sendWebhook(data) {
+    const isNew = bookingType === 'new';
     const params = new URLSearchParams({
-      name:   data.name   || '',
-      phone:  data.phone  || '',
-      email:  data.email  || '',
-      date:   data.date   || '',
-      animal: data.animal || '',
-      motive: data.motive || '',
+      type:         isNew ? 'NOUVEAU CLIENT' : 'CLIENT EXISTANT',
+      name:         data.name         || '',
+      phone:        data.phone        || '',
+      email:        data.email        || '',
+      address:      data.address      || '',
+      date:         data.date         || '',
+      animal:       data.animal       || '',
+      animalAge:    data.animalAge    || '',
+      animalSexe:   data.animalSexe   || '',
+      animalSteril: data.animalSteril || '',
+      antecedents:  data.antecedents  || '',
+      motive:       data.motive       || '',
     });
     fetch(WEBHOOK_URL + '?' + params.toString(), { mode: 'no-cors' }).catch(() => {});
 
     const message = [
-      'Proprietaire : ' + (data.name   || '?'),
-      'Telephone    : ' + (data.phone  || '?'),
-      'Email        : ' + (data.email  || '?'),
-      'Creneau      : ' + (data.date   || '?'),
-      'Animal       : ' + (data.animal || '?'),
-      'Motif        : ' + (data.motive || '?'),
-    ].join('\n');
+      (isNew ? '🆕 NOUVEAU CLIENT' : '🔄 Client existant'),
+      'Nom          : ' + (data.name         || '?'),
+      'Téléphone    : ' + (data.phone        || '?'),
+      'Email        : ' + (data.email        || '?'),
+      isNew ? 'Adresse      : ' + (data.address      || '?') : '',
+      'Animal       : ' + (data.animal       || '?'),
+      isNew ? 'Age/Race     : ' + (data.animalAge    || '?') : '',
+      isNew ? 'Sexe         : ' + (data.animalSexe   || '?') : '',
+      isNew ? 'Stérilisé    : ' + (data.animalSteril || '?') : '',
+      isNew ? 'Antécédents  : ' + (data.antecedents  || '?') : '',
+      'Créneau      : ' + (data.date         || '?'),
+      'Motif        : ' + (data.motive       || '?'),
+    ].filter(Boolean).join('\n');
     fetch('https://ntfy.sh/' + NTFY_TOPIC, {
       method: 'POST',
       headers: { 'Title': 'Nouveau RDV - ' + (data.animal || '') + ' - ' + (data.name || ''), 'Priority': 'high' },
@@ -637,127 +650,221 @@
   }
 
   /* ── Flux de prise de rendez-vous ── */
+  /* bookingType : '' | 'existing' | 'new' */
+  let bookingType = '';
+
   function startBooking() {
     booking = true;
-    bookingStep = 1;
+    bookingStep = 0;
+    bookingType = '';
     bookingData = {};
-    setChips([]);
+    setChips(['✅ Oui, je suis déjà client', '🆕 Non, première visite']);
     setTimeout(() => {
       showTyping();
       setTimeout(() => {
         hideTyping();
-        appendMsg('bot', 'Pour préparer votre demande, j\'ai besoin de quelques informations. 📋<br><br><strong>Quel est votre prénom et nom ?</strong>');
+        appendMsg('bot', 'Super, je vais vous aider à préparer votre rendez-vous 😊<br><br>Êtes-vous <strong>déjà client</strong> chez nous ?');
         scrollBottom();
-      }, 700);
-    }, 300);
+      }, 600);
+    }, 200);
   }
 
   function handleBookingInput(text) {
+    const t  = normalize(text);
     const chips_creneaux = ['Lundi matin', 'Lundi après-midi', 'Mercredi matin', 'Mercredi après-midi', 'Vendredi matin', 'Vendredi après-midi', 'Je ne sais pas encore'];
     const chips_animaux  = ['🐶 Chien', '🐱 Chat', '🐰 Lapin', '🐹 Rongeur', '🦜 Autre'];
-    const chips_motifs   = ['Consultation générale', 'Vaccination', 'Chirurgie / Stérilisation', 'Urgence', 'Suivi / Rappel'];
+    const chips_motifs   = ['Consultation générale', 'Vaccination', 'Chirurgie / Stérilisation', 'Suivi / Rappel', 'Autre'];
+    const chips_sexe     = ['🔵 Mâle', '🔴 Femelle', 'Je ne sais pas'];
+    const chips_steril   = ['✅ Oui', '❌ Non', 'Je ne sais pas'];
 
-    if (normalize(text).match(/^(annuler|stop|quitter|non merci|abandonner)$/)) {
+    if (t.match(/^(annuler|stop|quitter|non merci|abandonner)$/) && bookingStep !== 0) {
       resetBooking();
-      showTyping();
       setTimeout(() => {
-        hideTyping();
-        appendMsg('bot', '❌ Demande annulée. Je reste disponible si vous avez d\'autres questions ! 🐾');
-        setChips(['Horaires', 'Prendre RDV', 'Adresse', 'Services']);
-      }, 500);
+        botReply('Pas de souci, j\'annule tout 😊 N\'hésitez pas à revenir quand vous voulez !');
+        setChips(['Horaires', 'Prendre RDV', 'Urgences']);
+      }, 300);
       return;
     }
 
-    if (bookingStep === 1) {
-      if (text.trim().length < 2) {
-        botReply('Merci de saisir votre <strong>prénom et nom</strong> (au moins 2 caractères). 😊');
-        return;
+    /* ═══ STEP 0 — Déjà client ? ═══ */
+    if (bookingStep === 0) {
+      const isExisting = t.match(/\b(oui|deja|deja client|je suis client|existant|connais)\b/);
+      const isNew      = t.match(/\b(non|nouveau|nouvelle|premiere|premier|jamais|pas client|nouvelle visite)\b/);
+      if (isExisting || text.includes('déjà') || text.includes('Oui')) {
+        bookingType = 'existing';
+        bookingStep = 1;
+        setChips([]);
+        botReply('Parfait, bienvenue ! 😊<br><br>Pour vous retrouver dans notre agenda, <strong>quel est votre nom ?</strong>');
+      } else if (isNew || text.includes('Non') || text.includes('première') || text.includes('premier')) {
+        bookingType = 'new';
+        bookingStep = 1;
+        setChips([]);
+        botReply('Bienvenue chez nous ! On va préparer votre dossier pour que votre première visite se passe au mieux 🐾<br><br>On commence par vous — <strong>votre prénom et nom ?</strong>');
+      } else {
+        botReply('Désolée, je n\'ai pas bien compris 😊 Êtes-vous déjà venu consulter chez nous ?');
+        setChips(['✅ Oui, je suis déjà client', '🆕 Non, première visite']);
       }
-      bookingData.name = text.trim();
-      bookingStep = 2;
-      botReply(`Merci <strong>${escapeHtml(bookingData.name.split(' ')[0])}</strong> 😊<br><br><strong>Quel est votre numéro de téléphone ?</strong>`);
+      return;
+    }
 
-    } else if (bookingStep === 2) {
-      const clean = text.replace(/[\s\.\-]/g, '');
-      if (!/^[0-9\+]{9,14}$/.test(clean)) {
-        botReply('Ce numéro ne semble pas valide. Merci de saisir un <strong>numéro de téléphone</strong> correct (ex : 06 12 34 56 78).');
-        return;
-      }
-      bookingData.phone = text.trim();
-      bookingStep = 3;
-      botReply('Quelle est votre <strong>adresse email</strong> ? (pour recevoir une confirmation)');
+    /* ═══ FLUX CLIENT EXISTANT ═══ */
+    if (bookingType === 'existing') {
 
-    } else if (bookingStep === 3) {
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text.trim())) {
-        botReply('Cet email ne semble pas valide. Merci de saisir une <strong>adresse email correcte</strong> (ex : prenom@gmail.com).');
-        return;
-      }
-      bookingData.email = text.trim();
-      bookingStep = 4;
-      setChips(chips_creneaux);
-      botReply('Quel <strong>créneau vous conviendrait</strong> ? (Le cabinet est ouvert Lun / Mer / Ven)');
+      if (bookingStep === 1) {
+        if (text.trim().length < 2) { botReply('Merci d\'indiquer votre <strong>nom</strong> s\'il vous plaît 😊'); return; }
+        bookingData.name = text.trim();
+        bookingStep = 2;
+        botReply(`Et votre <strong>numéro de téléphone</strong>, <strong>${escapeHtml(bookingData.name.split(' ')[0])}</strong> ?`);
 
-    } else if (bookingStep === 4) {
-      if (text.trim().length < 2) {
-        botReply('Merci d\'indiquer un créneau souhaité ou de choisir "Je ne sais pas encore".');
-        return;
-      }
-      bookingData.date = text.trim();
-      bookingStep = 5;
-      setChips(chips_animaux);
-      botReply('Quel animal souhaitez-vous amener ? <strong>Précisez l\'espèce et le prénom</strong> de votre compagnon 🐾');
+      } else if (bookingStep === 2) {
+        const clean = text.replace(/[\s.\-]/g, '');
+        if (!/^[0-9+]{9,14}$/.test(clean)) { botReply('Ce numéro ne semble pas correct. Pouvez-vous le ressaisir ? (ex : 06 12 34 56 78)'); return; }
+        bookingData.phone = text.trim();
+        bookingStep = 3;
+        setChips(chips_animaux);
+        botReply('Quel animal souhaitez-vous amener ? <strong>Espèce et prénom</strong> de votre compagnon 🐾');
 
-    } else if (bookingStep === 5) {
-      if (text.trim().length < 2) {
-        botReply('Merci de préciser l\'espèce et le prénom de votre animal (ex : "Mon chat Minou").');
-        return;
-      }
-      bookingData.animal = text.trim();
-      bookingStep = 6;
-      setChips(chips_motifs);
-      botReply('Quel est le <strong>motif de la consultation</strong> ?');
+      } else if (bookingStep === 3) {
+        if (text.trim().length < 2) { botReply('Merci de préciser l\'espèce et le prénom de votre animal (ex : "Mon chat Minou").'); return; }
+        bookingData.animal = text.trim();
+        bookingStep = 4;
+        setChips(chips_creneaux);
+        botReply('Quel <strong>créneau vous conviendrait</strong> ?<br><small>Cabinet ouvert Lun / Mer / Ven</small>');
 
-    } else if (bookingStep === 6) {
-      if (text.trim().length < 2) {
-        botReply('Merci d\'indiquer le motif de votre visite (ex : "Vaccination annuelle").');
-        return;
+      } else if (bookingStep === 4) {
+        if (text.trim().length < 2) { botReply('Indiquez un créneau ou choisissez "Je ne sais pas encore".'); return; }
+        bookingData.date = text.trim();
+        bookingStep = 5;
+        setChips(chips_motifs);
+        botReply('Quel est le <strong>motif de la consultation</strong> ?');
+
+      } else if (bookingStep === 5) {
+        if (text.trim().length < 2) { botReply('Merci d\'indiquer le motif (ex : "Vaccination annuelle").'); return; }
+        bookingData.motive = text.trim();
+        bookingStep = 99;
+        showRecap();
       }
-      bookingData.motive = text.trim();
-      bookingStep = 7;
-      showRecap();
+      return;
+    }
+
+    /* ═══ FLUX NOUVEAU CLIENT ═══ */
+    if (bookingType === 'new') {
+
+      if (bookingStep === 1) {
+        if (text.trim().length < 2) { botReply('Merci de saisir votre <strong>prénom et nom</strong> 😊'); return; }
+        bookingData.name = text.trim();
+        bookingStep = 2;
+        botReply(`Enchanté(e) <strong>${escapeHtml(bookingData.name.split(' ')[0])}</strong> 😊<br><br>Votre <strong>numéro de téléphone</strong> ?`);
+
+      } else if (bookingStep === 2) {
+        const clean = text.replace(/[\s.\-]/g, '');
+        if (!/^[0-9+]{9,14}$/.test(clean)) { botReply('Numéro invalide. Ressaisissez-le s\'il vous plaît (ex : 06 12 34 56 78).'); return; }
+        bookingData.phone = text.trim();
+        bookingStep = 3;
+        botReply('Votre <strong>adresse email</strong> ? (pour vous envoyer la confirmation de RDV)');
+
+      } else if (bookingStep === 3) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text.trim())) { botReply('Cet email ne semble pas valide. Réessayez (ex : prenom@gmail.com).'); return; }
+        bookingData.email = text.trim();
+        bookingStep = 4;
+        botReply('Votre <strong>adresse postale</strong> ? (pour compléter votre dossier — ville suffit si vous préférez)');
+
+      } else if (bookingStep === 4) {
+        bookingData.address = text.trim() || 'Non renseignée';
+        bookingStep = 5;
+        setChips(chips_animaux);
+        botReply('Maintenant parlons de votre compagnon 🐾<br><br><strong>Quelle est son espèce et comment s\'appelle-t-il ?</strong>');
+
+      } else if (bookingStep === 5) {
+        if (text.trim().length < 2) { botReply('Précisez l\'espèce et le prénom (ex : "Mon chat Minou").'); return; }
+        bookingData.animal = text.trim();
+        bookingStep = 6;
+        botReply(`Il a quel <strong>âge approximatif</strong> ? (et sa race si vous la connaissez)`);
+
+      } else if (bookingStep === 6) {
+        bookingData.animalAge = text.trim() || 'Non renseigné';
+        bookingStep = 7;
+        setChips(chips_sexe);
+        botReply('C\'est un <strong>mâle ou une femelle</strong> ?');
+
+      } else if (bookingStep === 7) {
+        bookingData.animalSexe = text.trim();
+        bookingStep = 8;
+        setChips(chips_steril);
+        botReply('Il/elle est <strong>stérilisé(e)</strong> ?');
+
+      } else if (bookingStep === 8) {
+        bookingData.animalSteril = text.trim();
+        bookingStep = 9;
+        botReply('Des <strong>antécédents médicaux, traitements en cours ou allergies</strong> connues ? (tapez "Aucun" si rien de particulier)');
+
+      } else if (bookingStep === 9) {
+        bookingData.antecedents = text.trim() || 'Aucun';
+        bookingStep = 10;
+        setChips(chips_creneaux);
+        botReply('On y est presque ! Quel <strong>créneau vous conviendrait</strong> ?<br><small>Cabinet ouvert Lun / Mer / Ven</small>');
+
+      } else if (bookingStep === 10) {
+        if (text.trim().length < 2) { botReply('Indiquez un créneau ou choisissez "Je ne sais pas encore".'); return; }
+        bookingData.date = text.trim();
+        bookingStep = 11;
+        setChips(chips_motifs);
+        botReply('Et pour finir — quel est le <strong>motif de la consultation</strong> ?');
+
+      } else if (bookingStep === 11) {
+        if (text.trim().length < 2) { botReply('Indiquez le motif (ex : "Bilan de santé / première visite").'); return; }
+        bookingData.motive = text.trim();
+        bookingStep = 99;
+        showRecap();
+      }
+      return;
     }
   }
 
   function buildMailto(data) {
-    const subject = encodeURIComponent('🐾 Demande de RDV — ' + (data.animal || '') + ' — ' + (data.name || ''));
-    const body = encodeURIComponent(
-      'Bonjour Dr PAYRIERE,\n\n' +
-      'Nouvelle demande de rendez-vous reçue via le site internet :\n\n' +
-      'Propriétaire : ' + (data.name   || '') + '\n' +
-      'Téléphone    : ' + (data.phone  || '') + '\n' +
-      'Email        : ' + (data.email  || '') + '\n' +
-      'Créneau      : ' + (data.date   || '') + '\n' +
-      'Animal       : ' + (data.animal || '') + '\n' +
-      'Motif        : ' + (data.motive || '') + '\n\n' +
-      'Merci de confirmer le rendez-vous.\n\nCordialement,\n' + (data.name || '')
-    );
-    return 'mailto:mpayriere.vet@gmail.com?subject=' + subject + '&body=' + body;
+    const isNew = bookingType === 'new';
+    const subject = encodeURIComponent((isNew ? '🆕 NOUVEAU CLIENT — ' : '🔄 RDV — ') + (data.animal || '') + ' — ' + (data.name || ''));
+    let body = 'Bonjour Dr PAYRIERE,\n\n';
+    body += isNew ? 'NOUVEAU CLIENT — Demande de rendez-vous + fiche à créer\n\n' : 'Client existant — Demande de rendez-vous\n\n';
+    body += '━━━ PROPRIÉTAIRE ━━━\n';
+    body += 'Nom          : ' + (data.name    || '') + '\n';
+    body += 'Téléphone    : ' + (data.phone   || '') + '\n';
+    if (isNew) body += 'Email        : ' + (data.email   || '') + '\n';
+    if (isNew) body += 'Adresse      : ' + (data.address || '') + '\n';
+    body += '\n━━━ ANIMAL ━━━\n';
+    body += 'Animal       : ' + (data.animal      || '') + '\n';
+    if (isNew) body += 'Âge / Race   : ' + (data.animalAge  || '') + '\n';
+    if (isNew) body += 'Sexe         : ' + (data.animalSexe || '') + '\n';
+    if (isNew) body += 'Stérilisé(e) : ' + (data.animalSteril || '') + '\n';
+    if (isNew) body += 'Antécédents  : ' + (data.antecedents || '') + '\n';
+    body += '\n━━━ CONSULTATION ━━━\n';
+    body += 'Créneau      : ' + (data.date   || '') + '\n';
+    body += 'Motif        : ' + (data.motive || '') + '\n';
+    body += '\nMerci de confirmer le rendez-vous.\n\nCordialement,\n' + (data.name || '');
+    return 'mailto:mpayriere.vet@gmail.com?subject=' + encodeURIComponent(subject.replace(/%F0%9F.*?%20/g,'')) + '&body=' + encodeURIComponent(body);
   }
 
   function showRecap() {
     const data = bookingData;
+    const isNew = bookingType === 'new';
     setChips([]);
     sendWebhook(data);
     showTyping();
     setTimeout(() => {
       hideTyping();
-      appendMsg('bot', 'Récapitulatif de votre demande :<br><br>' +
-        '👤 <strong>' + escapeHtml(data.name)   + '</strong><br>' +
-        '📞 ' + escapeHtml(data.phone)  + '<br>' +
-        '✉️ ' + escapeHtml(data.email)  + '<br>' +
-        '🗓️ ' + escapeHtml(data.date)   + '<br>' +
-        '🐾 ' + escapeHtml(data.animal) + '<br>' +
-        '📋 ' + escapeHtml(data.motive));
+      let recap = 'Voilà, c\'est noté ! Voici le récapitulatif :<br><br>';
+      recap += '👤 <strong>' + escapeHtml(data.name) + '</strong><br>';
+      recap += '📞 ' + escapeHtml(data.phone) + '<br>';
+      if (isNew && data.email)        recap += '✉️ ' + escapeHtml(data.email) + '<br>';
+      if (isNew && data.address)      recap += '📍 ' + escapeHtml(data.address) + '<br>';
+      recap += '🐾 ' + escapeHtml(data.animal) + '<br>';
+      if (isNew && data.animalAge)    recap += '🎂 ' + escapeHtml(data.animalAge) + '<br>';
+      if (isNew && data.animalSexe)   recap += '⚥ ' + escapeHtml(data.animalSexe) + '<br>';
+      if (isNew && data.animalSteril) recap += '✂️ Stérilisé(e) : ' + escapeHtml(data.animalSteril) + '<br>';
+      if (isNew && data.antecedents)  recap += '📋 ' + escapeHtml(data.antecedents) + '<br>';
+      recap += '🗓️ ' + escapeHtml(data.date) + '<br>';
+      recap += '💬 ' + escapeHtml(data.motive);
+      appendMsg('bot', recap);
       scrollBottom();
     }, 700);
 
@@ -767,9 +874,10 @@
         hideTyping();
         const mailto = buildMailto(data);
 
-        appendMsg('bot', '✅ <strong>Demande envoyée automatiquement !</strong><br><br>' +
-          'Le Dr PAYRIERE a reçu une notification et vous contactera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer votre créneau.<br><br>' +
-          '📧 Vous pouvez aussi envoyer un email directement :');
+        const confirmMsg = bookingType === 'new'
+          ? '✅ <strong>C\'est envoyé !</strong><br><br>Le Dr PAYRIERE a bien reçu votre dossier et votre demande de rendez-vous. Elle vous rappellera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer le créneau. À très vite ! 😊<br><br>Vous pouvez aussi envoyer un email avec toutes les infos :'
+          : '✅ <strong>Demande envoyée !</strong><br><br>Le Dr PAYRIERE a reçu votre demande et vous contactera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer. À bientôt ! 😊<br><br>Ou envoyez un email directement :';
+        appendMsg('bot', confirmMsg);
 
         const wrap = make('div', { class: 'cb-booking-actions' });
 
@@ -798,9 +906,10 @@
   }
 
   function resetBooking() {
-    booking     = false;
-    bookingStep = 0;
-    bookingData = {};
+    booking      = false;
+    bookingStep  = 0;
+    bookingType  = '';
+    bookingData  = {};
   }
 
   function botReply(html) {
