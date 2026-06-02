@@ -747,72 +747,49 @@
       return;
     }
 
-    /* ═══ FLUX NOUVEAU CLIENT ═══ */
+    /* ═══ FLUX NOUVEAU CLIENT (6 étapes max) ═══ */
     if (bookingType === 'new') {
 
       if (bookingStep === 1) {
         if (text.trim().length < 2) { botReply('Merci de saisir votre <strong>prénom et nom</strong> 😊'); return; }
         bookingData.name = text.trim();
         bookingStep = 2;
-        botReply(`Enchanté(e) <strong>${escapeHtml(bookingData.name.split(' ')[0])}</strong> 😊<br><br>Votre <strong>numéro de téléphone</strong> ?`);
+        botReply(`Enchanté(e) <strong>${escapeHtml(bookingData.name.split(' ')[0])}</strong> 😊 Votre <strong>numéro de téléphone</strong> ?`);
 
       } else if (bookingStep === 2) {
         const clean = text.replace(/[\s.\-]/g, '');
-        if (!/^[0-9+]{9,14}$/.test(clean)) { botReply('Numéro invalide. Ressaisissez-le s\'il vous plaît (ex : 06 12 34 56 78).'); return; }
+        if (!/^[0-9+]{9,14}$/.test(clean)) { botReply('Ce numéro ne semble pas correct. Réessayez (ex : 06 12 34 56 78).'); return; }
         bookingData.phone = text.trim();
         bookingStep = 3;
-        botReply('Votre <strong>adresse email</strong> ? (pour vous envoyer la confirmation de RDV)');
+        botReply('Votre <strong>email</strong> pour recevoir la confirmation ? (tapez "passer" si vous préférez qu\'on vous rappelle)');
 
       } else if (bookingStep === 3) {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text.trim())) { botReply('Cet email ne semble pas valide. Réessayez (ex : prenom@gmail.com).'); return; }
-        bookingData.email = text.trim();
+        const skip = normalize(text).match(/^(passer|skip|non|pas email|sans email)$/);
+        if (!skip && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text.trim())) {
+          botReply('Cet email ne semble pas valide. Réessayez ou tapez <strong>"passer"</strong> pour continuer sans.');
+          return;
+        }
+        bookingData.email = skip ? '' : text.trim();
         bookingStep = 4;
-        botReply('Votre <strong>adresse postale</strong> ? (pour compléter votre dossier — ville suffit si vous préférez)');
+        setChips(chips_animaux);
+        botReply('Et votre compagnon — <strong>quelle espèce et comment il s\'appelle ?</strong> 🐾');
 
       } else if (bookingStep === 4) {
-        bookingData.address = text.trim() || 'Non renseignée';
-        bookingStep = 5;
-        setChips(chips_animaux);
-        botReply('Maintenant parlons de votre compagnon 🐾<br><br><strong>Quelle est son espèce et comment s\'appelle-t-il ?</strong>');
-
-      } else if (bookingStep === 5) {
         if (text.trim().length < 2) { botReply('Précisez l\'espèce et le prénom (ex : "Mon chat Minou").'); return; }
         bookingData.animal = text.trim();
-        bookingStep = 6;
-        botReply(`Il a quel <strong>âge approximatif</strong> ? (et sa race si vous la connaissez)`);
-
-      } else if (bookingStep === 6) {
-        bookingData.animalAge = text.trim() || 'Non renseigné';
-        bookingStep = 7;
-        setChips(chips_sexe);
-        botReply('C\'est un <strong>mâle ou une femelle</strong> ?');
-
-      } else if (bookingStep === 7) {
-        bookingData.animalSexe = text.trim();
-        bookingStep = 8;
-        setChips(chips_steril);
-        botReply('Il/elle est <strong>stérilisé(e)</strong> ?');
-
-      } else if (bookingStep === 8) {
-        bookingData.animalSteril = text.trim();
-        bookingStep = 9;
-        botReply('Des <strong>antécédents médicaux, traitements en cours ou allergies</strong> connues ? (tapez "Aucun" si rien de particulier)');
-
-      } else if (bookingStep === 9) {
-        bookingData.antecedents = text.trim() || 'Aucun';
-        bookingStep = 10;
+        bookingStep = 5;
         setChips(chips_creneaux);
-        botReply('On y est presque ! Quel <strong>créneau vous conviendrait</strong> ?<br><small>Cabinet ouvert Lun / Mer / Ven</small>');
+        botReply('Quel <strong>créneau vous conviendrait</strong> ? (cabinet ouvert Lun / Mer / Ven)');
 
-      } else if (bookingStep === 10) {
+      } else if (bookingStep === 5) {
         if (text.trim().length < 2) { botReply('Indiquez un créneau ou choisissez "Je ne sais pas encore".'); return; }
         bookingData.date = text.trim();
-        bookingStep = 11;
+        bookingStep = 6;
         setChips(chips_motifs);
-        botReply('Et pour finir — quel est le <strong>motif de la consultation</strong> ?');
+        botReply('Dernière question — quel est le <strong>motif de la consultation</strong> ?');
 
-      } else if (bookingStep === 11) {
-        if (text.trim().length < 2) { botReply('Indiquez le motif (ex : "Bilan de santé / première visite").'); return; }
+      } else if (bookingStep === 6) {
+        if (text.trim().length < 2) { botReply('Indiquez le motif (ex : "Bilan de santé").'); return; }
         bookingData.motive = text.trim();
         bookingStep = 99;
         showRecap();
@@ -875,8 +852,8 @@
         const mailto = buildMailto(data);
 
         const confirmMsg = bookingType === 'new'
-          ? '✅ <strong>C\'est envoyé !</strong><br><br>Le Dr PAYRIERE a bien reçu votre dossier et votre demande de rendez-vous. Elle vous rappellera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer le créneau. À très vite ! 😊<br><br>Vous pouvez aussi envoyer un email avec toutes les infos :'
-          : '✅ <strong>Demande envoyée !</strong><br><br>Le Dr PAYRIERE a reçu votre demande et vous contactera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer. À bientôt ! 😊<br><br>Ou envoyez un email directement :';
+          ? '✅ <strong>Parfait, c\'est noté !</strong><br><br>Le Dr PAYRIERE va vous recontacter au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer votre créneau.<br><br>On complètera votre dossier directement lors de votre première visite 😊 À très vite !<br><br>Vous pouvez aussi nous envoyer un email :'
+          : '✅ <strong>Demande envoyée !</strong><br><br>Le Dr PAYRIERE vous contactera au <strong>' + escapeHtml(data.phone) + '</strong> pour confirmer. À bientôt ! 😊<br><br>Ou appelez directement :';
         appendMsg('bot', confirmMsg);
 
         const wrap = make('div', { class: 'cb-booking-actions' });
