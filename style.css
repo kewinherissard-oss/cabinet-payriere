@@ -515,59 +515,144 @@ img { max-width: 100%; display: block; }
 .service-card p { font-size: .85rem; color: var(--text-muted); line-height: 1.65; }
 
 /* ── About ── */
-.about { background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); }
+.about {
+  background: linear-gradient(160deg, #060d20 0%, #0e2145 50%, #071530 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grille de points subtile */
+.about::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.055) 1px, transparent 1px);
+  background-size: 38px 38px;
+  pointer-events: none;
+}
+
+/* Orbes flottantes */
+.about-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+.about-bg-orb-1 {
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, rgba(29,78,216,.3) 0%, transparent 70%);
+  top: -180px; right: 60px;
+  animation: orbDriftA 14s ease-in-out infinite;
+}
+.about-bg-orb-2 {
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(245,158,11,.18) 0%, transparent 70%);
+  bottom: -100px; left: -60px;
+  animation: orbDriftA 11s ease-in-out infinite reverse;
+}
+.about-bg-orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(96,165,250,.2) 0%, transparent 70%);
+  top: 45%; left: 42%;
+  animation: orbDriftA 18s ease-in-out infinite;
+  animation-delay: -6s;
+}
+@keyframes orbDriftA {
+  0%,100% { transform: translate(0,0) scale(1); }
+  25%  { transform: translate(-35px, 28px) scale(1.06); }
+  50%  { transform: translate(28px, -38px) scale(.94); }
+  75%  { transform: translate(-18px,-18px) scale(1.03); }
+}
+
+/* Pattes déco flottantes */
+.about-bg-paw {
+  position: absolute;
+  font-size: 2rem;
+  opacity: .055;
+  pointer-events: none;
+  z-index: 0;
+  animation: pawDrift 7s ease-in-out infinite;
+}
+@keyframes pawDrift {
+  0%,100% { transform: translateY(0) rotate(0deg);   opacity: .055; }
+  33%     { transform: translateY(-22px) rotate(14deg); opacity: .1; }
+  66%     { transform: translateY(-10px) rotate(-7deg); opacity: .075; }
+}
+
+/* Container au-dessus */
+.about .container { position: relative; z-index: 2; }
+
 .about-inner { display: flex; align-items: center; gap: 80px; }
 .about-visual { flex-shrink: 0; }
+
+/* Wrapper perspective 3D */
+.about-card-wrapper {
+  perspective: 900px;
+  perspective-origin: center center;
+}
+
+/* Carte avec effet 3D */
 .about-card {
   position: relative;
   width: 300px;
-  background: #fff;
   border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0,0,0,.14), 0 0 0 1px rgba(0,0,0,.06);
+  box-shadow: 0 32px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.1);
+  transform-style: preserve-3d;
+  transition: box-shadow .3s ease;
+  cursor: pointer;
+  will-change: transform;
+}
+.about-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(255,255,255,.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 3;
+}
+.about-card:hover {
+  box-shadow: 0 48px 100px rgba(0,0,0,.65), 0 0 60px rgba(29,78,216,.3), 0 0 0 1px rgba(255,255,255,.18);
 }
 .about-card > img:first-child {
   width: 100%;
   height: 360px;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 5%;
+  transform: scale(1.5);
+  transform-origin: center 20%;
   display: block;
 }
 .about-card-info {
   padding: 18px 20px 20px;
-  background: #fff;
+  background: rgba(6,13,32,.85);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,.1);
 }
 .about-card-info strong {
   display: block;
   font-size: 1.1rem;
   font-weight: 800;
-  color: var(--text);
+  color: #fff;
   margin-bottom: 4px;
 }
 .about-card-info span {
   font-size: .85rem;
-  color: var(--primary);
+  color: #fbbf24;
   font-weight: 600;
 }
-.about-floating {
-  position: absolute;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  border: 3px solid #fff;
-  animation: floatBubble 3s ease-in-out infinite;
-}
-.about-floating img { width: 100%; height: 100%; object-fit: cover; }
-.a1 { width: 56px; height: 56px; top: -10px; right: -10px; animation-delay: 0s; }
-.a2 { width: 56px; height: 56px; bottom: -10px; left: -10px; animation-delay: .75s; }
-.a3 { width: 48px; height: 48px; bottom: 20px; right: -20px; animation-delay: 1.5s; }
-.a4 { width: 48px; height: 48px; top: 20px; left: -20px; animation-delay: 2.25s; }
-@keyframes floatBubble { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-8px) rotate(5deg)} }
 
+/* Textes section sombre */
+.about .section-header h2    { color: #fff; }
+.about .section-header h2 span { color: #fbbf24; }
+.about .section-header p     { color: rgba(255,255,255,.6); }
 .about-text { flex: 1; }
-.about-desc { color: var(--text-muted); margin-bottom: 28px; font-size: 1rem; line-height: 1.8; }
+.about-desc { color: rgba(255,255,255,.7); margin-bottom: 28px; font-size: 1rem; line-height: 1.8; }
 .about-list { display: flex; flex-direction: column; gap: 14px; }
-.about-list li { display: flex; align-items: center; gap: 12px; font-size: .95rem; font-weight: 600; }
+.about-list li { display: flex; align-items: center; gap: 12px; font-size: .95rem; font-weight: 600; color: rgba(255,255,255,.88); }
 .about-list li span { font-size: 1.3rem; }
 
 /* ── Philosophie ── */

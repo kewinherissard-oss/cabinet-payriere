@@ -184,6 +184,34 @@ window.addEventListener('scroll', () => {
 })();
 
 /* ══════════════════════════════════════════════
+   TILT 3D — carte Dr PAYRIERE
+   ══════════════════════════════════════════════ */
+(function initAboutTilt() {
+  const wrapper = document.querySelector('.about-card-wrapper');
+  const card    = document.querySelector('.about-card');
+  if (!wrapper || !card) return;
+
+  let raf;
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+
+  wrapper.addEventListener('mousemove', e => {
+    const r = wrapper.getBoundingClientRect();
+    tx = (e.clientX - r.left) / r.width  - 0.5;
+    ty = (e.clientY - r.top)  / r.height - 0.5;
+  }, { passive: true });
+
+  wrapper.addEventListener('mouseleave', () => { tx = 0; ty = 0; });
+
+  function tiltTick() {
+    cx += (tx - cx) * 0.1;
+    cy += (ty - cy) * 0.1;
+    card.style.transform = `rotateY(${cx * 20}deg) rotateX(${-cy * 16}deg) translateZ(${Math.abs(cx) * 12 + Math.abs(cy) * 12}px)`;
+    raf = requestAnimationFrame(tiltTick);
+  }
+  tiltTick();
+})();
+
+/* ══════════════════════════════════════════════
    GSAP ScrollTrigger — animations au scroll
    ══════════════════════════════════════════════ */
 window.addEventListener('load', () => {
