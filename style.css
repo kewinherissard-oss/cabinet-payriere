@@ -621,9 +621,7 @@ img { max-width: 100%; display: block; }
   width: 100%;
   height: 360px;
   object-fit: cover;
-  object-position: center 5%;
-  transform: scale(1.5);
-  transform-origin: center 20%;
+  object-position: center top;
   display: block;
 }
 .about-card-info {
@@ -654,6 +652,132 @@ img { max-width: 100%; display: block; }
 .about-list { display: flex; flex-direction: column; gap: 14px; }
 .about-list li { display: flex; align-items: center; gap: 12px; font-size: .95rem; font-weight: 600; color: rgba(255,255,255,.88); }
 .about-list li span { font-size: 1.3rem; }
+
+/* ════════════════════════════════════════════
+   DARK-BG — Fond navy partagé pour toutes sections
+   ════════════════════════════════════════════ */
+.dark-bg {
+  background: linear-gradient(160deg, #060d20 0%, #0e2145 50%, #071530 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+.dark-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 38px 38px;
+  pointer-events: none;
+}
+.dark-bg::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  right: -150px; top: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,78,216,.22) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbDriftA 16s ease-in-out infinite;
+}
+.dark-bg .container,
+.dark-bg .contact-inner { position: relative; z-index: 2; }
+
+/* Titres & headers */
+.dark-bg .section-header h2      { color: #fff; }
+.dark-bg .section-header h2 span { color: #fbbf24; }
+.dark-bg .section-header p       { color: rgba(255,255,255,.6); }
+
+/* ── Services dark ── */
+.services.dark-bg .services-tag { background: rgba(245,158,11,.18); color: #fbbf24; border-color: rgba(245,158,11,.35); }
+.services.dark-bg .services-intro-block h2 { color: #fff; }
+.services.dark-bg .services-intro-block h2 span { color: #fbbf24; }
+.services.dark-bg .services-col-desc { color: rgba(255,255,255,.68); }
+.services.dark-bg .service-card {
+  background: rgba(255,255,255,.055);
+  border-color: rgba(255,255,255,.11);
+  box-shadow: 0 4px 24px rgba(0,0,0,.35);
+}
+.services.dark-bg .service-card:hover { background: rgba(255,255,255,.09); border-color: rgba(245,158,11,.4); }
+.services.dark-bg .service-card h3 { color: #fff; }
+.services.dark-bg .service-card p  { color: rgba(255,255,255,.68); }
+.services.dark-bg .service-icon-wrap { background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(29,78,216,.35)); }
+
+/* ── Philosophie dark ── */
+.philosophie.dark-bg .philo-card {
+  background: rgba(255,255,255,.055);
+  border-color: rgba(255,255,255,.11);
+  box-shadow: 0 4px 24px rgba(0,0,0,.3);
+}
+.philosophie.dark-bg .philo-main {
+  background: rgba(29,78,216,.18);
+  border-left-color: #fbbf24;
+}
+.philosophie.dark-bg .philo-yes { border-left-color: #4ade80; }
+.philosophie.dark-bg .philo-no  { border-left-color: #fb923c; }
+.philosophie.dark-bg .philo-card h3 { color: #fff; }
+.philosophie.dark-bg .philo-card p  { color: rgba(255,255,255,.7); }
+.philosophie.dark-bg .philo-list li { color: rgba(255,255,255,.8); }
+.philosophie.dark-bg .philo-card strong { color: #fbbf24; }
+
+/* ── Boutique dark ── */
+.boutique.dark-bg .boutique-tag { background: rgba(245,158,11,.18); color: #fbbf24; border-color: rgba(245,158,11,.3); }
+.boutique.dark-bg .boutique-text h2       { color: #fff; }
+.boutique.dark-bg .boutique-text h2 span  { color: #fbbf24; }
+.boutique.dark-bg .boutique-text > p      { color: rgba(255,255,255,.7); }
+.boutique.dark-bg .boutique-list li       { color: rgba(255,255,255,.85); }
+.boutique.dark-bg .boutique-card {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.12);
+  backdrop-filter: blur(12px);
+}
+.boutique.dark-bg .boutique-logo strong { color: #fff; }
+.boutique.dark-bg .boutique-logo span   { color: #fbbf24; }
+.boutique.dark-bg .boutique-feature {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.1);
+}
+.boutique.dark-bg .boutique-feature p { color: rgba(255,255,255,.82); }
+.boutique.dark-bg .boutique-animals { opacity: .55; }
+
+/* ── Contact dark ── */
+.contact.dark-bg .section-header h2      { color: #fff; }
+.contact.dark-bg .section-header h2 span { color: #fbbf24; }
+.contact.dark-bg .section-header p       { color: rgba(255,255,255,.6); }
+.contact.dark-bg .contact-item {
+  background: rgba(255,255,255,.055);
+  border-color: rgba(255,255,255,.11);
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.contact.dark-bg .contact-item:hover { background: rgba(255,255,255,.09); border-color: rgba(245,158,11,.4); }
+.contact.dark-bg .contact-item strong { color: rgba(255,255,255,.5); }
+.contact.dark-bg .contact-item p      { color: #fff; }
+.contact.dark-bg .urgence-box {
+  background: rgba(249,115,22,.1);
+  border-color: rgba(249,115,22,.3);
+  color: #fed7aa;
+}
+.contact.dark-bg .urgence-box p strong { color: #fbbf24; }
+.contact.dark-bg .urgence-link {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(249,115,22,.3);
+}
+.contact.dark-bg .urgence-link strong { color: #fb923c; }
+.contact.dark-bg .urgence-link span:last-child { color: #fdba74; }
+.contact.dark-bg .hours-card {
+  background: rgba(255,255,255,.055);
+  border-color: rgba(255,255,255,.11);
+  backdrop-filter: blur(12px);
+}
+.contact.dark-bg .hours-card h3          { color: #fff; }
+.contact.dark-bg .hours-table tr         { border-bottom-color: rgba(255,255,255,.08); }
+.contact.dark-bg .hours-table td:first-child { color: rgba(255,255,255,.55); }
+.contact.dark-bg .hours-table td:last-child  { color: #60a5fa; }
+.contact.dark-bg .hours-table tr.closed td:last-child  { color: #f87171; }
+.contact.dark-bg .hours-table tr.domicile td:last-child { color: #fb923c; }
+.contact.dark-bg .hours-pets { opacity: .6; }
 
 /* ── Philosophie ── */
 .philosophie { background: var(--bg); }
@@ -725,7 +849,7 @@ img { max-width: 100%; display: block; }
 .t-author small  { color: rgba(255,255,255,.6); font-size: .8rem; }
 
 /* ── Contact ── */
-.contact { background: var(--bg); }
+.contact { background: var(--bg); } /* overridé par .dark-bg */
 .contact-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
 .contact-items { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
 .contact-item {
