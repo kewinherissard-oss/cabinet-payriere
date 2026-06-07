@@ -195,8 +195,8 @@ window.addEventListener('load', () => {
   tl.from('[data-gsap-hero="tag"]',  { opacity: 0, y: 20, duration: .7 })
     .from('[data-gsap-hero="title"]', { opacity: 0, y: 40, duration: .9 }, '-=.3')
     .from('[data-gsap-hero="sub"]',   { opacity: 0, y: 30, duration: .7 }, '-=.5')
-    .from('[data-gsap-hero="pets"] span', { opacity: 0, scale: 0, stagger: .08, duration: .5 }, '-=.4')
-    .from('[data-gsap-hero="cta"] a', { opacity: 0, y: 20, stagger: .12, duration: .5 }, '-=.3');
+    .fromTo('[data-gsap-hero="pets"] span', { opacity: 0, y: 16 }, { opacity: 1, y: 0, stagger: .07, duration: .5, clearProps: 'all' }, '-=.4')
+    .fromTo('[data-gsap-hero="cta"] a', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .12, duration: .5, clearProps: 'all' }, '-=.3');
 
   /* — Parallax scroll sur le héro — */
   const layers = document.querySelectorAll('.p-layer');

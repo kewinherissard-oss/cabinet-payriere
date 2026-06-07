@@ -33,55 +33,17 @@
     </nav>
   </header>
 
-  <!-- ── Hero 3D Parallax ── -->
+  <!-- ── Hero ── -->
   <section id="accueil" class="hero" data-hero>
 
-    <!-- Fond étoilé / particules -->
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
 
-    <!-- Couche 0 — très loin : pattes décoratives -->
-    <div class="parallax-scene" id="parallaxScene">
-      <div class="p-layer" data-depth="0.05">
-        <span class="deco-paw" style="top:12%;left:8%;">🐾</span>
-        <span class="deco-paw" style="top:75%;left:92%;">🐾</span>
-        <span class="deco-paw" style="top:55%;left:3%;">🐾</span>
-        <span class="deco-paw" style="top:20%;left:88%;">🐾</span>
-      </div>
-
-      <!-- Couche 1 — loin : petits animaux -->
-      <div class="p-layer" data-depth="0.12">
-        <div class="animal-orb small" style="top:15%;left:12%;">
-          <img src="https://images.unsplash.com/photo-1425082661705-1834bfd09dca?w=160&h=160&fit=crop&q=80" alt="Hamster" loading="lazy">
-        </div>
-        <div class="animal-orb small" style="top:68%;left:85%;">
-          <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=160&h=160&fit=crop&q=80" alt="Lapin" loading="lazy">
-        </div>
-        <div class="animal-orb small" style="top:80%;left:20%;">
-          <img src="https://images.unsplash.com/photo-1452857297128-d9c29adba80b?w=160&h=160&fit=crop&q=80" alt="Chaton" loading="lazy">
-        </div>
-      </div>
-
-      <!-- Couche 2 — milieu : animaux moyens -->
-      <div class="p-layer" data-depth="0.25">
-        <div class="animal-orb medium" style="top:10%;right:18%;">
-          <img src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=240&h=240&fit=crop&q=80" alt="Chat" loading="lazy">
-        </div>
-        <div class="animal-orb medium" style="top:70%;left:8%;">
-          <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=240&h=240&fit=crop&q=80" alt="Chiot" loading="lazy">
-        </div>
-      </div>
-
-      <!-- Couche 3 — proche : grand animal -->
-      <div class="p-layer" data-depth="0.45">
-        <div class="animal-orb large" style="top:50%;right:12%;transform:translateY(-50%);">
-          <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=400&fit=crop&q=80" alt="Chien" loading="lazy">
-          <div class="orb-ring"></div>
-          <div class="orb-ring r2"></div>
-        </div>
-      </div>
+    <!-- Visuel chat + chien -->
+    <div class="hero-visual">
+      <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&q=85" alt="Chien et chat complices" loading="eager">
     </div>
 
-    <!-- Contenu texte (fixe) -->
+    <!-- Contenu texte -->
     <div class="hero-content">
       <span class="hero-tag" data-gsap-hero="tag">Cabinet vétérinaire de confiance</span>
       <h1 data-gsap-hero="title">
@@ -188,37 +150,55 @@
   <!-- ── Services ── -->
   <section id="services" class="section services">
     <div class="container">
-      <div class="section-header" data-gsap-reveal>
-        <h2>Nos <span>Services</span></h2>
-        <p>Tout ce dont votre animal a besoin, réuni en un seul cabinet</p>
+
+      <div class="services-layout">
+
+        <div class="services-col-left" data-gsap-reveal>
+          <div class="services-intro-block">
+            <span class="services-tag">Nos Services</span>
+            <h2>Des solutions de <span>confiance</span> pour tous vos compagnons</h2>
+            <a href="#" class="btn-primary" onclick="event.preventDefault();openChatbotRDV();">📅 Prendre RDV</a>
+          </div>
+          <div class="service-card" data-gsap-card>
+            <div class="service-icon-wrap"><div class="service-icon">🩺</div></div>
+            <h3>Consultations</h3>
+            <p>Bilan de santé, suivi régulier et consultations d'urgence pour tous vos compagnons.</p>
+          </div>
+          <div class="service-card" data-gsap-card>
+            <div class="service-icon-wrap"><div class="service-icon">🔬</div></div>
+            <h3>Analyses & Imagerie</h3>
+            <p>Prise de sang, échographie — des diagnostics précis réalisés directement sur place.</p>
+          </div>
+        </div>
+
+        <div class="services-col-center">
+          <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?w=420&h=640&fit=crop&q=85" alt="Chat du cabinet" loading="lazy">
+        </div>
+
+        <div class="services-col-right" data-gsap-reveal>
+          <p class="services-col-desc">Avec plus de 30 ans d'expérience et une approche naturelle et bienveillante, le Dr PAYRIERE offre une gamme complète de soins vétérinaires pour chiens, chats, lapins, rongeurs et NAC.</p>
+          <div class="service-card" data-gsap-card>
+            <div class="service-icon-wrap"><div class="service-icon">💉</div></div>
+            <h3>Vaccinations</h3>
+            <p>Programme de vaccination adapté à chaque espèce pour une protection optimale tout au long de la vie.</p>
+          </div>
+          <div class="service-card" data-gsap-card>
+            <div class="service-icon-wrap"><div class="service-icon">🏥</div></div>
+            <h3>Chirurgie</h3>
+            <p>Bloc opératoire moderne pour les interventions courantes : stérilisation, extractions, et plus.</p>
+          </div>
+        </div>
+
       </div>
-      <div class="services-grid">
-        <div class="service-card" data-gsap-card>
-          <div class="service-icon">🩺</div>
-          <h3>Consultations</h3>
-          <p>Bilan de santé, suivi régulier et consultations d'urgence pour tous vos compagnons.</p>
-        </div>
-        <div class="service-card" data-gsap-card>
-          <div class="service-icon">💉</div>
-          <h3>Vaccinations</h3>
-          <p>Programme de vaccination adapté à chaque espèce pour une protection optimale tout au long de la vie.</p>
-        </div>
-        <div class="service-card" data-gsap-card>
-          <div class="service-icon">🔬</div>
-          <h3>Analyses & Imagerie</h3>
-          <p>Prise de sang, échographie — des diagnostics précis réalisés directement sur place.</p>
-        </div>
-        <div class="service-card" data-gsap-card>
-          <div class="service-icon">🏥</div>
-          <h3>Chirurgie</h3>
-          <p>Bloc opératoire moderne pour les interventions courantes : stérilisation, extractions, et plus.</p>
-        </div>
-        <div class="service-card" data-gsap-card>
-          <div class="service-icon">🦷</div>
+
+      <div class="services-bottom">
+        <div class="service-card service-card--wide" data-gsap-card>
+          <div class="service-icon-wrap"><div class="service-icon">🦷</div></div>
           <h3>Dentisterie</h3>
           <p>Détartrage, soins dentaires et conseils pour une bonne hygiène bucco-dentaire de votre animal.</p>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -227,7 +207,7 @@
     <div class="container about-inner">
       <div class="about-visual" data-gsap-reveal>
         <div class="about-card">
-          <img src="dr-payriere.jpg" alt="Dr PAYRIERE, vétérinaire" loading="lazy">
+          <img src="imagedr-payriere.jpg" alt="Dr PAYRIERE, vétérinaire" loading="lazy">
           <div class="about-card-info">
             <strong>Dr PAYRIERE</strong>
             <span>Vétérinaire — 30 ans d'expérience</span>
