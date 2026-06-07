@@ -220,11 +220,12 @@ window.addEventListener('load', () => {
 
   /* — Entrée héro — */
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  tl.from('[data-gsap-hero="tag"]',  { opacity: 0, y: 20, duration: .7 })
-    .from('[data-gsap-hero="title"]', { opacity: 0, y: 40, duration: .9 }, '-=.3')
+  tl.from('.header',                  { y: -80, opacity: 0, duration: .7 })
+    .from('[data-gsap-hero="tag"]',   { opacity: 0, y: 20, duration: .7 }, '-=.25')
+    .from('[data-gsap-hero="title"]', { opacity: 0, y: 40, duration: .9 }, '-=.4')
     .from('[data-gsap-hero="sub"]',   { opacity: 0, y: 30, duration: .7 }, '-=.5')
     .fromTo('[data-gsap-hero="pets"] span', { opacity: 0, y: 16 }, { opacity: 1, y: 0, stagger: .07, duration: .5, clearProps: 'all' }, '-=.4')
-    .fromTo('[data-gsap-hero="cta"] a', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .12, duration: .5, clearProps: 'all' }, '-=.3');
+    .fromTo('[data-gsap-hero="cta"] a', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: .14, duration: .55, clearProps: 'all' }, '-=.35');
 
   /* — Parallax scroll sur le héro — */
   const layers = document.querySelectorAll('.p-layer');

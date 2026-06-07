@@ -43,35 +43,45 @@ img { max-width: 100%; display: block; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--accent);
+  background: rgba(245,158,11,.18);
   color: #fff;
-  padding: 14px 30px;
+  padding: 14px 32px;
   border-radius: 50px;
   font-weight: 700;
   font-size: .95rem;
-  border: none;
+  border: 1.5px solid rgba(245,158,11,.55);
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-  box-shadow: 0 4px 18px rgba(245,158,11,.4);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all var(--transition);
+  box-shadow: 0 4px 20px rgba(245,158,11,.2), inset 0 1px 0 rgba(255,255,255,.1);
+  text-decoration: none;
 }
-.btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(245,158,11,.5); }
+.btn-primary:hover {
+  background: rgba(245,158,11,.34);
+  border-color: rgba(245,158,11,.8);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(245,158,11,.38), inset 0 1px 0 rgba(255,255,255,.18);
+}
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.1);
   color: #fff;
-  padding: 13px 28px;
+  padding: 14px 32px;
   border-radius: 50px;
   font-weight: 600;
   font-size: .95rem;
-  border: 2px solid rgba(255,255,255,.45);
+  border: 1.5px solid rgba(255,255,255,.22);
   cursor: pointer;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   transition: all var(--transition);
+  text-decoration: none;
 }
-.btn-secondary:hover { background: rgba(255,255,255,.22); transform: translateY(-2px); }
+.btn-secondary:hover { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); transform: translateY(-2px); }
 
 /* ── Section commons ── */
 .section { padding: 100px 0; }
@@ -131,17 +141,19 @@ img { max-width: 100%; display: block; }
 .nav-links a:hover { color: #fff; background: rgba(255,255,255,.1); }
 
 .btn-rdv {
-  background: var(--accent) !important;
+  background: rgba(245,158,11,.18) !important;
   color: #fff !important;
   border-radius: 50px !important;
   padding: 9px 22px !important;
   font-weight: 700 !important;
-  border: 2px solid var(--accent) !important;
-  box-shadow: 0 4px 16px rgba(245,158,11,.4);
+  border: 1.5px solid rgba(245,158,11,.5) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 16px rgba(245,158,11,.18) !important;
   transition: all var(--transition) !important;
   margin-left: 6px;
 }
-.btn-rdv:hover { background: var(--accent-dark) !important; transform: translateY(-1px) !important; }
+.btn-rdv:hover { background: rgba(245,158,11,.34) !important; border-color: rgba(245,158,11,.75) !important; transform: translateY(-1px) !important; }
 
 .burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
 .burger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all var(--transition); }
@@ -198,8 +210,10 @@ img { max-width: 100%; display: block; }
 .hero-content {
   position: relative;
   z-index: 10;
-  max-width: 580px;
-  padding: 0 0 0 8vw;
+  max-width: 600px;
+  width: 100%;
+  margin-left: 8vw;
+  padding: 0 24px 0 0;
 }
 
 .hero-tag {
@@ -262,15 +276,7 @@ img { max-width: 100%; display: block; }
 }
 .hero-pets span:hover { transform: scale(1.25) translateY(-4px); background: rgba(245,158,11,.2); border-color: rgba(245,158,11,.5); }
 
-.hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
-
-.hero-rdv-bottom {
-  position: absolute;
-  bottom: 36px; left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  white-space: nowrap;
-}
+.hero-cta { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 4px; }
 
 /* Scroll indicator */
 .scroll-indicator {
@@ -986,7 +992,7 @@ img { max-width: 100%; display: block; }
 
 /* ── Responsive ── */
 @media (max-width: 960px) {
-  .hero-content { padding: 0 24px; text-align: center; }
+  .hero-content { margin-left: 0; padding: 0 24px; text-align: center; }
   .hero-pets { justify-content: center; }
   .hero-cta { justify-content: center; }
   .services-layout { grid-template-columns: 1fr; }
