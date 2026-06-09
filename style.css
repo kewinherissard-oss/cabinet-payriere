@@ -182,7 +182,7 @@ img { max-width: 100%; display: block; }
   inset: 0;
   z-index: 0;
   background:
-    url('https://images.pexels.com/photos/19490691/pexels-photo-19490691.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop') center center / cover no-repeat;
+    url('https://images.pexels.com/photos/19490691/pexels-photo-19490691.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1200') center 20% / cover no-repeat;
   transform-origin: center center;
   animation: heroBgReveal 2.2s cubic-bezier(.22,.8,.36,1) both;
 }
