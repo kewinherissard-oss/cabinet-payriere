@@ -78,7 +78,7 @@ function createRDV(p) {
   var phone  = p.phone  || 'Non renseigne';
   var email  = p.email  || '';
   var date   = p.date   || 'A confirmer';
-  var animal = p.animal || 'Non precise';
+  var animal = (p.animal || 'Non precise').replace(/[^\x20-\x7EÀ-ɏ]/g, '').trim() || 'Non precise';
   var motive = p.motive || 'Non precise';
   var type   = p.type   || '';
 

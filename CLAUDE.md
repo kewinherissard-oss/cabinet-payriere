@@ -12,20 +12,39 @@ Déployé en ligne sur GitHub Pages : **https://kewinherissard-oss.github.io/cab
 
 ```
 /
-├── index.html               # Structure HTML complète (~435 lignes)
-├── style.css                # Système de design complet (~1343 lignes)
-├── app.js                   # Animations et interactions JS (~305 lignes)
+├── index.html               # Structure HTML complète (~589 lignes)
+├── style.css                # Système de design complet (~1450 lignes)
+├── app.js                   # Animations et interactions JS (~318 lignes)
 ├── chatbot.js               # Widget chatbot autonome IIFE (~1041 lignes)
 ├── Code.gs                  # Google Apps Script — copie de travail (sync avec apps-script/)
-├── imagedr-payriere.jpg     # Photo active du Dr PAYRIERE (utilisée dans la section équipe)
+├── imagedr-payriere.jpg     # Photo active du Dr PAYRIERE (section équipe)
+├── services-cat-nobg.png    # Photo active — chat tabby fond transparent (section services)
+├── services-cat-raw.jpg     # Source Unsplash du chat services (photo-1574158622682-e40e69881006)
 ├── puce avatar2.png         # Avatar actif de Puce (chaton noir et blanc, yeux dorés)
-├── puce-avatar.svg          # Version SVG de l'avatar Puce (non utilisé)
-├── puce avatar.png          # Ancienne version avatar (non utilisé)
-├── puce-avatar.png          # Ancienne version avatar (non utilisé)
-├── puce-original.png        # Version originale avatar (non utilisé)
-├── puce.jpg                 # Photo source (non utilisé)
-├── avatar puce2.png         # Fichier doublon haute résolution (non utilisé)
-├── Maine coon leve patte.jpg # Photo locale non trackée (non utilisée)
+│
+├── — Fichiers non utilisés —
+├── puce-avatar.svg          # Version SVG de l'avatar Puce
+├── puce avatar.png          # Ancienne version avatar
+├── puce-avatar.png          # Ancienne version avatar
+├── puce-original.png        # Version originale avatar
+├── puce.jpg                 # Photo source Puce
+├── avatar puce2.png         # Fichier doublon haute résolution
+├── Maine coon leve patte.jpg # Photo locale non trackée
+├── Tic et puce hero.jpg     # Photo locale non trackée
+├── tic-puce-hero.png        # Photo locale non trackée
+├── cat-guide-raw.jpg        # Source (tentative chat debout, abandon)
+├── cat-guide.png            # Traitement bg-removal (tentative abandon)
+├── cat-services.png         # Chat debout fond transparent (tentative abandon)
+├── cat-sit-raw.jpg          # Source alternative (non utilisée)
+│
+├── — Scripts utilitaires Node.js —
+├── process-cat.mjs          # Télécharge l'image Unsplash + suppression de fond → services-cat-nobg.png
+├── remove-bg.mjs            # Suppression fond générique (cat-guide-raw → cat-services.png)
+├── gen-cat.mjs              # Tentative génération IA Gemini/Imagen (non fonctionnel, tier gratuit)
+├── package.json             # Dépendance : @imgly/background-removal-node ^1.4.5
+├── package-lock.json
+├── node_modules/            # Non tracké dans Git
+│
 ├── CLAUDE.md                # Ce fichier
 ├── apps-script/
 │   ├── Code.gs              # Script déployé sur Google Apps Script (clasp)
@@ -50,8 +69,9 @@ Dépôts Git :
 - **GSAP 3.12.5 + ScrollTrigger** — chargé via CDN, uniquement pour les animations au scroll
 - **Google Apps Script** — webhook serverless déployé pour l'automatisation des RDV
 - **ntfy.sh** — push notifications instantanées vers le Dr PAYRIERE à chaque RDV
+- **@imgly/background-removal-node** — suppression de fond IA locale (Node.js, scripts `.mjs`)
 
-> Aucune autre bibliothèque tierce. Pas de bundler, pas de build step.
+> Aucune autre bibliothèque tierce côté site. Pas de bundler, pas de build step.
 
 ---
 
@@ -63,12 +83,12 @@ Dépôts Git :
 | 2 | `#accueil` `.hero` | Hero plein écran full-bleed — photo chien+chat en fond, overlay navy, canvas étoilé, titre, deux CTAs glass côte à côte |
 | 3 | bandeau confiance | 5 points clés (soins, urgences, équipe, matériel, accessibilité) |
 | 4 | `#pmarqueeSection` | PerspectiveMarquee — défilement 3D animé en JS natif |
-| 5 | `.animal-parade` | Défilé de 5 espèces avec photos rondes (Chiens, Chats, Lapins, Rongeurs, NAC) |
+| 5 | `.animal-parade` | Défilé de 5 espèces avec photos rondes (Chiens, Chats, Lapins, Rongeurs, Furets & NAC) |
 | 6 | `.gallery` | Strip galerie 4 photos réelles d'animaux (Unsplash) |
-| 7 | `#services` `.dark-bg` | 3 colonnes : intro+2 cartes, photo chat centrale, 2 cartes — plus carte large Dentisterie en bas |
-| 8 | `#equipe` `.about` | Fond navy propre avec orbes 3D et empreintes flottantes — carte Dr PAYRIERE avec tilt 3D, biographie, diplômes |
+| 7 | `#services` `.dark-bg` | 3 colonnes : intro+2 cartes gauche, **photo chat PNG transparent central**, 2 cartes droite + carte large Dentisterie en bas |
+| 8 | `#equipe` `.about` | Fond navy bleu vif avec orbes 3D et empreintes flottantes — carte Dr PAYRIERE avec tilt 3D, biographie, diplômes |
 | 9 | `.philosophie` `.dark-bg` | Phytothérapie en priorité, stérilisation chat ✅, stérilisation chien par implant Suprelorin® |
-| 10 | `#temoignages` | **5 vrais avis Google** — grille 3 colonnes + 2 avis centrés en dessous |
+| 10 | `#temoignages` | **5 vrais avis Google** — 2 rangées de marquee CSS en défilement automatique (gauche ↔ droite), pause au survol |
 | 11 | `#boutique` `.dark-bg` | ChronoVet — point relais officiel, liste produits, bouton vers chronovet.fr |
 | 12 | `#contact` `.dark-bg` | Adresse, téléphone, email, urgences Vet-Urgentys, tableau horaires |
 | 13 | `footer` | Navigation, copyright, slogan |
@@ -81,13 +101,13 @@ Dépôts Git :
 
 ```css
 :root {
-  --primary:       #1d4ed8;  /* Bleu royal */
+  --primary:       #2563eb;  /* Bleu royal vif */
   --primary-light: #dbeafe;
-  --primary-dark:  #1e3a8a;
+  --primary-dark:  #1d4ed8;
   --accent:        #f59e0b;  /* Or */
   --accent-dark:   #d97706;
   --accent-light:  #fef3c7;
-  --dark:          #0a0f2e;  /* Marine profond */
+  --dark:          #0c2461;  /* Marine profond */
   --text:          #1e293b;
   --text-muted:    #64748b;
   --bg:            #f8fafc;
@@ -103,13 +123,16 @@ Dépôts Git :
 
 - **Hero full-bleed** — image chien+chat (`photo-1450778869180-41d0601e046e`) en `background: right center / cover`, overlay gradient navy gauche → transparent droite via `::before`, fondu bas via `::after`
 - **Boutons glass** — `.btn-primary` amber glass `rgba(245,158,11,.18)` + `backdrop-filter: blur(14px)` + bordure amber ; `.btn-secondary` blanc glass `rgba(255,255,255,.1)` + bordure blanche
-- **Navbar glass** — `.btn-rdv` glass amber au top, solid amber au scroll ; header glassmorphisme `rgba(10,15,46,.82)` + `blur(18px)` transparent, blanc opaque au scroll
-- **Dark-bg sections** — classe `.dark-bg` partagée sur Services, Philosophie, Boutique, Contact : `linear-gradient(160deg, #060d20, #0e2145, #071530)` + grille dots `38px × 38px` via `::before` + orbe animé bleu `blur(60px)` via `::after`
-- **Section Équipe custom** — fond navy `#060d20 → #0e2145 → #071530` avec `.about-bg-orb` (orbes glowing) + `.about-bg-paw` (empreintes flottantes) + tilt 3D sur la carte photo
-- **Photo Dr PAYRIERE** — `imagedr-payriere.jpg`, `object-fit: cover; object-position: center top;` sans zoom (scale supprimé)
-- **Glassmorphisme cartes** dark — `background: rgba(255,255,255,.055)`, `border: rgba(255,255,255,.11)`, `backdrop-filter: blur(12px)`
+- **Navbar glass** — `.btn-rdv` glass amber au top, solid amber au scroll ; header glassmorphisme transparent, blanc opaque au scroll
+- **Dark-bg sections** — classe `.dark-bg` partagée sur Services, Philosophie, Boutique, Contact : `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` + grille dots `38px × 38px` via `::before` + orbe animé bleu `blur(60px)` via `::after`
+- **Section Équipe custom** — fond `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` avec `.about-bg-orb` (orbes glowing) + `.about-bg-paw` (empreintes flottantes) + tilt 3D sur la carte photo
+- **Section Services** — fond `.dark-bg`, colonne centrale avec `services-cat-nobg.png` (PNG transparent, `object-fit: contain`, `drop-shadow` or + noir) qui flotte naturellement sur le navy
+- **Photo Dr PAYRIERE** — `imagedr-payriere.jpg`, `object-fit: cover; object-position: center top;`
+- **Chat services** — `services-cat-nobg.png`, chat tabby yeux verts, fond supprimé avec `@imgly/background-removal-node`, flotte sur le dark-bg
+- **Glassmorphisme cartes dark** — `background: rgba(255,255,255,.12)`, `border: rgba(255,255,255,.11)`, sections sombres uniquement
 - **Typography** — `clamp()` pour les titres, `font-weight: 900` sur les headings, `letter-spacing: -.03em`
 - **Unsplash CDN** — photos animaux `?w=&h=&fit=crop&q=80`
+- **Section Témoignages** — fond `var(--primary)` (bleu vif), 2 rangées de marquee défilantes (`@keyframes tmScroll`) avec cartes blanches, fades gauche/droite, pause au hover
 
 ### Classes CSS notables
 
@@ -126,8 +149,12 @@ Dépôts Git :
 | `.hero-content` | `margin-left: 8vw; max-width: 600px` — contenu hero aligné gauche |
 | `.hero-cta` | Flex row des deux boutons CTA hero |
 | `.hero-tag` | Badge doré "Cabinet vétérinaire de confiance" |
-| `.testimonials-grid` | Grille 3 colonnes pour les 3 premiers avis |
-| `.testimonials-more` | Grille 2 colonnes centrée pour les 2 avis supplémentaires |
+| `.services-guide-cat` | Image chat central services — `object-fit: contain`, `drop-shadow` |
+| `.tm-outer` | Conteneur marquee avis — `overflow: hidden`, fades L/R |
+| `.tm-track--left` | Rangée 1 avis — animation `tmScroll` 34s normale |
+| `.tm-track--right` | Rangée 2 avis — animation `tmScroll` 34s `reverse` |
+| `.tm-card` | Carte avis blanche 300px — hover lift |
+| `.tm-fade-l / .tm-fade-r` | Dégradé fondu bords du marquee (couleur `var(--primary)`) |
 | `#cb-root` | Widget chatbot fixe, z-index 1100 (au-dessus du header à 1000) |
 | `#cb-bubble` | Bouton FAB avec avatar Puce, animation pulse dorée |
 | `#cb-panel` | Fenêtre chat — `rgba(10,15,46,.92)` + `blur(22px)` |
@@ -138,28 +165,32 @@ Dépôts Git :
 
 | Breakpoint | Changements principaux |
 |------------|------------------------|
-| `960px` | Hero centré, nav mobile (burger), grilles services en colonne |
-| `860px` | Grille philosophie en colonne, boutique en colonne |
-| `600px` | Hero petits ajustements |
-| `480px` | Ultra mobile — tailles, paddings |
+| `960px` | Hero centré, nav mobile (burger), grilles services en colonne, contact en colonne |
+| `600px` | Nav mobile `.open`, trust-bar en colonne, services une colonne |
 
 ---
 
 ## Animations JavaScript (app.js)
 
-### 1. Canvas particules (`initCanvas`)
-Fond étoilé animé dans le hero. 110 points qui bougent et scintillent via `requestAnimationFrame` sur un `<canvas id="heroCanvas">`. Chaque dot : position, rayon, alpha oscillant, vélocité X/Y.
+### 1. Marquee Témoignages (`initTestimonialMarquee`)
+S'exécute en premier (top du fichier). Duplique les enfants de chaque `.tm-track` pour créer une boucle CSS infinie — la CSS animation prend le relais sans JS continu.
 
-### 2. Parallax souris (`initMouseParallax`)
+### 2. Burger menu & header scroll
+Burger toggle `.open` sur `.nav-links`. Header ajoute `.scrolled` après 60px de scroll.
+
+### 3. Canvas particules (`initCanvas`)
+Fond étoilé animé dans le hero. 110 points qui bougent et scintillent via `requestAnimationFrame` sur `<canvas id="heroCanvas">`. Chaque dot : position, rayon, alpha oscillant, vélocité X/Y.
+
+### 4. Parallax souris (`initMouseParallax`)
 Écoute `mousemove` sur la section hero, cherche les `.p-layer[data-depth]`. Actuellement aucun `.p-layer` dans le hero (code conservé pour usage futur). Lerp `cx += (mx - cx) * 0.08`.
 
-### 3. PerspectiveMarquee (`initPerspectiveMarquee`)
+### 5. PerspectiveMarquee (`initPerspectiveMarquee`)
 Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Items : `['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé']`. Blur et opacité calculés par item selon distance au centre.
 
-### 4. Tilt 3D carte Dr PAYRIERE (`initAboutTilt`)
+### 6. Tilt 3D carte Dr PAYRIERE (`initAboutTilt`)
 Écoute `mousemove` sur `.about-card-wrapper` → applique `rotateY/rotateX` sur `.about-card` via `requestAnimationFrame`. Interpolation douce avec facteur `0.1`. `translateZ` proportionnel à la magnitude du tilt. Reset au `mouseleave`.
 
-### 5. GSAP ScrollTrigger (sur `window.load`)
+### 7. GSAP ScrollTrigger (sur `window.load`)
 - **Header** — slide-down : `from('.header', { y:-80, opacity:0, duration:.7 })` en tête du timeline
 - **Entrée héro** — séquence : header → tag → titre → sous-titre → emojis animaux → boutons CTA (stagger 0.14s, `fromTo` + `clearProps:'all'`)
 - **Parallax scroll** — `.p-layer[data-depth]` (réservé, pas d'éléments actuellement)
@@ -279,6 +310,8 @@ clasp deployments    # vérifier l'URL de déploiement
 
 ## Témoignages — Vrais avis Google
 
+5 avis affichés en double dans 2 rangées de marquee (10 cartes par rangée après duplication JS) :
+
 | Auteur | Étoiles | Date | Résumé |
 |--------|---------|------|--------|
 | Léa L. | ⭐⭐⭐⭐⭐ | Mars 2025 | Urgence chat, très pro, attentionnée, réactive |
@@ -305,15 +338,44 @@ clasp deployments    # vérifier l'URL de déploiement
 ## Conventions de code
 
 - Interface entièrement en **français**
-- **Aucune bibliothèque tierce** sauf GSAP (CDN, animation uniquement)
+- **Aucune bibliothèque tierce** côté site sauf GSAP (CDN, animation uniquement)
 - **Aucun commentaire** dans le code sauf les blocs de séparation `/* ══ */` et `/* ── */`
 - JS organisé en **IIFEs** autonomes
 - CSS organisé par composant avec commentaires séparateurs `/* ── */`
 - Images animaux proviennent d'**Unsplash** via CDN — photo Dr PAYRIERE en **fichier local** (`imagedr-payriere.jpg`)
+- Photo chat section services : **fichier local** `services-cat-nobg.png` (PNG transparent généré avec `@imgly/background-removal-node`)
 - Avatar Puce : **fichier local** `puce avatar2.png`
-- Responsive **mobile-first**, breakpoints principaux à 960px, 860px, 600px et 480px
+- Responsive **mobile-first**, breakpoints principaux à 960px et 600px
 - Emojis **jamais stockés dans les données métier** (strippés avant envoi webhook et dans Code.gs)
 - Boutons contextuels : glass dans les sections sombres (hero, dark-bg), solid amber sur fond clair
+
+---
+
+## Suppression de fond — workflow Node.js
+
+Pour retravailler la photo du chat central (services) :
+
+```bash
+node process-cat.mjs
+# → Télécharge depuis Unsplash photo-1574158622682-e40e69881006
+# → Supprime le fond avec @imgly/background-removal-node (modèle medium)
+# → Sauvegarde services-cat-nobg.png (PNG transparent)
+```
+
+L'image est ensuite utilisée directement dans `index.html` :
+```html
+<img class="services-guide-cat" src="services-cat-nobg.png" alt="Chat du cabinet" loading="lazy">
+```
+
+CSS associé (`.services-guide-cat`) :
+```css
+width: 100%;
+max-width: 320px;
+object-fit: contain;
+filter:
+  drop-shadow(0 0 28px rgba(245,158,11,.12))
+  drop-shadow(0 12px 48px rgba(0,0,0,.55));
+```
 
 ---
 
@@ -342,6 +404,9 @@ gh api repos/kewinherissard-oss/cabinet-payriere/pages/builds --method POST
 
 | Commit | Changement |
 |--------|-----------|
+| session juin 2026 | Section services — chat tabby PNG transparent (`services-cat-nobg.png`) sur fond dark-bg |
+| session juin 2026 | Section témoignages — refonte en marquee CSS 2 rangées défilantes (gauche + droite) |
+| `7f3df58` | Animation marquee avis Google style 21s.dev |
 | `d7de4de` | Slot picker style Doctolib — créneaux visuels par jour dans le flux RDV |
 | `8c74d45` | Fix slot picker timing — injection post-message, scrollBottom correct |
 | `9a21299` | Intégration Google Calendar — créneaux réels filtrés |
