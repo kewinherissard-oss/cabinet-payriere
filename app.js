@@ -1,5 +1,17 @@
 'use strict';
 
+/* ══════════════════════════════════════════════
+   MARQUEE TÉMOIGNAGES — duplication pour boucle
+   ══════════════════════════════════════════════ */
+(function initTestimonialMarquee() {
+  document.querySelectorAll('.tm-track').forEach(function(track) {
+    var items = Array.from(track.children);
+    items.forEach(function(item) {
+      track.appendChild(item.cloneNode(true));
+    });
+  });
+})();
+
 /* ── Burger menu ── */
 const burger   = document.getElementById('burger');
 const navLinks = document.getElementById('nav-links');
