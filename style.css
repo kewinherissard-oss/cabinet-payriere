@@ -1404,6 +1404,7 @@ img { max-width: 100%; display: block; }
   border: 1.5px solid #cde4ff;
   margin: 4px 0 8px;
   padding: 0 !important;
+  flex-shrink: 0;
 }
 .cb-slot-day {
   border-bottom: 1px solid #deeeff;
