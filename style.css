@@ -182,7 +182,7 @@ img { max-width: 100%; display: block; }
   inset: 0;
   z-index: 0;
   background:
-    url('https://images.unsplash.com/photo-1695451486995-7697b5c1be51?w=1920&h=1080&fit=crop&crop=center&q=90') center center / cover no-repeat;
+    url('https://images.pexels.com/photos/19490689/pexels-photo-19490689.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop') center center / cover no-repeat;
   transform-origin: center center;
   animation: heroBgReveal 2.2s cubic-bezier(.22,.8,.36,1) both;
 }
@@ -193,11 +193,11 @@ img { max-width: 100%; display: block; }
   inset: 0;
   z-index: 1;
   background: linear-gradient(to right,
-    rgba(12,36,97,.92) 0%,
-    rgba(12,36,97,.80) 28%,
-    rgba(12,36,97,.40) 50%,
-    rgba(12,36,97,.10) 66%,
-    transparent 80%);
+    rgba(12,36,97,.70) 0%,
+    rgba(12,36,97,.55) 28%,
+    rgba(12,36,97,.25) 50%,
+    rgba(12,36,97,.05) 66%,
+    transparent 78%);
 }
 
 .hero::after {
