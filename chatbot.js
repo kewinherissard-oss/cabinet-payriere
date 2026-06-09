@@ -252,7 +252,7 @@
 
     /* ════ ORGANISATION & RDV (priority 50) ════ */
     { id: 'rdv', priority: 50,
-      keywords: ['rendez-vous', 'prendre rdv', 'reserver consultation', 'planifier visite', 'fixer rendez', 'appointment'],
+      keywords: ['rendez vous', 'prendre rdv', 'reserver consultation', 'planifier visite', 'fixer rendez', 'appointment', 'rdv'],
       threshold: 1, action: 'booking',
       response: 'Je vais vous aider à préparer votre demande de rendez-vous ! 📅',
       chips: [],
@@ -650,22 +650,27 @@
   }
 
   /* ════ SLOT PICKER — style Doctolib ════ */
-  const OPEN_DAYS    = [1, 3, 5]; /* Lun=1, Mer=3, Ven=5 */
-  const MATIN_SLOTS  = ['09:30','10:00','10:30','11:00','11:30','12:00'];
-  const APM_SLOTS    = ['15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30'];
-  let   slotDaysShown = 0;
-  let   slotAllDays   = [];
+  const OPEN_DAYS   = [1, 3, 5]; /* Lun=1, Mer=3, Ven=5 */
+  const MATIN_SLOTS = ['09:30','10:00','10:30','11:00','11:30','12:00'];
+  const APM_SLOTS   = ['15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30'];
+  let slotDaysShown = 0;
+  let slotAllDays   = [];
 
   function generateDays(total) {
-    const days = [];
-    const now  = new Date();
-    const check = new Date(now);
+    const days  = [];
+    const check = new Date();
+    check.setHours(0, 0, 0, 0);
     check.setDate(check.getDate() + 1);
     while (days.length < total) {
       if (OPEN_DAYS.includes(check.getDay())) {
-        const label = check.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        const cap   = label.charAt(0).toUpperCase() + label.slice(1);
-        days.push({ label: cap, times: [...MATIN_SLOTS, ...APM_SLOTS] });
+        const label = check.toLocaleDateString('fr-FR', {
+          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        });
+        days.push({
+          label: label.charAt(0).toUpperCase() + label.slice(1),
+          iso:   check.toISOString().split('T')[0],
+          times: [...MATIN_SLOTS, ...APM_SLOTS]
+        });
       }
       check.setDate(check.getDate() + 1);
     }
@@ -674,90 +679,57 @@
 
   function renderSlotPicker() {
     setChips([]);
+    slotAllDays   = generateDays(20);
     slotDaysShown = 0;
 
-    /* Indicateur de chargement */
-    const loader = make('div', { class: 'cb-slot-loading' });
-    loader.innerHTML = '<span class="cb-slot-spin">⟳</span> Chargement des créneaux…';
-    elMessages.appendChild(loader);
-    scrollBottom();
-
-    /* Tentative de fetch des créneaux réels depuis Google Calendar */
-    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 6000));
-    Promise.race([
-      fetch(WEBHOOK_URL + '?action=slots').then(r => r.json()),
-      timeout
-    ])
-    .then(data => {
-      if (data.status === 'ok' && data.days && data.days.length) {
-        slotAllDays = data.days.map(d => ({
-          iso:   d.iso,
-          label: formatISODateFR(d.iso),
-          times: d.slots
-        }));
-      } else {
-        slotAllDays = generateDays(20);
-      }
-    })
-    .catch(() => {
-      slotAllDays = generateDays(20);
-    })
-    .finally(() => {
-      loader.remove();
-      buildSlotPickerDOM();
-    });
-  }
-
-  function formatISODateFR(iso) {
-    const d = new Date(iso + 'T12:00:00');
-    const label = d.toLocaleDateString('fr-FR', {
-      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-    });
-    return label.charAt(0).toUpperCase() + label.slice(1);
-  }
-
-  function buildSlotPickerDOM() {
     const wrap  = make('div', { class: 'cb-slot-picker' });
-    const inner = make('div', { id: 'cb-slot-inner' });
+    const inner = make('div', { class: 'cb-slot-inner' });
+    const more  = make('button', { class: 'cb-slot-more' });
+    more.textContent = 'VOIR PLUS';
+    more.addEventListener('click', () => {
+      appendSlotDays(inner, 5, false);
+      if (slotDaysShown >= slotAllDays.length) more.style.display = 'none';
+    });
+
     wrap.appendChild(inner);
-
-    const moreBtn = make('button', { class: 'cb-slot-more' });
-    moreBtn.textContent = 'VOIR PLUS';
-    moreBtn.addEventListener('click', () => appendSlotDays(inner, 5));
-    wrap.appendChild(moreBtn);
-
-    appendSlotDays(inner, 5);
+    wrap.appendChild(more);
     elMessages.appendChild(wrap);
-    setTimeout(() => scrollBottom(), 50);
+    appendSlotDays(inner, 5, true);
+    setTimeout(() => scrollBottom(), 80);
   }
 
-  function appendSlotDays(container, n) {
+  function appendSlotDays(container, n, firstBatch) {
     const batch = slotAllDays.slice(slotDaysShown, slotDaysShown + n);
     slotDaysShown += batch.length;
 
     batch.forEach((day, i) => {
-      const label = day.label || day.date || '';
       const dayEl = make('div', { class: 'cb-slot-day' });
+      const hdr   = make('div', { class: 'cb-slot-hdr' });
+      const lbl   = make('strong');
+      lbl.textContent = day.label;
+      const tog   = make('span', { class: 'cb-slot-tog' });
 
-      const hdr = make('div', { class: 'cb-slot-hdr' });
-      const lbl = make('strong'); lbl.textContent = label;
-      const tog = make('span',  { class: 'cb-slot-tog' }); tog.textContent = i < 2 ? '∧' : '∨';
-      hdr.appendChild(lbl); hdr.appendChild(tog);
+      /* 2 premiers jours du premier batch ouverts, le reste fermé */
+      const open  = firstBatch && i < 2;
+      tog.textContent = open ? '∧' : '∨';
 
-      const grid = make('div', { class: 'cb-slot-grid' });
-      if (i >= 2) grid.style.display = 'none';
+      hdr.appendChild(lbl);
+      hdr.appendChild(tog);
+
+      const grid  = make('div', { class: 'cb-slot-grid' });
+      grid.style.display = open ? 'flex' : 'none';
 
       day.times.forEach(time => {
         const btn = make('button', { class: 'cb-slot-btn' });
         btn.textContent = time;
-        btn.addEventListener('click', () => pickSlot(label, time, day.iso));
+        btn.addEventListener('click', () => pickSlot(day.label, time, day.iso));
         grid.appendChild(btn);
       });
 
       hdr.addEventListener('click', () => {
-        const open = grid.style.display !== 'none';
-        grid.style.display = open ? 'none' : 'flex';
-        tog.textContent    = open ? '∨' : '∧';
+        const isOpen = grid.style.display === 'flex';
+        grid.style.display = isOpen ? 'none' : 'flex';
+        tog.textContent    = isOpen ? '∨' : '∧';
       });
 
       dayEl.appendChild(hdr);
@@ -766,7 +738,7 @@
     });
 
     if (slotDaysShown >= slotAllDays.length) {
-      const moreBtn = document.querySelector('.cb-slot-more');
+      const moreBtn = container.parentElement && container.parentElement.querySelector('.cb-slot-more');
       if (moreBtn) moreBtn.style.display = 'none';
     }
     scrollBottom();
@@ -818,8 +790,8 @@
     const chips_creneaux = ['Lundi matin', 'Lundi après-midi', 'Mercredi matin', 'Mercredi après-midi', 'Vendredi matin', 'Vendredi après-midi', 'Je ne sais pas encore'];
     const chips_animaux  = ['🐶 Chien', '🐱 Chat', '🐰 Lapin', '🐹 Rongeur', '🦜 Autre'];
     const chips_motifs   = ['Consultation générale', 'Vaccination', 'Chirurgie / Stérilisation', 'Suivi / Rappel', 'Autre'];
-    const chips_sexe     = ['🔵 Mâle', '🔴 Femelle', 'Je ne sais pas'];
-    const chips_steril   = ['✅ Oui', '❌ Non', 'Je ne sais pas'];
+    const chips_sexe     = ['Mâle', 'Femelle', 'Je ne sais pas'];
+    const chips_steril   = ['Oui', 'Non', 'Je ne sais pas'];
 
     if (t.match(/^(annuler|stop|quitter|non merci|abandonner)$/) && bookingStep !== 0) {
       resetBooking();
@@ -870,7 +842,7 @@
 
       } else if (bookingStep === 3) {
         if (text.trim().length < 2) { botReply('Merci de préciser l\'espèce et le prénom de votre animal (ex : "Mon chat Minou").'); return; }
-        bookingData.animal = text.trim();
+        bookingData.animal = text.trim().replace(/^[^\w\sÀ-ÿ]+\s*/, '');
         bookingStep = 4;
         showTyping();
         setTimeout(() => { hideTyping(); appendMsg('bot', 'Choisissez un créneau disponible 👇'); setTimeout(() => renderSlotPicker(), 150); }, 700);
@@ -917,7 +889,7 @@
 
       } else if (bookingStep === 4) {
         if (text.trim().length < 2) { botReply('Précisez l\'espèce et le prénom (ex : "Mon chat Minou").'); return; }
-        bookingData.animal = text.trim();
+        bookingData.animal = text.trim().replace(/^[^\w\sÀ-ÿ]+\s*/, '');
         bookingStep = 5;
         showTyping();
         setTimeout(() => { hideTyping(); appendMsg('bot', 'Choisissez un créneau disponible 👇'); setTimeout(() => renderSlotPicker(), 150); }, 700);
