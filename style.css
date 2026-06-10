@@ -134,8 +134,8 @@ img { max-width: 100%; display: block; }
   padding: 8px 13px;
   border-radius: 8px;
   font-size: .88rem;
-  font-weight: 600;
-  color: rgba(255,255,255,.8);
+  font-weight: 700;
+  color: rgba(255,255,255,.92);
   transition: color var(--transition), background var(--transition);
 }
 .nav-links a:hover { color: #fff; background: rgba(255,255,255,.1); }
