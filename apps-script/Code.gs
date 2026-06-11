@@ -9,6 +9,7 @@ function doGet(e) {
   try {
     var p = (e && e.parameter) ? e.parameter : {};
     if (p.action === 'slots') return getAvailableSlots();
+    if (p.action === 'avis')  return submitAvis(p);
     return createRDV(p);
   } catch (err) {
     return jsonResponse({ status: 'error', message: err.message });
@@ -134,6 +135,20 @@ function createRDV(p) {
     );
   }
 
+  return jsonResponse({ status: 'ok' });
+}
+
+/* ════ AVIS CLIENT ════ */
+function submitAvis(p) {
+  var nom   = (p.nom   || 'Anonyme').replace(/[<>]/g, '');
+  var note  = Math.min(5, Math.max(1, parseInt(p.note) || 5));
+  var texte = (p.texte || '').replace(/[<>]/g, '');
+  var stars = '⭐'.repeat(note);
+  var html  = '<h2 style="color:#2563eb">⭐ Nouvel avis — ' + CABINET + '</h2>' +
+              '<p><strong>' + nom + '</strong> &nbsp;' + stars + '</p>' +
+              '<blockquote style="border-left:4px solid #f59e0b;padding-left:12px;color:#333">' + texte + '</blockquote>' +
+              '<p style="color:#888;font-size:12px">Reçu via le site web</p>';
+  GmailApp.sendEmail(VET_EMAIL, stars + ' Nouvel avis de ' + nom + ' — site web', nom + '\n' + stars + '\n\n' + texte, { htmlBody: html });
   return jsonResponse({ status: 'ok' });
 }
 

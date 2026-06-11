@@ -347,7 +347,6 @@ img { max-width: 100%; display: block; }
 
 /* ── Animal Parade — avec photos ── */
 .animal-parade {
-  background: var(--bg);
   padding: 90px 0;
   overflow: hidden;
 }
@@ -383,8 +382,8 @@ img { max-width: 100%; display: block; }
 }
 .parade-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
 .parade-photo:hover img { transform: scale(1.1); }
-.parade-item h3 { font-size: 1rem; font-weight: 800; color: var(--text); }
-.parade-item p { font-size: .82rem; color: var(--text-muted); text-align: center; max-width: 120px; }
+.parade-item h3 { font-size: 1rem; font-weight: 800; color: #fff; }
+.parade-item p { font-size: .82rem; color: rgba(255,255,255,.75); text-align: center; max-width: 120px; }
 
 /* ── Gallery de photos ── */
 .gallery { background: var(--surface); padding: 0; }
@@ -886,7 +885,6 @@ img { max-width: 100%; display: block; }
   margin-top: 12px;
   z-index: 2;
 }
-.tm-outer--r2 { margin-top: 24px; }
 
 .tm-fade-l,
 .tm-fade-r {
@@ -912,8 +910,35 @@ img { max-width: 100%; display: block; }
   width: max-content;
 }
 .tm-track--left  { animation: tmScroll 34s linear infinite; }
-.tm-track--right { animation: tmScroll 34s linear infinite reverse; }
 .tm-outer:hover .tm-track { animation-play-state: paused; }
+
+.tm-cta-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding-bottom: 8px;
+}
+.tm-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: .97rem;
+  letter-spacing: .01em;
+  text-decoration: none;
+  background: rgba(245,158,11,.18);
+  color: #fff;
+  border: 1.5px solid rgba(245,158,11,.55);
+  backdrop-filter: blur(14px);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+.tm-cta-btn:hover {
+  background: rgba(245,158,11,.32);
+  box-shadow: 0 0 28px rgba(245,158,11,.35);
+  transform: translateY(-2px);
+}
 
 .tm-card {
   background: #fff;
@@ -937,6 +962,7 @@ img { max-width: 100%; display: block; }
   margin-bottom: 13px;
 }
 .tm-avatar {
+  display: none;
   width: 48px; height: 48px;
   border-radius: 50%;
   object-fit: cover;
@@ -1128,6 +1154,170 @@ img { max-width: 100%; display: block; }
   .parade-track { gap: 20px; }
   .gallery-strip { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Modal avis ── */
+.avis-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.avis-modal.is-open { display: flex; }
+
+.avis-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5,10,30,.72);
+  backdrop-filter: blur(6px);
+}
+
+.avis-panel {
+  position: relative;
+  background: rgba(10,15,46,.95);
+  border: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(22px);
+  border-radius: 22px;
+  padding: 40px 36px 36px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 32px 80px rgba(0,0,0,.6);
+  animation: avisSlideIn .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes avisSlideIn {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.avis-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(255,255,255,.08);
+  border: none;
+  border-radius: 50%;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.avis-close:hover { background: rgba(255,255,255,.18); color: #fff; }
+
+.avis-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.avis-icon { font-size: 2.2rem; margin-bottom: 10px; }
+.avis-header h3 {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+.avis-header p { color: rgba(255,255,255,.55); font-size: .9rem; margin: 0; }
+
+.avis-stars-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.avis-stars {
+  display: flex;
+  gap: 6px;
+  cursor: pointer;
+}
+.avis-star {
+  font-size: 2.2rem;
+  color: rgba(255,255,255,.2);
+  transition: color .12s, transform .12s;
+  user-select: none;
+  line-height: 1;
+}
+.avis-star.active,
+.avis-stars:hover .avis-star { color: #f59e0b; }
+.avis-stars .avis-star:hover ~ .avis-star { color: rgba(255,255,255,.2) !important; }
+.avis-star:hover { transform: scale(1.2); }
+
+.avis-stars-label {
+  font-size: .82rem;
+  color: rgba(255,255,255,.45);
+  min-height: 18px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.avis-input {
+  display: block;
+  width: 100%;
+  background: rgba(255,255,255,.07);
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: #fff;
+  font-size: .95rem;
+  font-family: inherit;
+  margin-bottom: 12px;
+  transition: border-color var(--transition), background var(--transition);
+  box-sizing: border-box;
+}
+.avis-input::placeholder { color: rgba(255,255,255,.35); }
+.avis-input:focus {
+  outline: none;
+  border-color: rgba(245,158,11,.6);
+  background: rgba(255,255,255,.1);
+}
+.avis-textarea { resize: vertical; min-height: 110px; }
+
+.avis-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  padding: 14px;
+  background: rgba(245,158,11,.22);
+  border: 1.5px solid rgba(245,158,11,.55);
+  border-radius: 50px;
+  color: #fff;
+  font-weight: 700;
+  font-size: .97rem;
+  font-family: inherit;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  margin-top: 4px;
+}
+.avis-submit:hover {
+  background: rgba(245,158,11,.38);
+  box-shadow: 0 0 28px rgba(245,158,11,.35);
+  transform: translateY(-1px);
+}
+.avis-submit:disabled { opacity: .6; cursor: default; transform: none; }
+
+.avis-success {
+  text-align: center;
+  padding: 12px 0;
+}
+.avis-success-icon { font-size: 3rem; margin-bottom: 12px; }
+.avis-success h4 { color: #fff; font-size: 1.2rem; font-weight: 800; margin: 0 0 10px; }
+.avis-success p { color: rgba(255,255,255,.6); font-size: .9rem; line-height: 1.6; margin: 0 0 20px; }
+
+.avis-google-link {
+  display: inline-block;
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: .88rem;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245,158,11,.4);
+  padding-bottom: 2px;
+  transition: border-color var(--transition), color var(--transition);
+}
+.avis-google-link:hover { color: #fbbf24; border-color: #fbbf24; }
 
 /* ── Chatbot ── */
 #cb-root {
