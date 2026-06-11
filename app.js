@@ -112,7 +112,7 @@ window.addEventListener('scroll', () => {
   if (!section) return;
 
   /* — Paramètres identiques aux props du composant — */
-  const ITEMS          = ['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé'];
+  const ITEMS          = ['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'NAC', 'Vaccins', 'Chirurgie', 'Santé'];
   const FONT_SIZE      = 48;
   const FONT_WEIGHT    = 700;
   const PX_PER_FRAME   = 2;

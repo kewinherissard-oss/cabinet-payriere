@@ -313,7 +313,7 @@ img { max-width: 100%; display: block; }
 
 /* ── Trust bar ── */
 .trust-bar {
-  background: var(--dark);
+  background: linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%);
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -333,7 +333,7 @@ img { max-width: 100%; display: block; }
 .pmarquee-section {
   position: relative;
   height: 120px;
-  background: var(--dark);
+  background: linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -342,8 +342,8 @@ img { max-width: 100%; display: block; }
 .pmarquee-rotate { width: 100%; display: flex; align-items: center; justify-content: flex-start; transform-style: preserve-3d; }
 .pmarquee-track { display: flex; white-space: nowrap; will-change: transform; }
 .pmarquee-fade-x, .pmarquee-fade-y { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
-.pmarquee-fade-x { background: linear-gradient(90deg, var(--dark) 0%, transparent 18%, transparent 82%, var(--dark) 100%); }
-.pmarquee-fade-y { background: linear-gradient(180deg, var(--dark) 0%, transparent 28%, transparent 72%, var(--dark) 100%); }
+.pmarquee-fade-x { background: linear-gradient(90deg, #0c2461 0%, transparent 18%, transparent 82%, #0e3494 100%); }
+.pmarquee-fade-y { background: linear-gradient(180deg, #0c2461 0%, transparent 28%, transparent 72%, #0e3494 100%); }
 
 /* ── Animal Parade — avec photos ── */
 .animal-parade {
@@ -386,7 +386,7 @@ img { max-width: 100%; display: block; }
 .parade-item p { font-size: .82rem; color: rgba(255,255,255,.75); text-align: center; max-width: 120px; }
 
 /* ── Gallery de photos ── */
-.gallery { background: var(--surface); padding: 0; }
+.gallery { background: linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%); padding: 0; }
 .gallery-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -437,61 +437,38 @@ img { max-width: 100%; display: block; }
   margin-bottom: 16px;
 }
 
-.services-layout {
-  display: grid;
-  grid-template-columns: 1fr 300px 1fr;
-  gap: 32px;
-  align-items: stretch;
-  margin-bottom: 28px;
-}
-
-.services-col-left,
-.services-col-right {
+.services-top {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 48px;
+  margin-bottom: 48px;
 }
-
-.services-intro-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.services-intro-block h2 {
-  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+.services-top-text { flex: 1; }
+.services-top-text h2 {
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
   font-weight: 900;
-  line-height: 1.22;
-  color: var(--dark);
-  margin: 0 0 22px 0;
+  line-height: 1.2;
+  color: #fff;
+  margin: 10px 0 16px;
+  letter-spacing: -.02em;
 }
-.services-intro-block h2 span { color: var(--primary); }
+.services-top-text h2 span { color: #fbbf24; }
+.services-top-cta { flex-shrink: 0; }
 
 .services-col-desc {
   font-size: .93rem;
-  color: var(--text-muted);
+  color: rgba(255,255,255,.65);
   line-height: 1.75;
   margin: 0;
+  max-width: 520px;
 }
 
-.services-col-center {
+.services-grid {
   display: flex;
-  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 20px;
   justify-content: center;
-  min-height: 520px;
-  overflow: visible;
-  position: relative;
-}
-.services-guide-cat {
-  width: 100%;
-  max-width: 320px;
-  object-fit: contain;
-  object-position: center center;
-  display: block;
-  filter:
-    drop-shadow(0 0 28px rgba(245,158,11,.12))
-    drop-shadow(0 12px 48px rgba(0,0,0,.55));
-  pointer-events: none;
-  user-select: none;
 }
 
 .btn-services {
@@ -510,11 +487,6 @@ img { max-width: 100%; display: block; }
 }
 .btn-services:hover { background: var(--primary-dark); box-shadow: 0 6px 20px rgba(29,78,216,.35); transform: translateY(-2px); }
 
-.services-bottom {
-  display: flex;
-  justify-content: center;
-}
-.service-card--wide { max-width: 520px; width: 100%; }
 
 .service-card {
   background: var(--surface);
@@ -525,6 +497,8 @@ img { max-width: 100%; display: block; }
   text-align: center;
   opacity: 0;
   transform: translateY(30px);
+  flex: 0 1 calc(33.333% - 14px);
+  min-width: 220px;
   transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
   position: relative;
   overflow: hidden;
@@ -850,22 +824,26 @@ img { max-width: 100%; display: block; }
 @media (max-width: 860px) { .philo-grid { grid-template-columns: 1fr; } }
 
 /* ── Testimonials ── */
-.testimonials { background: var(--primary); position: relative; overflow: hidden; padding-bottom: 80px; }
+.testimonials { background: linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%); position: relative; overflow: hidden; padding-bottom: 80px; }
 .testimonials::before {
   content: '';
   position: absolute;
-  top: -100px; right: -100px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(245,158,11,.15), transparent 70%);
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 38px 38px;
   pointer-events: none;
 }
 .testimonials::after {
   content: '';
   position: absolute;
-  bottom: -100px; left: -100px;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(255,255,255,.05), transparent 70%);
+  width: 600px; height: 600px;
+  right: -150px; top: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,158,11,.15) 0%, transparent 70%);
+  filter: blur(60px);
   pointer-events: none;
+  z-index: 0;
 }
 .testimonials .section-header h2 { color: #fff; }
 .testimonials .section-header p  { color: rgba(255,255,255,.7); }
@@ -896,11 +874,11 @@ img { max-width: 100%; display: block; }
 }
 .tm-fade-l {
   left: 0;
-  background: linear-gradient(to right, var(--primary) 0%, transparent 100%);
+  background: linear-gradient(to right, #0c2461 0%, transparent 100%);
 }
 .tm-fade-r {
   right: 0;
-  background: linear-gradient(to left, var(--primary) 0%, transparent 100%);
+  background: linear-gradient(to left, #0e3494 0%, transparent 100%);
 }
 
 .tm-track {

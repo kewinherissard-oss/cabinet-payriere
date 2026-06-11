@@ -12,13 +12,13 @@ Déployé en ligne sur GitHub Pages : **https://kewinherissard-oss.github.io/cab
 
 ```
 /
-├── index.html               # Structure HTML complète (~604 lignes)
-├── style.css                # Système de design complet (~1713 lignes)
+├── index.html               # Structure HTML complète (~580 lignes)
+├── style.css                # Système de design complet (~1680 lignes)
 ├── app.js                   # Animations et interactions JS (~317 lignes)
 ├── chatbot.js               # Widget chatbot autonome IIFE (~1138 lignes)
 ├── Code.gs                  # Google Apps Script — copie de travail (sync avec apps-script/)
 ├── imagedr-payriere.jpg     # Photo active du Dr PAYRIERE (section équipe)
-├── services-cat-nobg.png    # Photo active — chat tabby fond transparent (section services)
+├── services-cat-nobg.png    # Chat birman fond supprimé (non utilisé dans le site depuis refonte services)
 ├── services-cat-raw.jpg     # Source Unsplash du chat services (photo-1574158622682-e40e69881006)
 ├── puce avatar2.png         # Avatar actif de Puce (chaton noir et blanc, yeux dorés)
 │
@@ -48,6 +48,8 @@ Déployé en ligne sur GitHub Pages : **https://kewinherissard-oss.github.io/cab
 │
 ├── — Scripts utilitaires Node.js —
 ├── process-cat.mjs          # Télécharge l'image Unsplash + suppression de fond → services-cat-nobg.png
+├── process-birman.mjs       # Suppression fond discord-photo-2.png (birman) → services-cat-nobg.png (tentative)
+├── process-maine-coon.mjs   # Suppression fond "Maine coon leve patte.jpg" → services-cat-nobg.png (tentative)
 ├── remove-bg.mjs            # Suppression fond générique (cat-guide-raw → cat-services.png)
 ├── gen-cat.mjs              # Tentative génération IA Gemini/Imagen (non fonctionnel, tier gratuit)
 ├── package.json             # Dépendance : @imgly/background-removal-node ^1.4.5
@@ -90,15 +92,15 @@ Dépôts Git :
 |-------|-------------|---------|
 | 1 | `header` | Navigation fixe — logo, liens (Accueil, Services, L'équipe, Avis, Boutique, Contact), bouton **Prendre RDV** glass amber |
 | 2 | `#accueil` `.hero` | Hero plein écran full-bleed — photo chien+chat en fond, overlay navy, canvas étoilé, titre, deux CTAs glass côte à côte |
-| 3 | bandeau confiance | 5 points clés (soins, urgences, équipe, matériel, accessibilité) |
-| 4 | `#pmarqueeSection` | PerspectiveMarquee — défilement 3D animé en JS natif |
+| 3 | bandeau confiance | 5 points clés (soins, urgences, équipe, matériel, accessibilité) — fond navy gradient |
+| 4 | `#pmarqueeSection` | PerspectiveMarquee — défilement 3D animé en JS natif — fond navy gradient |
 | 5 | `.animal-parade` `.dark-bg` | Défilé de 4 espèces avec photos rondes sur fond navy (Chiens, Chats, Lapins, NAC) — textes en blanc |
-| 6 | `.gallery` | Strip galerie 4 photos réelles d'animaux (Unsplash) |
-| 7 | `#services` `.dark-bg` | 3 colonnes : intro+2 cartes gauche, **photo chat PNG transparent central**, 2 cartes droite + carte large Dentisterie en bas |
-| 8 | `#equipe` `.about` | Fond navy bleu vif avec orbes 3D et empreintes flottantes — carte Dr PAYRIERE avec tilt 3D, biographie, diplômes |
-| 9 | `.philosophie` `.dark-bg` | Phytothérapie en priorité, stérilisation chat ✅, stérilisation chien par implant Suprelorin® |
-| 10 | `#temoignages` | **5 vrais avis Google** — 1 rangée de marquee CSS défilant (gauche), sans avatars, bouton "Laisser un avis" ouvre une modal |
-| 11 | `#boutique` `.dark-bg` | ChronoVet — point relais officiel, liste produits, bouton vers chronovet.fr |
+| 6 | `#services` `.dark-bg` | Header `.services-top` (titre + description + bouton RDV) + grille `.services-grid` flex-wrap 5 cartes (3+2) — **sans image chat** |
+| 7 | `#equipe` `.about` | Fond navy bleu vif avec orbes 3D et empreintes flottantes — carte Dr PAYRIERE avec tilt 3D, biographie, diplômes |
+| 8 | `.philosophie` `.dark-bg` | Phytothérapie en priorité, stérilisation chat ✅, stérilisation chien par implant Suprelorin® |
+| 9 | `#temoignages` | **5 vrais avis Google** — 1 rangée de marquee CSS défilant, fond navy gradient, sans avatars, bouton "Laisser un avis" ouvre une modal |
+| 10 | `#boutique` `.dark-bg` | ChronoVet — point relais officiel, liste produits, bouton vers chronovet.fr |
+| 11 | `.gallery` | Strip galerie 4 photos réelles d'animaux (Unsplash) — fond navy gradient — **entre boutique et contact** |
 | 12 | `#contact` `.dark-bg` | Adresse, téléphone, email, urgences Vet-Urgentys, tableau horaires |
 | 13 | `footer` | Navigation, copyright, slogan |
 | — | `#avis-modal` | Modal "Laisser un avis" — formulaire étoiles + nom + texte, envoi via Apps Script, lien Google post-envoi |
@@ -134,15 +136,15 @@ Dépôts Git :
 - **Hero full-bleed** — image chien+chat (`photo-1450778869180-41d0601e046e`) en `background: right center / cover`, overlay gradient navy gauche → transparent droite via `::before`, fondu bas via `::after`
 - **Boutons glass** — `.btn-primary` amber glass `rgba(245,158,11,.18)` + `backdrop-filter: blur(14px)` + bordure amber ; `.btn-secondary` blanc glass `rgba(255,255,255,.1)` + bordure blanche
 - **Navbar glass** — `.btn-rdv` glass amber au top, solid amber au scroll ; header glassmorphisme transparent, blanc opaque au scroll
-- **Dark-bg sections** — classe `.dark-bg` partagée sur Animal Parade, Services, Philosophie, Boutique, Contact : `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` + grille dots `38px × 38px` via `::before` + orbe animé bleu `blur(60px)` via `::after`
-- **Section Équipe custom** — fond `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` avec `.about-bg-orb` (orbes glowing) + `.about-bg-paw` (empreintes flottantes) + tilt 3D sur la carte photo
-- **Section Services** — fond `.dark-bg`, colonne centrale avec `services-cat-nobg.png` (PNG transparent, `object-fit: contain`, `drop-shadow` or + noir) qui flotte naturellement sur le navy
+- **Fond navy unifié** — `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` utilisé sur **toutes** les sections colorées du site (trust-bar, pmarquee, dark-bg, testimonials, gallery, équipe) pour une cohérence visuelle totale
+- **Dark-bg sections** — classe `.dark-bg` partagée sur Animal Parade, Services, Philosophie, Boutique, Contact : gradient navy + grille dots `38px × 38px` via `::before` + orbe animé bleu `blur(60px)` via `::after`
+- **Section Équipe custom** — fond navy gradient avec `.about-bg-orb` (orbes glowing) + `.about-bg-paw` (empreintes flottantes) + tilt 3D sur la carte photo
+- **Section Services** — fond `.dark-bg`, header `.services-top` (flex row : texte+description à gauche, bouton RDV à droite), grille `.services-grid` flex-wrap 5 cartes égales (`flex: 0 1 calc(33.333% - 14px)`), disposition 3+2 centrée sur desktop — **sans image chat**
 - **Photo Dr PAYRIERE** — `imagedr-payriere.jpg`, `object-fit: cover; object-position: center top;`
-- **Chat services** — `services-cat-nobg.png`, chat tabby yeux verts, fond supprimé avec `@imgly/background-removal-node`, flotte sur le dark-bg
 - **Glassmorphisme cartes dark** — `background: rgba(255,255,255,.12)`, `border: rgba(255,255,255,.11)`, sections sombres uniquement
 - **Typography** — `clamp()` pour les titres, `font-weight: 900` sur les headings, `letter-spacing: -.03em`
 - **Unsplash CDN** — photos animaux `?w=&h=&fit=crop&q=80`
-- **Section Témoignages** — fond `var(--primary)` (bleu vif), 1 rangée de marquee défilante (`@keyframes tmScroll`), cartes blanches sans avatar, fades gauche/droite, pause au hover, bouton CTA glass amber "Laisser un avis"
+- **Section Témoignages** — fond navy gradient, 1 rangée de marquee défilante (`@keyframes tmScroll`), cartes blanches sans avatar, fades L/R adaptés au navy, pause au hover, bouton CTA glass amber "Laisser un avis"
 - **Modal avis** — `position: fixed`, backdrop semi-transparent, panel glassmorphisme navy (`rgba(10,15,46,.96)` + `blur(22px)`), animation slide-up, étoiles cliquables en or, champ texte, bouton amber
 
 ### Classes CSS notables
@@ -160,12 +162,15 @@ Dépôts Git :
 | `.hero-content` | `margin-left: 8vw; max-width: 600px` — contenu hero aligné gauche |
 | `.hero-cta` | Flex row des deux boutons CTA hero |
 | `.hero-tag` | Badge doré "Cabinet vétérinaire de confiance" |
-| `.services-guide-cat` | Image chat central services — `object-fit: contain`, `drop-shadow` |
+| `.services-top` | Flex row header services — titre+description à gauche, bouton RDV à droite |
+| `.services-top-text` | Bloc texte header services (`flex: 1`) |
+| `.services-top-cta` | Bouton RDV header services (`flex-shrink: 0`) |
+| `.services-grid` | Grille flex-wrap des 5 cartes de services (`justify-content: center`) |
 | `.tm-outer` | Conteneur marquee avis — `overflow: hidden`, fades L/R |
 | `.tm-track--left` | Unique rangée avis — animation `tmScroll` 34s normale |
 | `.tm-avatar` | Avatar avis — `display: none` (masqué, HTML conservé) |
 | `.tm-card` | Carte avis blanche 300px — hover lift |
-| `.tm-fade-l / .tm-fade-r` | Dégradé fondu bords du marquee (couleur `var(--primary)`) |
+| `.tm-fade-l / .tm-fade-r` | Dégradé fondu bords du marquee — adaptés au navy (`#0c2461` / `#0e3494`) |
 | `.tm-cta-wrap` | Conteneur centré du bouton "Laisser un avis" |
 | `.tm-cta-btn` | Bouton glass amber "Laisser un avis" — ouvre `#avis-modal` |
 | `.avis-modal` | Modal avis — `position: fixed`, `z-index: 2000`, masqué par défaut |
@@ -205,7 +210,7 @@ Fond étoilé animé dans le hero. 110 points qui bougent et scintillent via `re
 Écoute `mousemove` sur la section hero, cherche les `.p-layer[data-depth]`. Actuellement aucun `.p-layer` dans le hero (code conservé pour usage futur). Lerp `cx += (mx - cx) * 0.08`.
 
 ### 5. PerspectiveMarquee (`initPerspectiveMarquee`)
-Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Items : `['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'Vaccins', 'Chirurgie', 'Santé']`. Blur et opacité calculés par item selon distance au centre.
+Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Items : `['Chiens', 'Chats', 'Lapins', 'Rongeurs', 'NAC', 'Vaccins', 'Chirurgie', 'Santé']` — animaux en premier, NAC ajouté. Blur et opacité calculés par item selon distance au centre.
 
 ### 6. Tilt 3D carte Dr PAYRIERE (`initAboutTilt`)
 Écoute `mousemove` sur `.about-card-wrapper` → applique `rotateY/rotateX` sur `.about-card` via `requestAnimationFrame`. Interpolation douce avec facteur `0.1`. `translateZ` proportionnel à la magnitude du tilt. Reset au `mouseleave`.
@@ -391,7 +396,7 @@ clasp deployments    # vérifier l'URL de déploiement
 - JS organisé en **IIFEs** autonomes
 - CSS organisé par composant avec commentaires séparateurs `/* ── */`
 - Images animaux proviennent d'**Unsplash** via CDN — photo Dr PAYRIERE en **fichier local** (`imagedr-payriere.jpg`)
-- Photo chat section services : **fichier local** `services-cat-nobg.png` (PNG transparent généré avec `@imgly/background-removal-node`)
+- `services-cat-nobg.png` : fichier existant mais **non utilisé** dans la section services (section sans image depuis la refonte grille)
 - Avatar Puce : **fichier local** `puce avatar2.png`
 - Responsive **mobile-first**, breakpoints principaux à 960px et 600px
 - Emojis **jamais stockés dans les données métier** (strippés avant envoi webhook et dans Code.gs)
@@ -402,29 +407,15 @@ clasp deployments    # vérifier l'URL de déploiement
 
 ## Suppression de fond — workflow Node.js
 
-Pour retravailler la photo du chat central (services) :
+Scripts disponibles pour traiter une nouvelle image si besoin :
 
 ```bash
-node process-cat.mjs
-# → Télécharge depuis Unsplash photo-1574158622682-e40e69881006
-# → Supprime le fond avec @imgly/background-removal-node (modèle medium)
-# → Sauvegarde services-cat-nobg.png (PNG transparent)
+node process-cat.mjs         # → services-cat-nobg.png depuis Unsplash
+node process-birman.mjs      # → services-cat-nobg.png depuis discord-photo-2.png
+node process-maine-coon.mjs  # → services-cat-nobg.png depuis "Maine coon leve patte.jpg"
 ```
 
-L'image est ensuite utilisée directement dans `index.html` :
-```html
-<img class="services-guide-cat" src="services-cat-nobg.png" alt="Chat du cabinet" loading="lazy">
-```
-
-CSS associé (`.services-guide-cat`) :
-```css
-width: 100%;
-max-width: 320px;
-object-fit: contain;
-filter:
-  drop-shadow(0 0 28px rgba(245,158,11,.12))
-  drop-shadow(0 12px 48px rgba(0,0,0,.55));
-```
+Tous utilisent `@imgly/background-removal-node` avec `model: 'medium'`. La section services n'utilise plus d'image chat (refonte juin 2026).
 
 ---
 
@@ -453,6 +444,10 @@ gh api repos/kewinherissard-oss/cabinet-payriere/pages/builds --method POST
 
 | Commit / Session | Changement |
 |------------------|-----------|
+| session juin 2026 | Fond navy unifié sur tout le site (trust-bar, pmarquee, testimonials, gallery) — cohérence visuelle totale |
+| session juin 2026 | Services — refonte layout : suppression 3 colonnes + image chat, nouveau `.services-top` header + `.services-grid` flex-wrap 5 cartes 3+2 |
+| session juin 2026 | Gallery déplacée entre boutique et contact |
+| session juin 2026 | PerspectiveMarquee — animaux en premier, ajout NAC |
 | `8f3e30f` (juin 2026) | Fond navy section animaux, modal avis client, témoignages 1 rangée sans avatars, boutique allégée, endpoint `action=avis` Apps Script |
 | session juin 2026 | Section services — chat tabby PNG transparent (`services-cat-nobg.png`) sur fond dark-bg |
 | session juin 2026 | Section témoignages — refonte en marquee CSS 2 rangées défilantes (gauche + droite) |

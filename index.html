@@ -113,70 +113,41 @@
     </div>
   </section>
 
-  <!-- ── Galerie photos ── -->
-  <section class="gallery">
-    <div class="gallery-strip">
-      <div class="gallery-item" data-label="Nos patients chiens">
-        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=300&fit=crop&q=80" alt="Chien Golden" loading="lazy">
-      </div>
-      <div class="gallery-item" data-label="Soins avec amour">
-        <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=600&h=300&fit=crop&q=80" alt="Vétérinaire" loading="lazy">
-      </div>
-      <div class="gallery-item" data-label="Nos petits félins">
-        <img src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=300&fit=crop&q=80" alt="Chat" loading="lazy">
-      </div>
-      <div class="gallery-item" data-label="Chaque animal compte">
-        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&h=300&fit=crop&q=80" alt="Chiens" loading="lazy">
-      </div>
-    </div>
-  </section>
-
   <!-- ── Services ── -->
   <section id="services" class="section services dark-bg">
     <div class="container">
 
-      <div class="services-layout">
-
-        <div class="services-col-left" data-gsap-reveal>
-          <div class="services-intro-block">
-            <span class="services-tag">Nos Services</span>
-            <h2>Des solutions de <span>confiance</span> pour tous vos compagnons</h2>
-            <a href="#" class="btn-primary" onclick="event.preventDefault();openChatbotRDV();">📅 Prendre RDV</a>
-          </div>
-          <div class="service-card" data-gsap-card>
-            <div class="service-icon-wrap"><div class="service-icon">🩺</div></div>
-            <h3>Consultations</h3>
-            <p>Bilan de santé, suivi régulier et consultations d'urgence pour tous vos compagnons.</p>
-          </div>
-          <div class="service-card" data-gsap-card>
-            <div class="service-icon-wrap"><div class="service-icon">🔬</div></div>
-            <h3>Analyses & Imagerie</h3>
-            <p>Prise de sang, échographie — des diagnostics précis réalisés directement sur place.</p>
-          </div>
-        </div>
-
-        <div class="services-col-center">
-          <img class="services-guide-cat" src="services-cat-nobg.png" alt="Chat du cabinet" loading="lazy">
-        </div>
-
-        <div class="services-col-right" data-gsap-reveal>
+      <div class="services-top" data-gsap-reveal>
+        <div class="services-top-text">
+          <span class="services-tag">Nos Services</span>
+          <h2>Des solutions de <span>confiance</span> pour tous vos compagnons</h2>
           <p class="services-col-desc">Avec plus de 30 ans d'expérience et une approche naturelle et bienveillante, la Dre PAYRIERE offre une gamme complète de soins vétérinaires pour chiens, chats, lapins, rongeurs et NAC.</p>
-          <div class="service-card" data-gsap-card>
-            <div class="service-icon-wrap"><div class="service-icon">💉</div></div>
-            <h3>Vaccinations</h3>
-            <p>Programme de vaccination adapté à chaque espèce pour une protection optimale tout au long de la vie.</p>
-          </div>
-          <div class="service-card" data-gsap-card>
-            <div class="service-icon-wrap"><div class="service-icon">🏥</div></div>
-            <h3>Chirurgie</h3>
-            <p>Bloc opératoire moderne pour les interventions courantes : stérilisation, chirurgie cutanée, et plus.</p>
-          </div>
         </div>
-
+        <a href="#" class="btn-primary services-top-cta" onclick="event.preventDefault();openChatbotRDV();">📅 Prendre RDV</a>
       </div>
 
-      <div class="services-bottom">
-        <div class="service-card service-card--wide" data-gsap-card>
+      <div class="services-grid">
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon-wrap"><div class="service-icon">🩺</div></div>
+          <h3>Consultations</h3>
+          <p>Bilan de santé, suivi régulier et consultations d'urgence pour tous vos compagnons.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon-wrap"><div class="service-icon">💉</div></div>
+          <h3>Vaccinations</h3>
+          <p>Programme de vaccination adapté à chaque espèce pour une protection optimale tout au long de la vie.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon-wrap"><div class="service-icon">🔬</div></div>
+          <h3>Analyses & Imagerie</h3>
+          <p>Prise de sang, échographie — des diagnostics précis réalisés directement sur place.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
+          <div class="service-icon-wrap"><div class="service-icon">🏥</div></div>
+          <h3>Chirurgie</h3>
+          <p>Bloc opératoire moderne pour les interventions courantes : stérilisation, chirurgie cutanée, et plus.</p>
+        </div>
+        <div class="service-card" data-gsap-card>
           <div class="service-icon-wrap"><div class="service-icon">🦷</div></div>
           <h3>Dentisterie</h3>
           <p>Détartrage, soins dentaires et conseils pour une bonne hygiène bucco-dentaire de votre animal.</p>
@@ -410,6 +381,24 @@
             <div class="boutique-animals">🐶 🐱 🐰 🐹</div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Galerie photos ── -->
+  <section class="gallery">
+    <div class="gallery-strip">
+      <div class="gallery-item" data-label="Nos patients chiens">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=300&fit=crop&q=80" alt="Chien Golden" loading="lazy">
+      </div>
+      <div class="gallery-item" data-label="Soins avec amour">
+        <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=600&h=300&fit=crop&q=80" alt="Vétérinaire" loading="lazy">
+      </div>
+      <div class="gallery-item" data-label="Nos petits félins">
+        <img src="https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?w=600&h=300&fit=crop&q=80" alt="Chat" loading="lazy">
+      </div>
+      <div class="gallery-item" data-label="Chaque animal compte">
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&h=300&fit=crop&q=80" alt="Chiens" loading="lazy">
       </div>
     </div>
   </section>
