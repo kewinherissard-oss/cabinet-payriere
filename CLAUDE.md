@@ -12,15 +12,24 @@ Déployé en ligne sur GitHub Pages : **https://kewinherissard-oss.github.io/cab
 
 ```
 /
-├── index.html               # Structure HTML complète (~589 lignes)
-├── style.css                # Système de design complet (~1450 lignes)
-├── app.js                   # Animations et interactions JS (~318 lignes)
-├── chatbot.js               # Widget chatbot autonome IIFE (~1041 lignes)
+├── index.html               # Structure HTML complète (~604 lignes)
+├── style.css                # Système de design complet (~1713 lignes)
+├── app.js                   # Animations et interactions JS (~317 lignes)
+├── chatbot.js               # Widget chatbot autonome IIFE (~1138 lignes)
 ├── Code.gs                  # Google Apps Script — copie de travail (sync avec apps-script/)
 ├── imagedr-payriere.jpg     # Photo active du Dr PAYRIERE (section équipe)
 ├── services-cat-nobg.png    # Photo active — chat tabby fond transparent (section services)
 ├── services-cat-raw.jpg     # Source Unsplash du chat services (photo-1574158622682-e40e69881006)
 ├── puce avatar2.png         # Avatar actif de Puce (chaton noir et blanc, yeux dorés)
+│
+├── — Photos Discord (reçues de T-triceratops, non trackées) —
+├── discord-photo-1.jpg      # Chien marron
+├── discord-photo-2.png      # Chat siamois
+├── discord-photo-3.png      # Chiot blanc
+├── discord-photo-4.png      # Chat sur chaise
+├── discord-photo-5.png      # Border collie
+├── discord-photo-6.png      # Chiot noir chez le vétérinaire
+├── discord-photo-7.png      # Deux chats sur arbre à chat
 │
 ├── — Fichiers non utilisés —
 ├── puce-avatar.svg          # Version SVG de l'avatar Puce
@@ -67,7 +76,7 @@ Dépôts Git :
 - **CSS3** — variables CSS, flexbox, grid, responsive mobile-first
 - **JavaScript ES6+** — vanilla JS, IIFEs, `requestAnimationFrame`, Canvas 2D
 - **GSAP 3.12.5 + ScrollTrigger** — chargé via CDN, uniquement pour les animations au scroll
-- **Google Apps Script** — webhook serverless déployé pour l'automatisation des RDV
+- **Google Apps Script** — webhook serverless déployé pour l'automatisation des RDV et la réception des avis
 - **ntfy.sh** — push notifications instantanées vers le Dr PAYRIERE à chaque RDV
 - **@imgly/background-removal-node** — suppression de fond IA locale (Node.js, scripts `.mjs`)
 
@@ -83,15 +92,16 @@ Dépôts Git :
 | 2 | `#accueil` `.hero` | Hero plein écran full-bleed — photo chien+chat en fond, overlay navy, canvas étoilé, titre, deux CTAs glass côte à côte |
 | 3 | bandeau confiance | 5 points clés (soins, urgences, équipe, matériel, accessibilité) |
 | 4 | `#pmarqueeSection` | PerspectiveMarquee — défilement 3D animé en JS natif |
-| 5 | `.animal-parade` | Défilé de 5 espèces avec photos rondes (Chiens, Chats, Lapins, Rongeurs, Furets & NAC) |
+| 5 | `.animal-parade` `.dark-bg` | Défilé de 4 espèces avec photos rondes sur fond navy (Chiens, Chats, Lapins, NAC) — textes en blanc |
 | 6 | `.gallery` | Strip galerie 4 photos réelles d'animaux (Unsplash) |
 | 7 | `#services` `.dark-bg` | 3 colonnes : intro+2 cartes gauche, **photo chat PNG transparent central**, 2 cartes droite + carte large Dentisterie en bas |
 | 8 | `#equipe` `.about` | Fond navy bleu vif avec orbes 3D et empreintes flottantes — carte Dr PAYRIERE avec tilt 3D, biographie, diplômes |
 | 9 | `.philosophie` `.dark-bg` | Phytothérapie en priorité, stérilisation chat ✅, stérilisation chien par implant Suprelorin® |
-| 10 | `#temoignages` | **5 vrais avis Google** — 2 rangées de marquee CSS en défilement automatique (gauche ↔ droite), pause au survol |
+| 10 | `#temoignages` | **5 vrais avis Google** — 1 rangée de marquee CSS défilant (gauche), sans avatars, bouton "Laisser un avis" ouvre une modal |
 | 11 | `#boutique` `.dark-bg` | ChronoVet — point relais officiel, liste produits, bouton vers chronovet.fr |
 | 12 | `#contact` `.dark-bg` | Adresse, téléphone, email, urgences Vet-Urgentys, tableau horaires |
 | 13 | `footer` | Navigation, copyright, slogan |
+| — | `#avis-modal` | Modal "Laisser un avis" — formulaire étoiles + nom + texte, envoi via Apps Script, lien Google post-envoi |
 
 ---
 
@@ -124,7 +134,7 @@ Dépôts Git :
 - **Hero full-bleed** — image chien+chat (`photo-1450778869180-41d0601e046e`) en `background: right center / cover`, overlay gradient navy gauche → transparent droite via `::before`, fondu bas via `::after`
 - **Boutons glass** — `.btn-primary` amber glass `rgba(245,158,11,.18)` + `backdrop-filter: blur(14px)` + bordure amber ; `.btn-secondary` blanc glass `rgba(255,255,255,.1)` + bordure blanche
 - **Navbar glass** — `.btn-rdv` glass amber au top, solid amber au scroll ; header glassmorphisme transparent, blanc opaque au scroll
-- **Dark-bg sections** — classe `.dark-bg` partagée sur Services, Philosophie, Boutique, Contact : `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` + grille dots `38px × 38px` via `::before` + orbe animé bleu `blur(60px)` via `::after`
+- **Dark-bg sections** — classe `.dark-bg` partagée sur Animal Parade, Services, Philosophie, Boutique, Contact : `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` + grille dots `38px × 38px` via `::before` + orbe animé bleu `blur(60px)` via `::after`
 - **Section Équipe custom** — fond `linear-gradient(160deg, #0c2461 0%, #1d4ed8 55%, #0e3494 100%)` avec `.about-bg-orb` (orbes glowing) + `.about-bg-paw` (empreintes flottantes) + tilt 3D sur la carte photo
 - **Section Services** — fond `.dark-bg`, colonne centrale avec `services-cat-nobg.png` (PNG transparent, `object-fit: contain`, `drop-shadow` or + noir) qui flotte naturellement sur le navy
 - **Photo Dr PAYRIERE** — `imagedr-payriere.jpg`, `object-fit: cover; object-position: center top;`
@@ -132,7 +142,8 @@ Dépôts Git :
 - **Glassmorphisme cartes dark** — `background: rgba(255,255,255,.12)`, `border: rgba(255,255,255,.11)`, sections sombres uniquement
 - **Typography** — `clamp()` pour les titres, `font-weight: 900` sur les headings, `letter-spacing: -.03em`
 - **Unsplash CDN** — photos animaux `?w=&h=&fit=crop&q=80`
-- **Section Témoignages** — fond `var(--primary)` (bleu vif), 2 rangées de marquee défilantes (`@keyframes tmScroll`) avec cartes blanches, fades gauche/droite, pause au hover
+- **Section Témoignages** — fond `var(--primary)` (bleu vif), 1 rangée de marquee défilante (`@keyframes tmScroll`), cartes blanches sans avatar, fades gauche/droite, pause au hover, bouton CTA glass amber "Laisser un avis"
+- **Modal avis** — `position: fixed`, backdrop semi-transparent, panel glassmorphisme navy (`rgba(10,15,46,.96)` + `blur(22px)`), animation slide-up, étoiles cliquables en or, champ texte, bouton amber
 
 ### Classes CSS notables
 
@@ -141,7 +152,7 @@ Dépôts Git :
 | `.btn-primary` | Bouton CTA principal — glass amber, `blur(14px)`, hover glow |
 | `.btn-secondary` | Bouton CTA secondaire — glass blanc, `blur(14px)` |
 | `.btn-rdv` | Bouton nav "Prendre RDV" — glass au top, solid amber au scroll |
-| `.dark-bg` | Fond navy partagé (Services, Philo, Boutique, Contact) |
+| `.dark-bg` | Fond navy partagé (Animal Parade, Services, Philo, Boutique, Contact) |
 | `.about-bg-orb-1/2/3` | Orbes glowing animés dans la section Équipe |
 | `.about-bg-paw` | Empreintes 🐾 flottantes avec `@keyframes` fade |
 | `.about-card-wrapper` | `perspective: 900px` pour le tilt 3D |
@@ -151,10 +162,19 @@ Dépôts Git :
 | `.hero-tag` | Badge doré "Cabinet vétérinaire de confiance" |
 | `.services-guide-cat` | Image chat central services — `object-fit: contain`, `drop-shadow` |
 | `.tm-outer` | Conteneur marquee avis — `overflow: hidden`, fades L/R |
-| `.tm-track--left` | Rangée 1 avis — animation `tmScroll` 34s normale |
-| `.tm-track--right` | Rangée 2 avis — animation `tmScroll` 34s `reverse` |
+| `.tm-track--left` | Unique rangée avis — animation `tmScroll` 34s normale |
+| `.tm-avatar` | Avatar avis — `display: none` (masqué, HTML conservé) |
 | `.tm-card` | Carte avis blanche 300px — hover lift |
 | `.tm-fade-l / .tm-fade-r` | Dégradé fondu bords du marquee (couleur `var(--primary)`) |
+| `.tm-cta-wrap` | Conteneur centré du bouton "Laisser un avis" |
+| `.tm-cta-btn` | Bouton glass amber "Laisser un avis" — ouvre `#avis-modal` |
+| `.avis-modal` | Modal avis — `position: fixed`, `z-index: 2000`, masqué par défaut |
+| `.avis-backdrop` | Fond sombre semi-transparent, clic ferme la modal |
+| `.avis-panel` | Panneau glassmorphisme navy, animation `slideUp` |
+| `.avis-star` | Étoile interactive — `color: #f59e0b` quand active |
+| `.avis-input` | Champ texte / textarea dans la modal — fond semi-blanc |
+| `.avis-submit` | Bouton envoi amber, spinner d'envoi intégré |
+| `.avis-success` | Message de succès avec lien Google, caché jusqu'à envoi réussi |
 | `#cb-root` | Widget chatbot fixe, z-index 1100 (au-dessus du header à 1000) |
 | `#cb-bubble` | Bouton FAB avec avatar Puce, animation pulse dorée |
 | `#cb-panel` | Fenêtre chat — `rgba(10,15,46,.92)` + `blur(22px)` |
@@ -173,7 +193,7 @@ Dépôts Git :
 ## Animations JavaScript (app.js)
 
 ### 1. Marquee Témoignages (`initTestimonialMarquee`)
-S'exécute en premier (top du fichier). Duplique les enfants de chaque `.tm-track` pour créer une boucle CSS infinie — la CSS animation prend le relais sans JS continu.
+S'exécute en premier (top du fichier). Duplique les enfants de `.tm-track--left` pour créer une boucle CSS infinie — la CSS animation prend le relais sans JS continu. (Une seule rangée depuis juin 2026.)
 
 ### 2. Burger menu & header scroll
 Burger toggle `.open` sur `.nav-links`. Header ajoute `.scrolled` après 60px de scroll.
@@ -203,7 +223,7 @@ Défilement de texte en 3D (rotateX + rotateY + perspective CSS). Items : `['Chi
 
 ## Chatbot assistant virtuel "Puce" (chatbot.js)
 
-Widget IIFE autonome (~1041 lignes) injecté dans `document.body`, aucune dépendance, aucun conflit avec `app.js`.
+Widget IIFE autonome (~1138 lignes) injecté dans `document.body`, aucune dépendance, aucun conflit avec `app.js`.
 
 ### Avatar
 Fichier `puce avatar2.png` — chaton noir et blanc aux yeux dorés. Affiché dans le bouton FAB et dans le header du panel chat.
@@ -271,7 +291,26 @@ const NTFY_TOPIC  = 'rdv-cabinet-payriere-31530';
 
 ---
 
-## Automatisation RDV — Google Apps Script (Code.gs)
+## Modal "Laisser un avis" (index.html — IIFE inline)
+
+IIFE autonome en bas de `index.html`, injecté directement dans la page (pas de fichier séparé).
+
+### Déclencheur
+Bouton `#btn-avis-open` dans la section témoignages → `openModal()`.
+
+### Flux utilisateur
+1. L'utilisateur sélectionne une note (1–5 étoiles) — 5 par défaut
+2. Saisit son prénom/nom
+3. Saisit son commentaire (facultatif)
+4. Envoi → `fetch(WEBHOOK_URL + ?action=avis&nom=...&note=...&texte=...)` mode `no-cors`
+5. Message de succès + lien "Laisser aussi un avis sur Google" (`https://share.google/Q9o8rPFBJIVTr6JgP`)
+
+### Lien Google Maps avis
+URL directe vers la fiche Google du cabinet : `https://share.google/Q9o8rPFBJIVTr6JgP`
+
+---
+
+## Automatisation RDV & Avis — Google Apps Script (Code.gs)
 
 Déployé sur https://script.google.com avec le compte **mpayriere.vet@gmail.com**. Runtime V8, timezone Europe/Paris.
 
@@ -279,6 +318,7 @@ Déployé sur https://script.google.com avec le compte **mpayriere.vet@gmail.com
 
 **`doGet(e)` — point d'entrée unique**
 - `?action=slots` → `getAvailableSlots()` — retourne les créneaux libres au format JSON
+- `?action=avis` → `submitAvis(p)` — envoie un email au Dr PAYRIERE avec l'avis client
 - Tout autre paramètre → `createRDV(p)` — crée le RDV
 
 ### `getAvailableSlots()`
@@ -296,6 +336,14 @@ Déployé sur https://script.google.com avec le compte **mpayriere.vet@gmail.com
 4. **Envoie un email au Dr PAYRIERE** (`mpayriere.vet@gmail.com`)
 5. **Envoie un email de confirmation au client** (si email fourni)
 
+### `submitAvis(p)`
+
+1. Sanitise `nom`, `note` (entier 1–5), `texte` (suppression `<>`)
+2. Envoie un email HTML au Dr PAYRIERE avec nom, étoiles et commentaire
+3. Retourne `{ status: 'ok' }`
+
+> **Note déploiement** : après modification de `Code.gs`, toujours faire `clasp push` + `clasp deploy` pour activer les changements en production.
+
 ### Déploiement via clasp
 
 ```bash
@@ -310,7 +358,7 @@ clasp deployments    # vérifier l'URL de déploiement
 
 ## Témoignages — Vrais avis Google
 
-5 avis affichés en double dans 2 rangées de marquee (10 cartes par rangée après duplication JS) :
+5 avis affichés en **1 rangée** de marquee défilant (après duplication JS, 10 cartes en boucle) — **sans avatars** :
 
 | Auteur | Étoiles | Date | Résumé |
 |--------|---------|------|--------|
@@ -331,7 +379,7 @@ clasp deployments    # vérifier l'URL de déploiement
 - **Urgences** : Vet-Urgentys — 05 61 11 21 31 — https://vet-urgentys.fr
 - **Horaires** : Lun / Mer / Ven 9h30–12h30 et 15h–19h | Mar / Jeu : visites à domicile | Sam / Dim : fermé
 - **Espèces** : Chiens, Chats, Lapins, Rongeurs, NAC
-- **Boutique** : Point relais ChronoVet officiel (chronovet.fr)
+- **Boutique** : Point relais ChronoVet officiel (chronovet.fr) — liste produits : médicaments, phytothérapie, antiparasitaires, alimentation prescrite, hygiène
 
 ---
 
@@ -348,6 +396,7 @@ clasp deployments    # vérifier l'URL de déploiement
 - Responsive **mobile-first**, breakpoints principaux à 960px et 600px
 - Emojis **jamais stockés dans les données métier** (strippés avant envoi webhook et dans Code.gs)
 - Boutons contextuels : glass dans les sections sombres (hero, dark-bg), solid amber sur fond clair
+- Les sections avec fond blanc ont leurs textes en couleurs sombres (`var(--text)`) ; les sections `.dark-bg` ont leurs textes en blanc explicitement définis
 
 ---
 
@@ -391,7 +440,7 @@ npx serve -p 3001 .
 ## Déploiement site
 
 ```bash
-git add .
+git add index.html style.css app.js chatbot.js apps-script/Code.gs Code.gs
 git commit -m "description"
 git push payriere main
 # Forcer rebuild GitHub Pages si nécessaire :
@@ -402,8 +451,9 @@ gh api repos/kewinherissard-oss/cabinet-payriere/pages/builds --method POST
 
 ## Historique des évolutions notables
 
-| Commit | Changement |
-|--------|-----------|
+| Commit / Session | Changement |
+|------------------|-----------|
+| `8f3e30f` (juin 2026) | Fond navy section animaux, modal avis client, témoignages 1 rangée sans avatars, boutique allégée, endpoint `action=avis` Apps Script |
 | session juin 2026 | Section services — chat tabby PNG transparent (`services-cat-nobg.png`) sur fond dark-bg |
 | session juin 2026 | Section témoignages — refonte en marquee CSS 2 rangées défilantes (gauche + droite) |
 | `7f3df58` | Animation marquee avis Google style 21s.dev |
